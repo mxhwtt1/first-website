@@ -247,11 +247,7 @@ const MYTHS_DATA = [
 ];
 
 // ─── All unique tags ──────────────────────────────────────────
-const ALL_TAGS = [
-  "Getting started", "Attendance",
-  "Medication", "Anxiety", "Mental health",
-  "Diet", "Transport", "Access", "Lifestyle"
-];
+const ALL_TAGS = [];
 
 // ─── State ────────────────────────────────────────────────────
 let activeTag    = null;
