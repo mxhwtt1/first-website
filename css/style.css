@@ -139,12 +139,12 @@ ul { list-style: none; }
 }
 .logo span { color: #B8FDFF; }
 .logo-est {
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   color: rgba(255,255,255,0.4);
   font-weight: 400;
-  letter-spacing: 1px;
-  align-self: flex-end;
-  padding-bottom: 2px;
+  letter-spacing: 0.5px;
+  margin-left: 6px;
+  vertical-align: super;
 }
 .header-search-wrap {
   display: flex;
