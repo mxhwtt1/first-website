@@ -272,15 +272,18 @@ ul { list-style: none; }
 .bolt:hover {
   opacity: 1;
 }
-.bolt-1 { width: 36px; height: 50px; top: 15%; left: 6%;  transform: rotate(-10deg); }
-.bolt-2 { width: 52px; height: 70px; top: 55%; left: 3%;  transform: rotate(8deg); }
-.bolt-3 { width: 28px; height: 40px; top: 20%; right: 8%; transform: rotate(15deg); }
-.bolt-4 { width: 48px; height: 65px; top: 60%; right: 5%; transform: rotate(-12deg); }
-.bolt-5 { width: 32px; height: 45px; top: 40%; left: 50%; transform: rotate(5deg); }
-.bolt-6 { width: 22px; height: 32px; top: 10%; left: 30%; transform: rotate(-20deg); }
-.bolt-7 { width: 44px; height: 60px; top: 75%; left: 20%; transform: rotate(12deg); }
-.bolt-8 { width: 30px; height: 42px; top: 30%; right: 20%; transform: rotate(-8deg); }
-.bolt-9 { width: 40px; height: 55px; top: 80%; right: 25%; transform: rotate(18deg); }
+/* sides */
+.bolt-1 { width: 36px; height: 50px; top: 20%;  left: 1%;  transform: rotate(-10deg); }
+.bolt-2 { width: 52px; height: 70px; top: 55%;  left: 2%;  transform: rotate(8deg); }
+.bolt-3 { width: 28px; height: 40px; top: 30%;  right: 1%; transform: rotate(15deg); }
+.bolt-4 { width: 48px; height: 65px; top: 62%;  right: 2%; transform: rotate(-12deg); }
+/* top */
+.bolt-5 { width: 30px; height: 42px; top: 2%;   left: 18%; transform: rotate(-15deg); }
+.bolt-6 { width: 22px; height: 32px; top: 3%;   left: 45%; transform: rotate(10deg); }
+.bolt-7 { width: 26px; height: 38px; top: 1%;   right: 18%;transform: rotate(-8deg); }
+/* bottom */
+.bolt-8 { width: 34px; height: 48px; bottom: 2%; left: 22%; transform: rotate(12deg); }
+.bolt-9 { width: 28px; height: 40px; bottom: 3%; right: 20%;transform: rotate(-18deg); }
 .bolt-1:hover { transform: rotate(-10deg) scale(1.3); }
 .bolt-2:hover { transform: rotate(8deg)   scale(1.3); }
 .bolt-3:hover { transform: rotate(15deg)  scale(1.3); }
