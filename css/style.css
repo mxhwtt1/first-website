@@ -250,6 +250,17 @@ ul { list-style: none; }
   position: relative;
   overflow: visible;
 }
+.nav-hub-with-logos {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.hub-side-logo {
+  height: 120px;
+  width: auto;
+  flex-shrink: 0;
+  opacity: 0.85;
+}
 .nav-hub-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
