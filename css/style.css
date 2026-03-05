@@ -222,10 +222,21 @@ ul { list-style: none; }
   max-height: 120px;
   padding: 0 16px 12px;
 }
-.abbr-item:hover {
-  border-color: rgba(125,249,255,0.35);
-  background: rgba(125,249,255,0.07);
+.abbr-item:nth-child(1) {
+  background: rgba(125,249,255,0.06);
+  border-color: rgba(125,249,255,0.2);
 }
+.abbr-item:nth-child(2) {
+  background: rgba(167,139,250,0.06);
+  border-color: rgba(167,139,250,0.2);
+}
+.abbr-item:nth-child(3) {
+  background: rgba(251,191,36,0.06);
+  border-color: rgba(251,191,36,0.2);
+}
+.abbr-item:nth-child(1):hover { background: rgba(125,249,255,0.13); border-color: rgba(125,249,255,0.4); }
+.abbr-item:nth-child(2):hover { background: rgba(167,139,250,0.13); border-color: rgba(167,139,250,0.4); }
+.abbr-item:nth-child(3):hover { background: rgba(251,191,36,0.13);  border-color: rgba(251,191,36,0.4); }
 
 /* ─── Navigation Hub ────────────────────── */
 .nav-hub {
