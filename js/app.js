@@ -227,11 +227,21 @@ function initLibrary() {
 }
 
 
+// ─── Abbreviation tap toggles (mobile) ───────────────────────
+function initAbbrExpanders() {
+  document.querySelectorAll('.abbr-item').forEach(item => {
+    item.addEventListener('click', () => {
+      item.classList.toggle('tapped');
+    });
+  });
+}
+
 // ─── Boot ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   markActiveNav();
   initFaqAccordions();
   initShareBtn();
+  initAbbrExpanders();
 
   const page = window.location.pathname.split('/').pop() || 'index.html';
   if (page === '' || page === 'index.html') initHomepage();

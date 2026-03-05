@@ -250,9 +250,10 @@ ul { list-style: none; }
   background: rgba(255,160,30,0.12);
   border-color: rgba(255,160,30,0.45);
 }
-.abbr-item:nth-child(1):hover { background: rgba(52,211,153,0.22);  border-color: rgba(52,211,153,0.7); }
-.abbr-item:nth-child(2):hover { background: rgba(180,100,255,0.22); border-color: rgba(180,100,255,0.7); }
-.abbr-item:nth-child(3):hover { background: rgba(255,160,30,0.22);  border-color: rgba(255,160,30,0.7); }
+.abbr-item:nth-child(1):hover, .abbr-item:nth-child(1).tapped { background: rgba(52,211,153,0.22);  border-color: rgba(52,211,153,0.7); }
+.abbr-item:nth-child(2):hover, .abbr-item:nth-child(2).tapped { background: rgba(180,100,255,0.22); border-color: rgba(180,100,255,0.7); }
+.abbr-item:nth-child(3):hover, .abbr-item:nth-child(3).tapped { background: rgba(255,160,30,0.22);  border-color: rgba(255,160,30,0.7); }
+.abbr-item.tapped .abbr-body { max-height: 120px; padding: 0 16px 12px; }
 
 /* ─── Navigation Hub ────────────────────── */
 .nav-hub {
