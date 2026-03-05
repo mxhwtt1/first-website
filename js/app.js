@@ -226,11 +226,23 @@ function initLibrary() {
   update();
 }
 
+// ─── Abbreviation expanders ───────────────────────────────────
+function initAbbrExpanders() {
+  document.querySelectorAll('.abbr-trigger').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+      btn.nextElementSibling.classList.toggle('open', !expanded);
+    });
+  });
+}
+
 // ─── Boot ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   markActiveNav();
   initFaqAccordions();
   initShareBtn();
+  initAbbrExpanders();
 
   const page = window.location.pathname.split('/').pop() || 'index.html';
   if (page === '' || page === 'index.html') initHomepage();
