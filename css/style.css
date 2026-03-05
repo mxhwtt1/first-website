@@ -152,44 +152,6 @@ ul { list-style: none; }
   background: rgba(255,255,255,.1);
 }
 
-/* Simple/Detail toggle in header */
-.mode-toggle-wrap {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-shrink: 0;
-}
-.mode-toggle-label {
-  font-size: 0.8rem;
-  color: rgba(255,255,255,.6);
-  white-space: nowrap;
-}
-.mode-toggle {
-  position: relative;
-  width: 44px;
-  height: 24px;
-  flex-shrink: 0;
-}
-.mode-toggle input { opacity: 0; width: 0; height: 0; }
-.mode-toggle-slider {
-  position: absolute;
-  inset: 0;
-  background: rgba(255,255,255,.2);
-  border-radius: 999px;
-  cursor: pointer;
-  transition: background var(--transition);
-}
-.mode-toggle-slider::before {
-  content: '';
-  position: absolute;
-  width: 18px; height: 18px;
-  left: 3px; top: 3px;
-  background: #fff;
-  border-radius: 50%;
-  transition: transform var(--transition);
-}
-.mode-toggle input:checked + .mode-toggle-slider { background: var(--color-accent); }
-.mode-toggle input:checked + .mode-toggle-slider::before { transform: translateX(20px); }
 
 /* ─── Hero ─────────────────────────────── */
 .hero {

@@ -256,7 +256,6 @@ const ALL_TAGS = [
 // ─── State ────────────────────────────────────────────────────
 let activeTag    = null;
 let searchQuery  = '';
-let detailMode   = false;
 
 // ─── Build a myth card HTML string ───────────────────────────
 function buildCard(myth) {
@@ -343,7 +342,6 @@ function renderCards(container, myths) {
   }
   container.innerHTML = myths.map(buildCard).join('');
   attachCardEvents(container);
-  applyDetailMode(container);
 }
 
 // ─── Attach per-card events ───────────────────────────────────
@@ -358,14 +356,6 @@ function attachCardEvents(container) {
   });
 }
 
-// ─── Apply / remove detail mode ───────────────────────────────
-function applyDetailMode(container) {
-  if (!container) return;
-  container.querySelectorAll('.card-detail').forEach(d => {
-    d.style.display = detailMode ? 'flex' : 'none';
-    d.setAttribute('aria-hidden', String(!detailMode));
-  });
-}
 
 // ─── Tag filter buttons ───────────────────────────────────────
 function buildTagFilters(container, onFilterChange) {
@@ -396,15 +386,6 @@ function initSearch(inputId, onSearch) {
   });
 }
 
-// ─── Detail mode toggle ───────────────────────────────────────
-function initDetailToggle(toggleId, onToggle) {
-  const toggle = document.getElementById(toggleId);
-  if (!toggle) return;
-  toggle.addEventListener('change', () => {
-    detailMode = toggle.checked;
-    onToggle();
-  });
-}
 
 // ─── FAQ accordion ────────────────────────────────────────────
 function initFaqAccordions() {
@@ -469,10 +450,6 @@ function initHomepage() {
 
   buildTagFilters(tagStrip, update);
   initSearch('search-input', update);
-  initDetailToggle('detail-toggle', () => {
-    applyDetailMode(document.getElementById('featured-grid'));
-  });
-
   update();
 }
 
@@ -491,10 +468,6 @@ function initLibrary() {
 
   buildTagFilters(tagStrip, update);
   initSearch('search-input', update);
-  initDetailToggle('detail-toggle', () => {
-    applyDetailMode(document.getElementById('library-grid'));
-  });
-
   update();
 }
 
