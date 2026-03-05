@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Myth Library | Hack Your Body: Fact vs Myth</title>
+  <meta name="description" content="Browse all 20 evidence-based cardiac rehab myths and facts. Filter by topic, search by keyword." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Desktop header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">Hack Your <span>Body</span></a>
+      <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="library.html">Myth Library</a>
+        <a href="about.html">About CR</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="mode-toggle-wrap">
+        <span class="mode-toggle-label">More detail</span>
+        <label class="mode-toggle" title="Toggle detail mode">
+          <input type="checkbox" id="detail-toggle" aria-label="Show more detail on cards" />
+          <span class="mode-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- Page hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Myth Library</h1>
+      <p>All 20 cardiac rehab myths — searchable, filterable, evidence-backed.</p>
+    </div>
+  </section>
+
+  <main>
+    <section class="section">
+      <div class="container">
+
+        <!-- Search bar -->
+        <div class="search-wrap" style="max-width:580px; margin-bottom:24px;">
+          <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+          </svg>
+          <input
+            type="search"
+            id="search-input"
+            placeholder="Search myths, topics, or keywords…"
+            aria-label="Search myths"
+            autocomplete="off"
+            style="box-shadow: var(--shadow-sm);"
+          />
+        </div>
+
+        <!-- Tag filter strip -->
+        <div id="lib-tag-strip" class="tag-filter-strip" role="group" aria-label="Filter by topic" style="justify-content:flex-start; margin-bottom:32px;"></div>
+
+        <!-- Controls bar -->
+        <div class="library-controls">
+          <p class="text-muted" style="font-size:0.9rem;">
+            Showing <strong id="result-count">20 myths</strong>
+          </p>
+          <button class="share-btn" aria-label="Share this page">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+              <path d="M4 12v8a2 2 0 002 2h12a2 2 0 002-2v-8M16 6l-4-4-4 4M12 2v13"/>
+            </svg>
+            Share this page
+          </button>
+        </div>
+
+        <!-- Cards grid -->
+        <div class="cards-grid" id="library-grid" aria-live="polite" aria-label="Myth cards"></div>
+
+      </div>
+    </section>
+
+    <!-- Disclaimer -->
+    <section class="section" style="padding-top:0;">
+      <div class="container">
+        <div class="disclaimer" role="note">
+          <strong>Important notice</strong>
+          This resource provides general information only and does not replace medical advice.
+          Always contact your cardiac rehab team, GP, or consultant for guidance about your individual situation.
+        </div>
+        <p class="text-muted" style="font-size:0.85rem; margin-top:12px;">
+          Last reviewed: March 2026 &mdash; CR Team, Blackpool.
+          Full reference list available on request.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-meta">
+        <span>Last reviewed: March 2026 &mdash; CR Team, Blackpool</span>
+        <span>This site does not replace medical advice. Contact your CR team or GP for individual guidance.</span>
+      </div>
+      <div class="footer-links">
+        <a href="library.html">Myth Library</a>
+        <a href="about.html">About CR</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile bottom nav -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/>
+      </svg>
+      Home
+    </a>
+    <a href="library.html" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      Library
+    </a>
+    <a href="about.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+      </svg>
+      About CR
+    </a>
+    <a href="contact.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.8 19.8 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+      </svg>
+      Contact
+    </a>
+  </nav>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

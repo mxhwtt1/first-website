@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hack Your Body: Fact vs Myth | Cardiac Rehab</title>
+  <meta name="description" content="Evidence-based myths about cardiac rehabilitation, busted. Know the facts — join your rehab programme with confidence." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Desktop header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo">Hack Your <span>Body</span></a>
+      <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="library.html">Myth Library</a>
+        <a href="about.html">About CR</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <div class="mode-toggle-wrap">
+        <span class="mode-toggle-label">More detail</span>
+        <label class="mode-toggle" title="Toggle detail mode">
+          <input type="checkbox" id="detail-toggle" aria-label="Show more detail on cards" />
+          <span class="mode-toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <span class="hero-eyebrow">Cardiac Rehab — Blackpool</span>
+      <h1>Hack Your <em>Body</em>:<br>Fact vs Myth</h1>
+      <p class="hero-sub">
+        Think you know what cardiac rehab involves? You might be surprised.
+        Find out what is really true — in plain English.
+      </p>
+
+      <div class="search-wrap">
+        <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+        </svg>
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Search — e.g. exercise, medication, transport…"
+          aria-label="Search myths"
+          autocomplete="off"
+        />
+      </div>
+
+      <div id="hero-tag-strip" class="tag-filter-strip" role="group" aria-label="Filter by topic"></div>
+    </div>
+  </section>
+
+  <!-- Featured myths -->
+  <main>
+    <section class="section">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Common myths, busted</h2>
+          <a href="library.html" class="btn btn-outline">See all 20 myths →</a>
+        </div>
+        <div class="cards-grid" id="featured-grid" aria-live="polite" aria-label="Myth cards"></div>
+        <div style="text-align:center; margin-top:40px;">
+          <a href="library.html" class="btn btn-primary">Browse the full myth library &rarr;</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Info strip -->
+    <section class="section" style="background:#fff; padding:48px 0;">
+      <div class="container">
+        <h2 class="section-title" style="margin-bottom:28px;">Why does this matter?</h2>
+        <div class="info-grid">
+          <div class="info-card">
+            <div class="info-card-icon">&#128147;</div>
+            <h3>CR saves lives</h3>
+            <p>People who complete cardiac rehab are significantly less likely to be re-admitted to hospital or to die from heart disease.</p>
+          </div>
+          <div class="info-card">
+            <div class="info-card-icon">&#128170;</div>
+            <h3>Anyone can do it</h3>
+            <p>You do not need to be fit, young, or healthy to start. CR is designed for people right after a heart event, at any age.</p>
+          </div>
+          <div class="info-card">
+            <div class="info-card-icon">&#127981;</div>
+            <h3>It is free on the NHS</h3>
+            <p>Cardiac rehab costs you nothing. No gym memberships, no equipment, no hidden fees. Just ask for a referral.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA strip -->
+    <section class="cta-strip">
+      <div class="container">
+        <h2>Ready to start your cardiac rehab?</h2>
+        <p>Find out what to expect, how to join, and how to get there — we have answers to the most common questions.</p>
+        <div class="btn-group">
+          <a href="about.html" class="btn btn-primary">What happens in CR?</a>
+          <a href="contact.html" class="btn btn-outline">Get in touch</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-meta">
+        <span>Last reviewed: March 2026 &mdash; CR Team, Blackpool</span>
+        <span>This site does not replace medical advice. Contact your CR team or GP for individual guidance.</span>
+      </div>
+      <div class="footer-links">
+        <a href="library.html">Myth Library</a>
+        <a href="about.html">About CR</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile bottom nav -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="index.html" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/>
+      </svg>
+      Home
+    </a>
+    <a href="library.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      Library
+    </a>
+    <a href="about.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+      </svg>
+      About CR
+    </a>
+    <a href="contact.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.8 19.8 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+      </svg>
+      Contact
+    </a>
+  </nav>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
