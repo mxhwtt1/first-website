@@ -111,6 +111,8 @@ ul { list-style: none; }
 /* ─── Desktop Header ─────────────────────────────── */
 .site-header {
   background: #004F96;
+  position: relative;
+  z-index: 100;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -256,6 +258,7 @@ ul { list-style: none; }
 .nav-hub {
   padding: 60px 0 80px;
   position: relative;
+  z-index: 1;
   overflow: visible;
 }
 .nav-hub-with-logos {
@@ -378,41 +381,44 @@ ul { list-style: none; }
 }
 
 /* ─── Lightning Bolts ───────────────────── */
+.bolt-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
 .bolt {
   position: absolute;
   fill: #7DF9FF;
-  opacity: 0.55;
-  cursor: default;
+  opacity: 0.45;
+  cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease;
   pointer-events: all;
 }
-.bolt:hover {
-  opacity: 1;
-}
-/* sides */
-.bolt-1 { width: 36px; height: 50px; top: 20%;  left: 1%;  transform: rotate(-10deg); }
-.bolt-2 { width: 52px; height: 70px; top: 55%;  left: 2%;  transform: rotate(8deg); }
-.bolt-3 { width: 28px; height: 40px; top: 30%;  right: 1%; transform: rotate(15deg); }
-.bolt-4 { width: 48px; height: 65px; top: 62%;  right: 2%; transform: rotate(-12deg); }
-/* top */
-.bolt-5 { width: 30px; height: 42px; top: 2%;   left: 18%; transform: rotate(-15deg); }
-.bolt-6 { width: 22px; height: 32px; top: 3%;   left: 45%; transform: rotate(10deg); }
-.bolt-7 { width: 26px; height: 38px; top: 1%;   right: 18%;transform: rotate(-8deg); }
-/* bottom */
-.bolt-8 { width: 34px; height: 48px; bottom: 2%; left: 22%; transform: rotate(12deg); }
-.bolt-9 { width: 28px; height: 40px; bottom: 3%; right: 20%;transform: rotate(-18deg); }
+.bolt:hover { opacity: 1; }
+.bolt-1 { width: 36px; height: 50px; top:  8%;  left:  3%;  transform: rotate(-10deg); }
+.bolt-2 { width: 52px; height: 70px; top: 42%;  left:  1%;  transform: rotate(8deg); }
+.bolt-3 { width: 28px; height: 40px; top: 75%;  left:  5%;  transform: rotate(15deg); }
+.bolt-4 { width: 48px; height: 65px; top: 20%;  right:  2%; transform: rotate(-12deg); }
+.bolt-5 { width: 30px; height: 42px; top: 60%;  right:  4%; transform: rotate(-15deg); }
+.bolt-6 { width: 22px; height: 32px; top: 88%;  right:  7%; transform: rotate(10deg); }
+.bolt-7 { width: 26px; height: 38px; top: 12%;  left: 48%;  transform: rotate(-8deg); }
+.bolt-8 { width: 34px; height: 48px; top: 55%;  left: 52%;  transform: rotate(12deg); }
+.bolt-9 { width: 28px; height: 40px; top: 82%;  left: 30%;  transform: rotate(-18deg); }
 .bolt-1:hover { transform: rotate(-10deg) scale(1.3); }
 .bolt-2:hover { transform: rotate(8deg)   scale(1.3); }
 .bolt-3:hover { transform: rotate(15deg)  scale(1.3); }
 .bolt-4:hover { transform: rotate(-12deg) scale(1.3); }
-.bolt-5:hover { transform: rotate(5deg)   scale(1.3); }
-.bolt-6:hover { transform: rotate(-20deg) scale(1.3); }
-.bolt-7:hover { transform: rotate(12deg)  scale(1.3); }
-.bolt-8:hover { transform: rotate(-8deg)  scale(1.3); }
-.bolt-9:hover { transform: rotate(18deg)  scale(1.3); }
+.bolt-5:hover { transform: rotate(-15deg) scale(1.3); }
+.bolt-6:hover { transform: rotate(10deg)  scale(1.3); }
+.bolt-7:hover { transform: rotate(-8deg)  scale(1.3); }
+.bolt-8:hover { transform: rotate(12deg)  scale(1.3); }
+.bolt-9:hover { transform: rotate(-18deg) scale(1.3); }
 
 /* ─── Hero ─────────────────────────────── */
 .hero {
+  position: relative;
+  z-index: 1;
   background: linear-gradient(to bottom, var(--color-hero-bg) 60%, #000000 100%);
   color: var(--color-hero-text);
   padding: 56px 0 48px;
