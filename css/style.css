@@ -8,7 +8,7 @@
 
 /* ─── Variables ─────────────────────────────── */
 :root {
-  --color-hero-bg:   #7DF9FF;
+  --color-hero-bg:   #0068C4;
   --color-hero-text: #f0f6ff;
   --color-primary:   #2563eb;
   --color-primary-dark: #1d4ed8;
@@ -110,7 +110,7 @@ ul { list-style: none; }
 
 /* ─── Desktop Header ─────────────────────────────── */
 .site-header {
-  background: #7DF9FF;
+  background: #0068C4;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -131,7 +131,7 @@ ul { list-style: none; }
   text-decoration: none;
   flex-shrink: 0;
 }
-.logo span { color: var(--color-accent); }
+.logo span { color: #7DF9FF; }
 .site-header nav {
   display: flex;
   align-items: center;
