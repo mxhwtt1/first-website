@@ -253,10 +253,11 @@ ul { list-style: none; }
 .nav-hub-with-logos {
   display: flex;
   align-items: center;
-  gap: 32px;
+  justify-content: center;
+  gap: 24px;
 }
 .hub-side-logo {
-  height: 120px;
+  height: 70px;
   width: auto;
   flex-shrink: 0;
   opacity: 0.85;
@@ -265,6 +266,8 @@ ul { list-style: none; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
+  flex: 1;
+  max-width: 900px;
 }
 .nav-hub-card {
   display: flex;
