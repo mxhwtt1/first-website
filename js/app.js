@@ -248,7 +248,7 @@ const MYTHS_DATA = [
 
 // ─── All unique tags ──────────────────────────────────────────
 const ALL_TAGS = [
-  "Exercise safety", "Getting started", "Attendance",
+  "Getting started", "Attendance",
   "Medication", "Anxiety", "Mental health",
   "Diet", "Transport", "Access", "Lifestyle"
 ];
