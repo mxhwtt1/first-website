@@ -8,7 +8,7 @@
 
 /* ─── Variables ─────────────────────────────── */
 :root {
-  --color-hero-bg:   #0d1b2a;
+  --color-hero-bg:   #7DF9FF;
   --color-hero-text: #f0f6ff;
   --color-primary:   #2563eb;
   --color-primary-dark: #1d4ed8;
@@ -110,7 +110,7 @@ ul { list-style: none; }
 
 /* ─── Desktop Header ─────────────────────────────── */
 .site-header {
-  background: #87CEEB;
+  background: #7DF9FF;
   position: sticky;
   top: 0;
   z-index: 100;
