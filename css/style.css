@@ -138,6 +138,14 @@ ul { list-style: none; }
   display: block;
 }
 .logo span { color: #B8FDFF; }
+.logo-est {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.4);
+  font-weight: 400;
+  letter-spacing: 1px;
+  align-self: flex-end;
+  padding-bottom: 2px;
+}
 .header-search-wrap {
   display: flex;
   align-items: center;
@@ -266,8 +274,8 @@ ul { list-style: none; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  width: 900px;
-  flex-shrink: 0;
+  max-width: 900px;
+  margin: 0 auto;
 }
 .nav-hub-card {
   display: flex;
@@ -405,7 +413,7 @@ ul { list-style: none; }
 
 /* ─── Hero ─────────────────────────────── */
 .hero {
-  background: var(--color-hero-bg);
+  background: linear-gradient(to bottom, #000000 0%, var(--color-hero-bg) 40%);
   color: var(--color-hero-text);
   padding: 56px 0 48px;
   text-align: center;
