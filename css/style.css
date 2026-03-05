@@ -131,7 +131,28 @@ ul { list-style: none; }
   text-decoration: none;
   flex-shrink: 0;
 }
-.logo span { color: #7DF9FF; }
+.logo span { color: #B8FDFF; }
+.header-search-wrap {
+  display: flex;
+  align-items: center;
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;
+  padding: 6px 14px;
+  gap: 8px;
+  flex: 1;
+  max-width: 320px;
+}
+.header-search-wrap .search-icon { color: rgba(255,255,255,0.7); flex-shrink: 0; }
+.header-search-wrap input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-size: 0.875rem;
+  width: 100%;
+}
+.header-search-wrap input::placeholder { color: rgba(255,255,255,0.6); }
 .site-header nav {
   display: flex;
   align-items: center;
