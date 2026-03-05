@@ -257,7 +257,7 @@ ul { list-style: none; }
   gap: 24px;
 }
 .hub-side-logo {
-  height: 70px;
+  height: 100px;
   width: auto;
   flex-shrink: 0;
   opacity: 0.85;
@@ -266,8 +266,8 @@ ul { list-style: none; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  flex: 1;
-  max-width: 900px;
+  width: 900px;
+  flex-shrink: 0;
 }
 .nav-hub-card {
   display: flex;
