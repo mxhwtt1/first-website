@@ -332,11 +332,40 @@ ul { list-style: none; }
   pointer-events: none;
 }
 @media (max-width: 700px) {
+  .nav-hub-with-logos {
+    flex-direction: column;
+    gap: 16px;
+  }
+  .hub-side-logo {
+    height: 60px;
+  }
   .nav-hub-grid {
     grid-template-columns: 1fr;
+    width: 100%;
   }
   .nav-hub-card {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 1;
+    flex-direction: row;
+  }
+  .nav-hub-img-placeholder {
+    border-bottom: none;
+    border-right: 1px solid #333;
+    width: 120px;
+    flex-shrink: 0;
+  }
+  .nav-hub-icon {
+    font-size: 2rem;
+    width: 80px;
+    flex-shrink: 0;
+  }
+  .nav-hub-label {
+    flex: 1;
+  }
+  .abbr-list {
+    flex-direction: column;
+  }
+  .abbr-item {
+    width: 100%;
   }
 }
 
