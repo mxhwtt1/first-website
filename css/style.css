@@ -135,24 +135,21 @@ ul { list-style: none; }
 .header-search-wrap {
   display: flex;
   align-items: center;
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 999px;
-  padding: 6px 14px;
-  gap: 8px;
-  flex: 1;
-  max-width: 320px;
+  gap: 6px;
+  max-width: 200px;
 }
-.header-search-wrap .search-icon { color: rgba(255,255,255,0.7); flex-shrink: 0; }
+.header-search-wrap .search-icon { color: rgba(255,255,255,0.4); flex-shrink: 0; }
 .header-search-wrap input {
   background: transparent;
   border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
   outline: none;
-  color: #fff;
-  font-size: 0.875rem;
+  color: rgba(255,255,255,0.8);
+  font-size: 0.78rem;
   width: 100%;
+  padding: 2px 0;
 }
-.header-search-wrap input::placeholder { color: rgba(255,255,255,0.6); }
+.header-search-wrap input::placeholder { color: rgba(255,255,255,0.35); }
 .site-header nav {
   display: flex;
   align-items: center;
