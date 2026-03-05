@@ -250,11 +250,19 @@ ul { list-style: none; }
 .bolt-3 { width: 28px; top: 20%; right: 8%; transform: rotate(15deg); }
 .bolt-4 { width: 48px; top: 60%; right: 5%; transform: rotate(-12deg); }
 .bolt-5 { width: 32px; top: 40%; left: 50%; transform: rotate(5deg); }
+.bolt-6 { width: 22px; top: 10%; left: 30%; transform: rotate(-20deg); }
+.bolt-7 { width: 44px; top: 75%; left: 20%; transform: rotate(12deg); }
+.bolt-8 { width: 30px; top: 30%; right: 20%; transform: rotate(-8deg); }
+.bolt-9 { width: 40px; top: 80%; right: 25%; transform: rotate(18deg); }
 .bolt-1:hover { transform: rotate(-10deg) scale(1.3); }
 .bolt-2:hover { transform: rotate(8deg)   scale(1.3); }
 .bolt-3:hover { transform: rotate(15deg)  scale(1.3); }
 .bolt-4:hover { transform: rotate(-12deg) scale(1.3); }
 .bolt-5:hover { transform: rotate(5deg)   scale(1.3); }
+.bolt-6:hover { transform: rotate(-20deg) scale(1.3); }
+.bolt-7:hover { transform: rotate(12deg)  scale(1.3); }
+.bolt-8:hover { transform: rotate(-8deg)  scale(1.3); }
+.bolt-9:hover { transform: rotate(18deg)  scale(1.3); }
 
 /* ─── Hero ─────────────────────────────── */
 .hero {
