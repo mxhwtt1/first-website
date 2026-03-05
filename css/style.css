@@ -119,17 +119,17 @@ ul { list-style: none; }
 .site-header .container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   height: 80px;
   gap: 24px;
 }
 .logo {
-  font-size: 1.1rem;
+  font-size: 1.45rem;
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.5px;
   text-decoration: none;
   flex-shrink: 0;
+  margin-right: auto;
 }
 .logo span { color: #B8FDFF; }
 .header-search-wrap {
