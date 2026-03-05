@@ -388,9 +388,10 @@ ul { list-style: none; }
   line-height: 1.1;
   margin-bottom: 16px;
 }
+.hero-hack { color: var(--color-accent); }
 .hero h1 em {
   font-style: normal;
-  color: var(--color-accent);
+  color: #fff;
 }
 .hero-sub {
   font-size: clamp(1rem, 2.5vw, 1.2rem);
