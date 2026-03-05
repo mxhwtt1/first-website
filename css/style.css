@@ -110,7 +110,7 @@ ul { list-style: none; }
 
 /* ─── Desktop Header ─────────────────────────────── */
 .site-header {
-  background: var(--color-hero-bg);
+  background: #87CEEB;
   position: sticky;
   top: 0;
   z-index: 100;
