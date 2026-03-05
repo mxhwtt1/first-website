@@ -136,7 +136,12 @@ ul { list-style: none; }
   display: flex;
   align-items: center;
   gap: 4px;
-  max-width: 120px;
+  width: 90px;
+  transition: width 0.4s ease;
+}
+.header-search-wrap:hover,
+.header-search-wrap:focus-within {
+  width: 220px;
 }
 .header-search-wrap .search-icon { color: rgba(255,255,255,0.4); flex-shrink: 0; width: 13px; height: 13px; }
 .header-search-wrap input {
@@ -148,7 +153,9 @@ ul { list-style: none; }
   font-size: 0.68rem;
   width: 100%;
   padding: 1px 0;
+  transition: border-color 0.3s ease;
 }
+.header-search-wrap:focus-within input { border-color: rgba(255,255,255,0.5); }
 .header-search-wrap input::placeholder { color: rgba(255,255,255,0.35); }
 .site-header nav {
   display: flex;
