@@ -110,7 +110,7 @@ ul { list-style: none; }
 
 /* ─── Desktop Header ─────────────────────────────── */
 .site-header {
-  background: #0068C4;
+  background: #004F96;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -120,7 +120,7 @@ ul { list-style: none; }
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 64px;
+  height: 80px;
   gap: 24px;
 }
 .logo {
