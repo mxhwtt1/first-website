@@ -176,13 +176,13 @@ ul { list-style: none; }
 /* ─── Abbreviation expanders ────────────── */
 .abbr-list {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: 8px;
   margin-top: 28px;
-  max-width: 540px;
   margin-left: auto;
   margin-right: auto;
   text-align: left;
+  justify-content: center;
 }
 .abbr-item {
   background: rgba(255,255,255,0.07);
@@ -198,7 +198,6 @@ ul { list-style: none; }
   padding: 10px 16px;
   background: transparent;
   border: none;
-  cursor: pointer;
   color: #fff;
 }
 .abbr-tag {
@@ -206,29 +205,22 @@ ul { list-style: none; }
   font-weight: 700;
   color: #7DF9FF;
   letter-spacing: 0.5px;
-  min-width: 40px;
-}
-.abbr-chevron {
-  margin-left: auto;
-  font-size: 1.1rem;
-  color: rgba(255,255,255,0.4);
-  transition: transform 0.25s ease;
-  display: inline-block;
-}
-.abbr-trigger[aria-expanded="true"] .abbr-chevron {
-  transform: rotate(90deg);
 }
 .abbr-body {
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
-  font-size: 0.85rem;
+  transition: max-height 0.35s ease, padding 0.35s ease;
+  font-size: 0.82rem;
   color: rgba(255,255,255,0.8);
   padding: 0 16px;
 }
-.abbr-body.open {
-  max-height: 100px;
+.abbr-item:hover .abbr-body {
+  max-height: 120px;
   padding: 0 16px 12px;
+}
+.abbr-item:hover {
+  border-color: rgba(125,249,255,0.35);
+  background: rgba(125,249,255,0.07);
 }
 
 /* ─── Navigation Hub ────────────────────── */
