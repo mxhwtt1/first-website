@@ -233,6 +233,29 @@ ul { list-style: none; }
   }
 }
 
+/* ─── Lightning Bolts ───────────────────── */
+.bolt {
+  position: absolute;
+  fill: #7DF9FF;
+  opacity: 0.55;
+  cursor: default;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  pointer-events: all;
+}
+.bolt:hover {
+  opacity: 1;
+}
+.bolt-1 { width: 36px; top: 15%; left: 6%;  transform: rotate(-10deg); }
+.bolt-2 { width: 52px; top: 55%; left: 3%;  transform: rotate(8deg); }
+.bolt-3 { width: 28px; top: 20%; right: 8%; transform: rotate(15deg); }
+.bolt-4 { width: 48px; top: 60%; right: 5%; transform: rotate(-12deg); }
+.bolt-5 { width: 32px; top: 40%; left: 50%; transform: rotate(5deg); }
+.bolt-1:hover { transform: rotate(-10deg) scale(1.3); }
+.bolt-2:hover { transform: rotate(8deg)   scale(1.3); }
+.bolt-3:hover { transform: rotate(15deg)  scale(1.3); }
+.bolt-4:hover { transform: rotate(-12deg) scale(1.3); }
+.bolt-5:hover { transform: rotate(5deg)   scale(1.3); }
+
 /* ─── Hero ─────────────────────────────── */
 .hero {
   background: var(--color-hero-bg);
@@ -240,7 +263,7 @@ ul { list-style: none; }
   padding: 56px 0 48px;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 .hero::before {
   content: '';
