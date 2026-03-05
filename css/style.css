@@ -131,6 +131,12 @@ ul { list-style: none; }
   flex-shrink: 0;
   margin-right: auto;
 }
+.logo-img {
+  height: 40px;
+  width: auto;
+  display: inline-block;
+  vertical-align: middle;
+}
 .logo span { color: #B8FDFF; }
 .header-search-wrap {
   display: flex;
