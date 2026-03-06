@@ -714,10 +714,10 @@ ul { list-style: none; }
   color: #fff;
 }
 .hero-tagline {
-  font-size: clamp(2.2rem, 6.5vw, 4rem);
+  font-size: clamp(1.3rem, 3vw, 1.8rem);
   font-weight: 800;
-  letter-spacing: -2px;
-  line-height: 1.05;
+  letter-spacing: -0.5px;
+  line-height: 1.15;
   color: #fff;
   margin-bottom: 18px;
 }
