@@ -485,11 +485,21 @@
     ctx.fillText(score >= 200 ? 'Myth-busting expert!' : score >= 100 ? 'Good effort — keep learning!' : 'Have another go!', W / 2, 292);
 
     ctx.fillStyle = '#0068C4';
-    rrect(W / 2 - 100, 322, 200, 54, 12);
+    rrect(W / 2 - 100, 316, 200, 48, 12);
     ctx.fill();
     ctx.fillStyle = '#fff';
     ctx.font = 'bold 20px system-ui,sans-serif';
-    ctx.fillText('PLAY AGAIN', W / 2, 355);
+    ctx.fillText('PLAY AGAIN', W / 2, 347);
+
+    rrect(W / 2 - 100, 376, 200, 44, 12);
+    ctx.fillStyle = 'rgba(255,255,255,0.07)';
+    ctx.fill();
+    ctx.strokeStyle = '#444';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = '#aaa';
+    ctx.font = '16px system-ui,sans-serif';
+    ctx.fillText('Go Home', W / 2, 404);
   }
 
   const PAUSE_RESUME = { x: W / 2 - 90, y: H / 2 - 18, w: 180, h: 46 };
@@ -665,7 +675,18 @@
 
   // ── Canvas click (start / restart / pause menu) ───
   canvas.addEventListener('click', e => {
-    if (gameState === 'start' || gameState === 'gameover') { resetGame(); gameState = 'playing'; return; }
+    if (gameState === 'start') { resetGame(); gameState = 'playing'; return; }
+    if (gameState === 'gameover') {
+      const rect = canvas.getBoundingClientRect();
+      const scale = W / rect.width;
+      const mx = (e.clientX - rect.left) * scale;
+      const my = (e.clientY - rect.top)  * scale;
+      // Go Home button: y 376–420
+      if (mx > W/2 - 100 && mx < W/2 + 100 && my > 376 && my < 420) {
+        window.location.href = 'index.html'; return;
+      }
+      resetGame(); gameState = 'playing'; return;
+    }
     if (gameState === 'paused') {
       const rect = canvas.getBoundingClientRect();
       const scale = W / rect.width;
