@@ -139,11 +139,11 @@ ul { list-style: none; }
 .site-header .container {
   display: flex;
   align-items: center;
-  height: 80px;
+  height: 96px;
   gap: 24px;
 }
 .logo {
-  font-size: 1.45rem;
+  font-size: 1.95rem;
   font-weight: 800;
   color: #fff;
   letter-spacing: -0.5px;
