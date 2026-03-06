@@ -275,6 +275,21 @@ function initCarousels() {
   });
 }
 
+// ─── Mobile nav toggle ────────────────────────────────────────
+function initMobileNavToggle() {
+  const nav = document.querySelector('.mobile-nav');
+  if (!nav) return;
+  const btn = document.createElement('button');
+  btn.className = 'mobile-nav-toggle';
+  btn.setAttribute('aria-label', 'Toggle navigation bar');
+  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`;
+  document.body.appendChild(btn);
+  btn.addEventListener('click', () => {
+    nav.classList.toggle('hidden');
+    btn.classList.toggle('nav-hidden');
+  });
+}
+
 // ─── Boot ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   markActiveNav();
@@ -282,6 +297,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initShareBtn();
   initAbbrExpanders();
   initCarousels();
+  initMobileNavToggle();
 
   const page = window.location.pathname.split('/').pop() || 'index.html';
   if (page === '' || page === 'index.html') initHomepage();
