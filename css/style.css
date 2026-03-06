@@ -729,7 +729,7 @@ ul { list-style: none; }
 .hero-tech--pap { color: #b464ff; }
 .hero-tech--ems { color: #ffa01e; }
 .hero-descriptor {
-  font-size: clamp(1.05rem, 2.6vw, 1.3rem);
+  font-size: clamp(0.85rem, 1.8vw, 1rem);
   font-weight: 500;
   color: rgba(240,246,255,0.82);
   max-width: 560px;
