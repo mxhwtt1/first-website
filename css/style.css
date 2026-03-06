@@ -211,6 +211,19 @@ ul { list-style: none; }
 }
 
 
+/* ─── Abbreviation tap hint (mobile only) ── */
+.abbr-hint-mobile {
+  display: none;
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.4);
+  text-align: center;
+  margin-top: 10px;
+  letter-spacing: 0.3px;
+}
+@media (max-width: 700px) {
+  .abbr-hint-mobile { display: block; }
+}
+
 /* ─── Abbreviation expanders ────────────── */
 .abbr-list {
   display: flex;
