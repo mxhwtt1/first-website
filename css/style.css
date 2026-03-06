@@ -525,6 +525,28 @@ ul { list-style: none; }
   box-shadow: 0 8px 32px rgba(125,249,255,0.15);
   text-decoration: none;
 }
+/* ── Per-carousel theme colours ───────────────────── */
+[data-theme="games"] .nav-hub-card:hover {
+  border-color: #c084fc;
+  box-shadow: 0 8px 32px rgba(192,132,252,0.22);
+}
+[data-theme="games"] .nav-hub-img-placeholder { background: #0e0918; }
+[data-theme="games"] .nav-hub-arrow { color: #c084fc; }
+
+[data-theme="revision"] .nav-hub-card:hover {
+  border-color: #4ade80;
+  box-shadow: 0 8px 32px rgba(74,222,128,0.2);
+}
+[data-theme="revision"] .nav-hub-img-placeholder { background: #080e09; }
+[data-theme="revision"] .nav-hub-arrow { color: #4ade80; }
+
+[data-theme="resources"] .nav-hub-card:hover {
+  border-color: #fbbf24;
+  box-shadow: 0 8px 32px rgba(251,191,36,0.2);
+}
+[data-theme="resources"] .nav-hub-img-placeholder { background: #0f0c00; }
+[data-theme="resources"] .nav-hub-arrow { color: #fbbf24; }
+
 .nav-hub-img-placeholder {
   flex: 1;
   background: #2a2a2a;
