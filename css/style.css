@@ -273,6 +273,18 @@ ul { list-style: none; }
 .abbr-item:nth-child(3):hover, .abbr-item:nth-child(3).tapped { background: rgba(255,160,30,0.22);  border-color: rgba(255,160,30,0.7); }
 .abbr-item.tapped .abbr-body { max-height: 120px; padding: 0 16px 12px; }
 
+/* ─── Carousel headings ─────────────────── */
+.carousel-heading {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #f0f0f0;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 0 0 12px 54px;
+  padding-left: 12px;
+  border-left: 3px solid #7DF9FF;
+}
+
 /* ─── Carousel rows ─────────────────────── */
 .carousel-row {
   display: flex;
