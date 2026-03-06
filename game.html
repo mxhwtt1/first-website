@@ -223,6 +223,7 @@
   let spawnTimer, spawnInterval, level;
   let redFlash = 0, greenFlash = 0;
   let bulletCooldown = 0;
+  let feedbacks = [];
 
   const player = { x: W / 2, y: H - 52, speed: 5 };
   const keys = { left: false, right: false, fire: false };
@@ -230,7 +231,7 @@
 
   function resetGame() {
     score = 0; lives = 3;
-    asteroids = []; bullets = []; particles = [];
+    asteroids = []; bullets = []; particles = []; feedbacks = [];
     spawnTimer = 0; spawnInterval = 180; level = 1;
     redFlash = 0; greenFlash = 0; bulletCooldown = 0;
     player.x = W / 2;
@@ -357,29 +358,19 @@
       ctx.beginPath();
       pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
       ctx.closePath();
-      ctx.fillStyle = isMyth ? '#3b0a0a' : '#022c22';
+      ctx.fillStyle = '#2a2030';
       ctx.fill();
-      ctx.strokeStyle = isMyth ? '#f87171' : '#34d399';
+      ctx.strokeStyle = '#8a7a8a';
       ctx.lineWidth = 2.5;
       ctx.stroke();
 
       ctx.restore();
 
-      // MYTH / FACT chip
-      const chipW = 58, chipH = 20;
-      ctx.fillStyle = isMyth ? '#f87171' : '#34d399';
-      rrect(cx - chipW / 2, cy - AH / 2 + 6, chipW, chipH, 4);
-      ctx.fill();
-      ctx.fillStyle = '#000';
-      ctx.font = 'bold 11px system-ui,sans-serif';
-      ctx.textAlign = 'center';
-      ctx.fillText(isMyth ? 'MYTH' : 'FACT', cx, cy - AH / 2 + 19);
-
-      // Statement text
-      ctx.fillStyle = '#eee';
+      // Statement text only — no myth/fact label
+      ctx.fillStyle = '#ddd';
       ctx.font = '11.5px system-ui,sans-serif';
       ctx.textAlign = 'center';
-      wrapText(a.stmt.text, cx, cy + 12, AW - 24, 15);
+      wrapText(a.stmt.text, cx, cy + 4, AW - 24, 15);
     });
 
     // Particles
@@ -389,6 +380,19 @@
       ctx.beginPath();
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+
+    // Feedback labels
+    feedbacks.forEach(f => {
+      ctx.globalAlpha = f.alpha;
+      ctx.fillStyle = f.color;
+      ctx.font = 'bold 18px system-ui,sans-serif';
+      ctx.textAlign = 'center';
+      ctx.shadowBlur = 10;
+      ctx.shadowColor = f.color;
+      ctx.fillText(f.text, f.x, f.y);
+      ctx.shadowBlur = 0;
     });
     ctx.globalAlpha = 1;
 
@@ -557,11 +561,13 @@
           if (a.stmt.type === 'myth') {
             score += 10;
             greenFlash = 14;
-            burst(cx, cy, '#f87171');
+            burst(cx, cy, '#FFA040');
+            feedbacks.push({ x: cx, y: cy, text: '+10', color: '#34d399', alpha: 1, vy: -1.8 });
           } else {
             score = Math.max(0, score - 5);
-            redFlash = 22;
-            burst(cx, cy, '#34d399');
+            redFlash = 30;
+            burst(cx, cy, '#f87171');
+            feedbacks.push({ x: cx, y: cy, text: '✗  THAT\'S A FACT!', color: '#f87171', alpha: 1, vy: -1.8 });
           }
           break;
         }
@@ -575,6 +581,10 @@
       p.life -= 0.045;
     });
     particles = particles.filter(p => p.life > 0);
+
+    // Feedback labels
+    feedbacks.forEach(f => { f.y += f.vy; f.alpha -= 0.022; });
+    feedbacks = feedbacks.filter(f => f.alpha > 0);
 
     if (redFlash > 0)   redFlash--;
     if (greenFlash > 0) greenFlash--;
