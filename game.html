@@ -70,6 +70,15 @@
       color: #666;
       text-align: center;
     }
+    .game-btn--pause {
+      background: rgba(255,255,255,0.06);
+      border-color: #555;
+      width: 52px;
+      height: 52px;
+      color: #aaa;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
   </style>
 </head>
 <body>
@@ -108,10 +117,13 @@
           <button class="game-btn" id="btn-left"  aria-label="Move left">&#9664;</button>
           <button class="game-btn game-btn--fire" id="btn-fire" aria-label="Fire">FIRE</button>
           <button class="game-btn" id="btn-right" aria-label="Move right">&#9654;</button>
+          <button class="game-btn game-btn--pause" id="btn-pause" aria-label="Pause">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><rect x="5" y="3" width="4" height="18" rx="1"/><rect x="15" y="3" width="4" height="18" rx="1"/></svg>
+          </button>
         </div>
 
         <p class="game-hint">
-          Desktop: arrow keys to move &nbsp;|&nbsp; Space to fire &nbsp;|&nbsp; click canvas to start
+          Arrow keys to move &nbsp;|&nbsp; Space to fire &nbsp;|&nbsp; P to pause
         </p>
 
       </div>
@@ -181,7 +193,7 @@
   }));
 
   // ── State ──────────────────────────────────────────
-  let gameState = 'start'; // 'start' | 'playing' | 'gameover'
+  let gameState = 'start'; // 'start' | 'playing' | 'paused' | 'gameover'
   let score, lives, asteroids, bullets, particles;
   let spawnTimer, spawnInterval, level;
   let redFlash = 0, greenFlash = 0;
@@ -371,6 +383,8 @@
     ctx.fillText('Lv ' + level, W - 12, 24);
     // Lives
     for (let i = 0; i < lives; i++) drawShipMini(W / 2 - (lives - 1) * 14 + i * 28, 20);
+
+    if (gameState === 'paused') drawPaused();
   }
 
   function drawShip(x, y) {
@@ -469,6 +483,65 @@
     ctx.fillText('PLAY AGAIN', W / 2, 355);
   }
 
+  const PAUSE_RESUME = { x: W / 2 - 90, y: H / 2 - 18, w: 180, h: 46 };
+  const PAUSE_QUIT   = { x: W / 2 - 90, y: H / 2 + 40, w: 180, h: 40 };
+
+  function drawPaused() {
+    // Dim overlay
+    ctx.fillStyle = 'rgba(4,4,14,0.78)';
+    ctx.fillRect(0, 0, W, H);
+
+    // Card
+    const cw = 280, ch = 220;
+    const cx = W / 2 - cw / 2, cy = H / 2 - ch / 2 - 10;
+    rrect(cx, cy, cw, ch, 16);
+    ctx.fillStyle = 'rgba(16,16,30,0.97)';
+    ctx.fill();
+    ctx.strokeStyle = '#2a2a40';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Title
+    ctx.textAlign = 'center';
+    ctx.shadowBlur = 18;
+    ctx.shadowColor = '#7DF9FF';
+    ctx.fillStyle = '#7DF9FF';
+    ctx.font = 'bold 30px system-ui,sans-serif';
+    ctx.fillText('PAUSED', W / 2, H / 2 - 50);
+    ctx.shadowBlur = 0;
+
+    // Score reminder
+    ctx.fillStyle = '#888';
+    ctx.font = '14px system-ui,sans-serif';
+    ctx.fillText('Score: ' + score, W / 2, H / 2 - 24);
+
+    // Resume button
+    const r = PAUSE_RESUME;
+    rrect(r.x, r.y, r.w, r.h, 10);
+    ctx.fillStyle = '#0068C4';
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 17px system-ui,sans-serif';
+    ctx.fillText('RESUME', W / 2, r.y + r.h / 2 + 6);
+
+    // Quit button
+    const q = PAUSE_QUIT;
+    rrect(q.x, q.y, q.w, q.h, 10);
+    ctx.fillStyle = 'rgba(255,255,255,0.07)';
+    ctx.fill();
+    ctx.strokeStyle = '#444';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.fillStyle = '#aaa';
+    ctx.font = '15px system-ui,sans-serif';
+    ctx.fillText('Quit to Menu', W / 2, q.y + q.h / 2 + 5);
+
+    // Hint
+    ctx.fillStyle = '#555';
+    ctx.font = '12px system-ui,sans-serif';
+    ctx.fillText('P · Esc to resume', W / 2, H / 2 + 100);
+  }
+
   // ── Update ─────────────────────────────────────────
   function update() {
     if (gameState !== 'playing') return;
@@ -558,6 +631,11 @@
   loop();
 
   // ── Keyboard ───────────────────────────────────────
+  function togglePause() {
+    if (gameState === 'playing') gameState = 'paused';
+    else if (gameState === 'paused') gameState = 'playing';
+  }
+
   document.addEventListener('keydown', e => {
     if (e.key === 'ArrowLeft')  keys.left  = true;
     if (e.key === 'ArrowRight') keys.right = true;
@@ -565,6 +643,8 @@
     if (e.key === ' ' || e.key === 'Enter') {
       if (gameState === 'start' || gameState === 'gameover') { resetGame(); gameState = 'playing'; }
     }
+    if (e.key === 'p' || e.key === 'P') togglePause();
+    if (e.key === 'Escape' && (gameState === 'playing' || gameState === 'paused')) togglePause();
   });
   document.addEventListener('keyup', e => {
     if (e.key === 'ArrowLeft')  keys.left  = false;
@@ -572,9 +652,21 @@
     if (e.key === ' ')          keys.fire  = false;
   });
 
-  // ── Canvas click (start / restart) ────────────────
-  canvas.addEventListener('click', () => {
-    if (gameState === 'start' || gameState === 'gameover') { resetGame(); gameState = 'playing'; }
+  // ── Canvas click (start / restart / pause menu) ───
+  canvas.addEventListener('click', e => {
+    if (gameState === 'start' || gameState === 'gameover') { resetGame(); gameState = 'playing'; return; }
+    if (gameState === 'paused') {
+      const rect = canvas.getBoundingClientRect();
+      const scale = W / rect.width;
+      const mx = (e.clientX - rect.left) * scale;
+      const my = (e.clientY - rect.top)  * scale;
+      const r = PAUSE_RESUME, q = PAUSE_QUIT;
+      if (mx > r.x && mx < r.x + r.w && my > r.y && my < r.y + r.h) {
+        gameState = 'playing';
+      } else if (mx > q.x && mx < q.x + q.w && my > q.y && my < q.y + q.h) {
+        resetGame(); gameState = 'start';
+      }
+    }
   });
 
   // ── Mobile buttons ─────────────────────────────────
@@ -587,6 +679,13 @@
   }
   holdBtn('btn-left',  'left');
   holdBtn('btn-right', 'right');
+
+  const pauseBtn = document.getElementById('btn-pause');
+  if (pauseBtn) {
+    pauseBtn.addEventListener('click', () => {
+      if (gameState === 'playing' || gameState === 'paused') togglePause();
+    });
+  }
 
   const fireBtn = document.getElementById('btn-fire');
   if (fireBtn) {

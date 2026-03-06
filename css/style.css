@@ -1268,7 +1268,7 @@ ul { list-style: none; }
 @media (max-width: 767px) {
   /* Collapse desktop header nav on mobile */
   .site-header nav { display: none; }
-  .site-header .container { justify-content: space-between; }
+  .site-header .container { justify-content: space-between; gap: 8px; padding: 0 14px; }
 }
 
 /* ─── Focus styles (a11y) ─────────────────────────────── */
