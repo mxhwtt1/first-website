@@ -179,7 +179,10 @@
 
         <div class="flashcard-grid" id="flashcard-grid"></div>
 
-        <button class="reset-btn" id="reset-btn">Reset all cards</button>
+        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:48px;">
+          <button class="reset-btn" id="reset-btn" style="margin:0;">Reset all cards</button>
+          <button class="reset-btn" id="shuffle-btn" style="margin:0; border-color:#0068C4; color:#7DF9FF;">&#8635; Randomise</button>
+        </div>
 
       </div>
     </section>
@@ -244,13 +247,21 @@
       document.getElementById('progress-fill').style.width = (n / TOTAL * 100) + '%';
     }
 
-    function buildCards() {
+    function shuffle(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function buildCards(order) {
       const grid = document.getElementById('flashcard-grid');
       grid.innerHTML = '';
       flipped.clear();
       updateProgress();
 
-      for (let i = 1; i <= TOTAL; i++) {
+      for (const i of order) {
         const scene = document.createElement('div');
         scene.className = 'card-scene';
 
@@ -292,9 +303,11 @@
       }
     }
 
-    buildCards();
+    const defaultOrder = Array.from({ length: TOTAL }, (_, i) => i + 1);
+    buildCards([...defaultOrder]);
 
-    document.getElementById('reset-btn').addEventListener('click', buildCards);
+    document.getElementById('reset-btn').addEventListener('click', () => buildCards([...defaultOrder]));
+    document.getElementById('shuffle-btn').addEventListener('click', () => buildCards(shuffle([...defaultOrder])));
   </script>
 </body>
 </html>
