@@ -229,16 +229,22 @@ function initLibrary() {
 
 // ─── Abbreviation tap toggles (mobile) ───────────────────────
 function initAbbrExpanders() {
-  document.querySelectorAll('.abbr-item').forEach(item => {
+  const items = document.querySelectorAll('.abbr-item');
+  items.forEach(item => {
     let lastTouch = 0;
+    function toggle() {
+      const isOpen = item.classList.contains('tapped');
+      items.forEach(i => i.classList.remove('tapped'));
+      if (!isOpen) item.classList.add('tapped');
+    }
     item.addEventListener('touchend', e => {
       e.preventDefault();
       lastTouch = Date.now();
-      item.classList.toggle('tapped');
+      toggle();
     });
     item.addEventListener('click', () => {
       if (Date.now() - lastTouch < 500) return;
-      item.classList.toggle('tapped');
+      toggle();
     });
   });
 }
