@@ -752,7 +752,7 @@
           gameHint.textContent = 'Right-click or long-press to flag a myth';
         }
         revealCell(row, col);
-        if (gameState === 'dead') triggerExplosion(row, col);
+        if (gameState === 'dead') triggerExplosion(row, col, 'myth');
         else if (gameState === 'won') triggerWin();
       } else {
         quizWrong++;
@@ -765,8 +765,8 @@
           startTimer();
         }
         grid[row][col].el.classList.add('myth-triggered');
-        grid[row][col].el.textContent = 'MYTH';
-        triggerExplosion(row, col);
+        grid[row][col].el.textContent = '✕';
+        triggerExplosion(row, col, 'wrong-answer');
       }
     }, 420);
   }
@@ -830,8 +830,21 @@
   }
 
   // ── Explosion ─────────────────────────────────────
-  function triggerExplosion(row, col) {
+  function triggerExplosion(row, col, reason) {
     stopTimer();
+    // Set overlay message based on reason
+    const emoji = document.querySelector('.explosion-emoji');
+    const msg   = document.querySelector('.explosion-msg');
+    const sub   = document.querySelector('.explosion-sub');
+    if (reason === 'wrong-answer') {
+      emoji.textContent = '❌';
+      msg.textContent   = 'WRONG ANSWER!';
+      sub.innerHTML     = 'You misidentified that statement — the square blew up.<br>The myths are still out there.';
+    } else {
+      emoji.textContent = '💥';
+      msg.textContent   = 'MYTH DETECTED!';
+      sub.innerHTML     = 'You uncovered a myth square.<br>You knew your facts — just picked the wrong cell.';
+    }
     // Reveal all myths
     setTimeout(() => {
       for (let r = 0; r < config.rows; r++) {
