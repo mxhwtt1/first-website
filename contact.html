@@ -3,13 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact & Referral | Hack Your Body: Fact vs Myth</title>
-  <meta name="description" content="How to get in touch with the team and how to get a referral to the programme." />
+  <title>Contact | Hack Your Body: Fact vs Myth</title>
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .wip-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 50vh;
+      text-align: center;
+      gap: 20px;
+      padding: 60px 24px;
+    }
+    .wip-badge {
+      display: inline-block;
+      background: rgba(255,160,30,0.12);
+      border: 1.5px solid rgba(255,160,30,0.5);
+      color: #ffa01e;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 99px;
+    }
+    .wip-title { font-size: 1.6rem; font-weight: 700; color: #f0f0f0; margin: 0; }
+    .wip-sub { color: var(--color-muted); font-size: 0.95rem; max-width: 380px; margin: 0; line-height: 1.6; }
+  </style>
 </head>
 <body>
 
-  <!-- Desktop header -->
   <header class="site-header">
     <div class="container">
       <button class="back-btn" onclick="history.back()" aria-label="Go back">
@@ -20,180 +44,23 @@
       <nav aria-label="Main navigation">
         <a href="practice.html">Practice</a>
         <a href="about.html">About</a>
-        <a href="contact.html">Contact</a>
+        <a href="contact.html" class="active">Contact</a>
       </nav>
     </div>
   </header>
 
-  <!-- Page hero -->
-  <section class="page-hero">
-    <div class="container">
-      <h1>Contact &amp; Referral</h1>
-      <p>How to get in touch, get referred, and get to your sessions.</p>
-    </div>
-  </section>
-
   <main>
-    <section class="section">
-      <div class="container">
-
-        <!-- Contact cards -->
-        <h2 class="section-title" style="margin-bottom:24px;">Get in touch</h2>
-
-        <div class="disclaimer" role="note" style="margin-bottom:32px;">
-          <strong>Placeholder contact details</strong>
-          The contact details below need to be updated with your real team information before publishing.
-          Replace the telephone number, email address, and location with the correct service details.
-        </div>
-
-        <div class="contact-grid">
-          <div class="contact-card">
-            <div class="contact-card-icon">&#128222;</div>
-            <h3>Phone</h3>
-            <p>
-              Call the team directly.<br>
-              <a href="tel:+441234567890"><strong>01234 567 890</strong></a><br>
-              <span class="text-muted">Monday to Friday, 9am to 5pm</span>
-            </p>
-          </div>
-
-          <div class="contact-card">
-            <div class="contact-card-icon">&#9993;</div>
-            <h3>Email</h3>
-            <p>
-              Email us and we will respond within 2 working days.<br>
-              <a href="mailto:cardiacrehab@blackpool.nhs.uk"><strong>cardiacrehab@blackpool.nhs.uk</strong></a><br>
-              <span class="text-muted">Please include your name and date of birth.</span>
-            </p>
-          </div>
-
-          <div class="contact-card">
-            <div class="contact-card-icon">&#127968;</div>
-            <h3>Location</h3>
-            <p>
-              Blackpool Cardiac Rehab Centre<br>
-              <strong>[Venue name and address]</strong><br>
-              Blackpool, Lancashire<br>
-              <span class="text-muted">Free parking available on site.</span>
-            </p>
-          </div>
-
-          <div class="contact-card">
-            <div class="contact-card-icon">&#128197;</div>
-            <h3>Session times</h3>
-            <p>
-              Sessions run on:<br>
-              <strong>[Days and times to be confirmed]</strong><br>
-              <span class="text-muted">Contact us to find out which session is best for you.</span>
-            </p>
-          </div>
-        </div>
-
-        <!-- Referral section -->
-        <h2 class="section-title" style="margin: 56px 0 16px;">How to get referred</h2>
-        <article class="prose">
-          <p>
-            Most people are referred automatically after a heart attack, surgery, or procedure.
-            If you were not referred, or if you were not sure whether it was offered to you, here is what to do:
-          </p>
-
-          <h3>Option 1 — Ask your GP</h3>
-          <p>
-            Your GP can refer you to the local cardiac rehab programme. Just mention that you had a heart event
-            and would like to be referred. Your GP can also tell you whether you are eligible.
-          </p>
-
-          <h3>Option 2 — Ask your cardiac nurse or consultant</h3>
-          <p>
-            If you are still in contact with the hospital team, ask your cardiac nurse, physiologist,
-            or consultant cardiologist to refer you. They can do this directly.
-          </p>
-
-          <h3>Option 3 — Contact us directly</h3>
-          <p>
-            In some cases you may be able to refer yourself. Call or email the team using the details above
-            and tell us about your diagnosis. We will let you know what information we need.
-          </p>
-
-          <h3>What happens after referral?</h3>
-          <p>
-            Once referred, you will be contacted by the team to arrange an initial assessment appointment.
-            At this appointment they will assess your fitness, review your medical history, and design your personal programme.
-            This usually happens within a few weeks of referral.
-          </p>
-        </article>
-
-        <!-- Transport section -->
-        <h2 class="section-title" style="margin: 56px 0 24px;">Getting to your sessions</h2>
-        <div class="contact-grid">
-          <div class="contact-card">
-            <div class="contact-card-icon">&#128664;</div>
-            <h3>By car</h3>
-            <p>
-              Free parking is available at [venue name].
-              If you are unable to drive after your heart event, ask a family member or carer if they can help.
-            </p>
-          </div>
-          <div class="contact-card">
-            <div class="contact-card-icon">&#128652;</div>
-            <h3>By bus</h3>
-            <p>
-              Several bus routes serve [venue area]. Contact Blackpool Transport for up-to-date timetables and routes.
-              Bus passes may be available — ask your team.
-            </p>
-          </div>
-          <div class="contact-card">
-            <div class="contact-card-icon">&#128661;</div>
-            <h3>Community transport</h3>
-            <p>
-              If you have difficulty travelling, community transport options may be available in your area.
-              Talk to your team — do not let transport stop you from attending.
-            </p>
-          </div>
-          <div class="contact-card">
-            <div class="contact-card-icon">&#128167;</div>
-            <h3>Still not sure?</h3>
-            <p>
-              If getting to sessions feels like a barrier, please tell us. We will do our best to help you find a solution —
-              transport should not be a reason to miss out.
-            </p>
-          </div>
-        </div>
-
-        <!-- Simple feedback -->
-        <div style="background:#fff; border:1px solid var(--color-border); border-radius:var(--radius-md); padding:28px; margin-top:48px; max-width:520px;">
-          <h3 style="margin-bottom:8px; font-size:1.1rem;">Was this page helpful?</h3>
-          <p style="font-size:0.9rem; color:var(--color-muted); margin-bottom:16px;">
-            Your feedback helps us improve this resource.
-          </p>
-          <div style="display:flex; gap:12px;">
-            <button class="btn btn-primary" style="padding:10px 20px;" onclick="this.textContent='Thanks!'; this.disabled=true;">
-              Yes, helpful
-            </button>
-            <button class="btn btn-outline" style="padding:10px 20px;" onclick="this.textContent='Thanks for letting us know.'; this.disabled=true;">
-              Not really
-            </button>
-          </div>
-        </div>
-
-        <div class="disclaimer" role="note" style="margin-top:40px;">
-          <strong>Medical disclaimer</strong>
-          This website provides general information only. It does not replace advice from your team, GP,
-          or consultant. If you are experiencing chest pain, shortness of breath at rest, or any other emergency symptoms,
-          call 999 immediately.
-        </div>
-
+    <div class="container">
+      <div class="wip-wrap">
+        <span class="wip-badge">Work in Progress</span>
+        <p class="wip-title">Contact</p>
+        <p class="wip-sub">Contact details are coming soon. Check back later.</p>
       </div>
-    </section>
+    </div>
   </main>
 
-  <!-- Footer -->
   <footer class="site-footer">
     <div class="container">
-      <div class="footer-meta">
-        <span>Last reviewed: March 2026</span>
-        <span>This site does not replace medical advice. Contact your team or GP for individual guidance.</span>
-      </div>
       <div class="footer-links">
         <a href="about.html">About</a>
         <a href="contact.html">Contact</a>
