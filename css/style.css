@@ -393,7 +393,7 @@ ul { list-style: none; }
 }
 .abbr-more {
   display: inline-block;
-  margin-top: 10px;
+  margin-top: 4px;
   font-size: 0.78rem;
   font-weight: 700;
   color: #7DF9FF;
