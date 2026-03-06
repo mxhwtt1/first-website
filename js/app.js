@@ -275,6 +275,99 @@ function initCarousels() {
   });
 }
 
+// ─── Hamburger slide-out menu ─────────────────────────────────
+function initHamburgerMenu() {
+  const header = document.querySelector('.site-header .container');
+  if (!header) return;
+
+  const page = window.location.pathname.split('/').pop() || 'index.html';
+
+  // Build burger button
+  const burger = document.createElement('button');
+  burger.className = 'burger-btn';
+  burger.setAttribute('aria-label', 'Open menu');
+  burger.setAttribute('aria-expanded', 'false');
+  burger.innerHTML = '<span></span><span></span><span></span>';
+  header.appendChild(burger);
+
+  // Build backdrop
+  const backdrop = document.createElement('div');
+  backdrop.className = 'menu-backdrop';
+  document.body.appendChild(backdrop);
+
+  // Build slide-out menu
+  const menu = document.createElement('nav');
+  menu.className = 'slide-menu';
+  menu.setAttribute('aria-label', 'Site menu');
+  menu.innerHTML = `
+    <div class="slide-menu-header">
+      <span class="slide-menu-title">Menu</span>
+      <button class="slide-menu-close" aria-label="Close menu">&#10005;</button>
+    </div>
+
+    <div class="menu-section">
+      <div class="menu-section-label">Home</div>
+      <a href="index.html" class="menu-link ${page === 'index.html' || page === '' ? 'active' : ''}">
+        <span class="menu-link-icon">🏠</span> Home
+      </a>
+    </div>
+
+    <div class="menu-divider"></div>
+
+    <div class="menu-section">
+      <div class="menu-section-label">Games</div>
+      <a href="game.html" class="menu-link ${page === 'game.html' ? 'active' : ''}">
+        <span class="menu-link-icon">🚀</span> Asteroid Blaster
+      </a>
+      <a href="minesweeper.html" class="menu-link ${page === 'minesweeper.html' ? 'active' : ''}">
+        <span class="menu-link-icon">💣</span> Myth Sweeper
+      </a>
+    </div>
+
+    <div class="menu-divider"></div>
+
+    <div class="menu-section">
+      <div class="menu-section-label">Revision</div>
+      <a href="practice.html" class="menu-link ${page === 'practice.html' ? 'active' : ''}">
+        <span class="menu-link-icon">📇</span> Practice Flashcards
+      </a>
+      <a href="faq.html" class="menu-link ${page === 'faq.html' ? 'active' : ''}">
+        <span class="menu-link-icon">❓</span> FAQ
+      </a>
+    </div>
+
+    <div class="menu-divider"></div>
+
+    <div class="menu-section">
+      <div class="menu-section-label">Info</div>
+      <a href="about.html" class="menu-link ${page === 'about.html' ? 'active' : ''}">
+        <span class="menu-link-icon">ℹ️</span> About the Programme
+      </a>
+      <a href="contact.html" class="menu-link ${page === 'contact.html' ? 'active' : ''}">
+        <span class="menu-link-icon">📞</span> Contact &amp; Referral
+      </a>
+    </div>`;
+  document.body.appendChild(menu);
+
+  function openMenu() {
+    menu.classList.add('open');
+    backdrop.classList.add('open');
+    burger.classList.add('open');
+    burger.setAttribute('aria-expanded', 'true');
+  }
+  function closeMenu() {
+    menu.classList.remove('open');
+    backdrop.classList.remove('open');
+    burger.classList.remove('open');
+    burger.setAttribute('aria-expanded', 'false');
+  }
+
+  burger.addEventListener('click', () => menu.classList.contains('open') ? closeMenu() : openMenu());
+  backdrop.addEventListener('click', closeMenu);
+  menu.querySelector('.slide-menu-close').addEventListener('click', closeMenu);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
+}
+
 // ─── Mobile nav toggle ────────────────────────────────────────
 function initMobileNavToggle() {
   const nav = document.querySelector('.mobile-nav');
@@ -300,6 +393,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initAbbrExpanders();
   initCarousels();
   initMobileNavToggle();
+  initHamburgerMenu();
 
   const page = window.location.pathname.split('/').pop() || 'index.html';
   if (page === '' || page === 'index.html') initHomepage();
