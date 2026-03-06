@@ -713,10 +713,10 @@ ul { list-style: none; }
   font-style: normal;
   color: #fff;
 }
-.hero-tagline {
-  font-size: clamp(1.3rem, 3vw, 1.8rem);
+.hero h1.hero-tagline {
+  font-size: clamp(1.1rem, 2.2vw, 1.6rem);
   font-weight: 800;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.3px;
   line-height: 1.15;
   color: #fff;
   margin-bottom: 18px;
