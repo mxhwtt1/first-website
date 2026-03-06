@@ -324,6 +324,7 @@ function initHamburgerMenu() {
       <div class="menu-section-label">Revision</div>
       <a href="practice.html" class="menu-link ${page === 'practice.html' ? 'active' : ''}">Practice Flashcards</a>
       <a href="faq.html" class="menu-link ${page === 'faq.html' ? 'active' : ''}">FAQ</a>
+      <a href="sources.html" class="menu-link ${page === 'sources.html' ? 'active' : ''}">Sources</a>
     </div>
 
     <div class="menu-divider"></div>

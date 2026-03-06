@@ -107,8 +107,8 @@
       <div class="game-wrap">
 
         <div class="game-legend">
-          <span><span class="legend-myth">■ MYTH</span> — shoot it</span>
-          <span><span class="legend-fact">■ FACT</span> — spare it</span>
+          <span><span class="legend-myth">■ MYTH</span> — shoot it (+10)</span>
+          <span><span class="legend-fact">■ FACT</span> — spare it (shooting costs a life)</span>
         </div>
 
         <canvas id="game-canvas" width="680" height="520"></canvas>
@@ -601,9 +601,11 @@
             feedbacks.push({ x: cx, y: cy, text: '+10', color: '#34d399', alpha: 1, vy: -1.8 });
           } else {
             score = Math.max(0, score - 5);
+            lives--;
             redFlash = 30;
             burst(cx, cy, '#f87171');
             feedbacks.push({ x: cx, y: cy, text: '✗  THAT\'S A FACT!', color: '#f87171', alpha: 1, vy: -1.8 });
+            if (lives <= 0) gameState = 'gameover';
           }
           break;
         }

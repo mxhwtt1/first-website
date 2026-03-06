@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sources | Hack Your Body: Fact vs Myth</title>
+  <meta name="description" content="Academic citations and sources behind every fact and myth on this site." />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .sources-intro {
+      font-size: 0.95rem;
+      color: var(--color-muted);
+      max-width: 600px;
+      line-height: 1.7;
+      margin-bottom: 32px;
+    }
+    .sources-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .source-row {
+      display: grid;
+      grid-template-columns: 1fr 200px;
+      gap: 20px;
+      align-items: start;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 18px 20px;
+      transition: border-color 0.2s;
+    }
+    .source-row:hover { border-color: rgba(255,255,255,0.13); }
+    .source-statement {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .source-statement p {
+      margin: 0;
+      font-size: 0.92rem;
+      color: #c8c8c8;
+      line-height: 1.55;
+    }
+    .source-cite {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .cite-btn {
+      background: rgba(251,191,36,0.08);
+      border: 1px solid rgba(251,191,36,0.35);
+      color: #fbbf24;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 99px;
+      cursor: pointer;
+      letter-spacing: 0.3px;
+      transition: background 0.2s;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .cite-btn:hover { background: rgba(251,191,36,0.16); }
+    .cite-content {
+      display: none;
+      font-size: 0.76rem;
+      color: var(--color-muted);
+      line-height: 1.65;
+      font-style: italic;
+    }
+    .cite-content.open { display: block; }
+    @media (max-width: 640px) {
+      .source-row { grid-template-columns: 1fr; gap: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <button class="back-btn" onclick="history.back()" aria-label="Go back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back
+      </button>
+      <a href="index.html" class="logo"><span>Hack</span> Your Body</a>
+    </div>
+  </header>
+
+  <section class="page-hero">
+    <div class="container">
+      <p style="font-size:0.8rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(251,191,36,0.9);margin-bottom:10px;">Evidence Base</p>
+      <h1>Sources</h1>
+      <p>Every fact and myth on this site is backed by published research. Click any row to reveal the citation.</p>
+    </div>
+  </section>
+
+  <main>
+    <section class="section">
+      <div class="container">
+
+        <p class="sources-intro">
+          The statements below come from the Myth Library and the Asteroid Blaster game. Each one is matched to a peer-reviewed paper or authoritative guideline. Tap <strong>View citation</strong> on any row to reveal the reference.
+        </p>
+
+        <div class="sources-list">
+
+          <!-- MYTHS -->
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>Stretching before exercise prevents injury</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Lauersen JB, Bertelsen DM, Andersen LB. "The effectiveness of exercise interventions to prevent sports injuries." <em>Br J Sports Med.</em> 2014;48(11):871–877.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>Muscle turns into fat when you stop training</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Staron RS et al. "Muscle hypertrophy and fast fiber type conversions in heavy resistance-trained women." <em>Eur J Appl Physiol.</em> 1990;60(1):71–79. Muscle and adipose tissue are physiologically distinct; one cannot convert to the other.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>Crunches burn belly fat</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Vispute SS, Smith JD, LeCheminant JD, Hurley KS. "The effect of abdominal exercise on abdominal fat." <em>J Strength Cond Res.</em> 2011;25(9):2559–2564.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>Cardio is the only way to lose weight</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Strasser B, Schobersberger W. "Evidence for resistance training as a treatment therapy in obesity." <em>J Obes.</em> 2011;2011:482564.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>Lifting weights makes women bulky</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Staron RS et al. "Strength and skeletal muscle adaptations in heavy-resistance-trained women after detraining and retraining." <em>J Appl Physiol.</em> 1990;70(1):134–143.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>No pain, no gain</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                American College of Sports Medicine. <em>ACSM's Guidelines for Exercise Testing and Prescription.</em> 10th ed. Lippincott Williams &amp; Wilkins; 2018. Exercise at moderate perceived exertion (RPE 12–14) produces health benefits without pain.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>Sweating means you are burning fat</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                McArdle WD, Katch FI, Katch VL. <em>Exercise Physiology: Nutrition, Energy, and Human Performance.</em> 8th ed. Lippincott Williams &amp; Wilkins; 2014. Sweating is a thermoregulatory response, not a measure of fat oxidation.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>Running always damages your knees</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Lo GH et al. "Is there an association between a history of running and symptomatic knee osteoarthritis?" <em>Arthritis Care Res.</em> 2017;69(2):183–191.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>You need protein shakes to build muscle</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Morton RW et al. "A systematic review, meta-analysis and meta-regression of the effect of protein supplementation on resistance training-induced gains in muscle mass and strength." <em>Br J Sports Med.</em> 2018;52(6):376–384.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>More exercise is always better</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Kreher JB, Schwartz JB. "Overtraining syndrome: a practical guide." <em>Sports Health.</em> 2012;4(2):128–138.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>You only use 10% of your brain</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Chudler EH. "Myths about the brain." <em>Neuroscience for Kids</em>, University of Washington. Neuroimaging studies show virtually all brain regions are active. See also: Boyd R. <em>Scientific American.</em> 7 Feb 2008.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>Eating carbs at night causes weight gain</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Sofer S et al. "Greater weight loss and hormonal changes after 6 months diet with carbohydrates eaten mostly at dinner." <em>Obesity.</em> 2011;19(10):2006–2014.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-myth">Myth</span>
+              <p>Lactic acid causes post-workout soreness</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Cheung K, Hume P, Maxwell L. "Delayed onset muscle soreness: treatment strategies and performance factors." <em>Sports Med.</em> 2003;33(2):145–164. Lactate clears within an hour of exercise; DOMS is caused by micro-damage and inflammation.
+              </div>
+            </div>
+          </div>
+
+          <!-- FACTS -->
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-fact">Fact</span>
+              <p>Exercise improves mental health</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Schuch FB et al. "Exercise as a treatment for depression: a meta-analysis adjusting for publication bias." <em>J Psychiatr Res.</em> 2016;77:42–51.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-fact">Fact</span>
+              <p>Sleep is essential for muscle recovery</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Dattilo M et al. "Sleep and muscle recovery: endocrinological and molecular basis for a new and promising hypothesis." <em>Med Hypotheses.</em> 2011;77(2):220–226.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-fact">Fact</span>
+              <p>Dehydration reduces exercise performance</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Sawka MN et al. "American College of Sports Medicine position stand. Exercise and fluid replacement." <em>Med Sci Sports Exerc.</em> 2007;39(2):377–390.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-fact">Fact</span>
+              <p>Strength training increases bone density</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Layne JE, Nelson ME. "The effects of progressive resistance training on bone density: a review." <em>Med Sci Sports Exerc.</em> 1999;31(1):25–30.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-fact">Fact</span>
+              <p>Regular exercise reduces heart disease risk</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Warburton DE, Nicol CW, Bredin SS. "Health benefits of physical activity: the evidence." <em>CMAJ.</em> 2006;174(6):801–809.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-fact">Fact</span>
+              <p>Warming up improves performance</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Bishop D. "Warm up II: performance changes following active warm up and how to structure the warm up." <em>Sports Med.</em> 2003;33(7):483–498.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-fact">Fact</span>
+              <p>Resistance training boosts metabolism</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Westcott WL. "Resistance training is medicine: effects of strength training on health." <em>Curr Sports Med Rep.</em> 2012;11(4):209–216.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-fact">Fact</span>
+              <p>Good posture reduces back pain</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Hartvigsen J et al. "What low back pain is and why we need to pay attention." <em>Lancet.</em> 2018;391(10137):2356–2367.
+              </div>
+            </div>
+          </div>
+
+          <div class="source-row">
+            <div class="source-statement">
+              <span class="label label-fact">Fact</span>
+              <p>Progressive overload builds strength</p>
+            </div>
+            <div class="source-cite">
+              <button class="cite-btn" aria-expanded="false">View citation</button>
+              <div class="cite-content">
+                Schoenfeld BJ. "The mechanisms of muscle hypertrophy and their application to resistance training." <em>J Strength Cond Res.</em> 2010;24(10):2857–2872.
+              </div>
+            </div>
+          </div>
+
+        </div><!-- .sources-list -->
+
+        <div class="disclaimer" role="note" style="margin-top:48px;">
+          <strong>Note on citations</strong>
+          These references are provided for educational purposes. This site does not replace professional medical or scientific advice. Where possible, the primary source is cited; some entries reference textbook summaries of well-established physiology.
+        </div>
+
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-meta">
+        <span>Last reviewed: March 2026</span>
+        <span>This site does not replace medical advice. Contact your team or GP for individual guidance.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+    document.querySelectorAll('.cite-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const content = btn.nextElementSibling;
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', String(!expanded));
+        btn.textContent = expanded ? 'View citation' : 'Hide citation';
+        content.classList.toggle('open', !expanded);
+      });
+    });
+  </script>
+</body>
+</html>
