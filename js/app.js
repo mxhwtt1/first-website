@@ -339,6 +339,21 @@ function initHamburgerMenu() {
     <div class="menu-divider"></div>
 
     <div class="menu-section">
+      <div class="menu-section-label">Techniques</div>
+      <a href="pnf.html" class="menu-link ${page === 'pnf.html' ? 'active' : ''}">
+        <span class="menu-link-icon">🤸</span> PNF Stretching
+      </a>
+      <a href="pap.html" class="menu-link ${page === 'pap.html' ? 'active' : ''}">
+        <span class="menu-link-icon">💪</span> Post-Activation Potentiation
+      </a>
+      <a href="ems.html" class="menu-link ${page === 'ems.html' ? 'active' : ''}">
+        <span class="menu-link-icon">⚡</span> Electrical Muscle Stimulation
+      </a>
+    </div>
+
+    <div class="menu-divider"></div>
+
+    <div class="menu-section">
       <div class="menu-section-label">Info</div>
       <a href="about.html" class="menu-link ${page === 'about.html' ? 'active' : ''}">
         <span class="menu-link-icon">ℹ️</span> About the Programme
