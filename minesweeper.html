@@ -254,6 +254,92 @@
       transition: border-color 0.2s, color 0.2s;
     }
     .back-to-setup:hover { border-color: #0068C4; color: #f0f0f0; }
+
+    /* ── Quiz modal ────────────────────────────── */
+    .quiz-modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 400;
+      background: rgba(0,0,0,0.7);
+      align-items: flex-end;
+      justify-content: center;
+      padding-bottom: env(safe-area-inset-bottom, 0);
+    }
+    .quiz-modal.active { display: flex; }
+    .quiz-card {
+      background: #111;
+      border: 2px solid #333;
+      border-radius: 20px 20px 0 0;
+      padding: 28px 24px 32px;
+      width: 100%;
+      max-width: 520px;
+      animation: slide-up 0.25s ease;
+    }
+    @keyframes slide-up {
+      from { transform: translateY(100%); opacity: 0; }
+      to   { transform: translateY(0);    opacity: 1; }
+    }
+    .quiz-badge {
+      display: inline-block;
+      background: #0068C4;
+      color: #fff;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 99px;
+      margin-bottom: 14px;
+    }
+    .quiz-instruction {
+      font-size: 0.8rem;
+      color: var(--color-muted);
+      margin-bottom: 10px;
+    }
+    .quiz-statement {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #f0f0f0;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+    .quiz-btns {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .quiz-answer-btn {
+      padding: 16px 8px;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: transform 0.1s, opacity 0.1s;
+    }
+    .quiz-answer-btn:active { transform: scale(0.96); }
+    .quiz-myth-btn { background: rgba(248,113,113,0.15); border-color: #f87171; color: #f87171; }
+    .quiz-fact-btn { background: rgba(52,211,153,0.15); border-color: #34d399; color: #34d399; }
+    .quiz-answer-btn.correct { opacity: 1; animation: flash-correct 0.35s ease; }
+    .quiz-answer-btn.wrong   { animation: flash-wrong 0.35s ease; }
+    @keyframes flash-correct {
+      0%,100% { background: rgba(52,211,153,0.15); }
+      50%      { background: rgba(52,211,153,0.5); }
+    }
+    @keyframes flash-wrong {
+      0%,100% { background: rgba(248,113,113,0.15); }
+      50%      { background: rgba(248,113,113,0.5); }
+    }
+    .quiz-score {
+      font-size: 0.78rem;
+      color: #555;
+      text-align: right;
+      margin-top: 12px;
+    }
+    .quiz-score .qs-right { color: #34d399; font-weight: 700; }
+    .quiz-score .qs-wrong { color: #f87171; font-weight: 700; }
   </style>
 </head>
 <body>
@@ -278,7 +364,7 @@
   <section class="page-hero">
     <div class="container">
       <h1>Myth Sweeper</h1>
-      <p>Uncover the safe squares. One wrong click and the myths blow up in your face.</p>
+      <p>Every click triggers a Myth or Fact challenge. Answer wrong and it explodes — even on a safe square.</p>
     </div>
   </section>
 
@@ -337,6 +423,20 @@
 
     </div>
   </main>
+
+  <!-- Quiz modal -->
+  <div class="quiz-modal" id="quiz-modal">
+    <div class="quiz-card">
+      <span class="quiz-badge">&#10067; Knowledge Check</span>
+      <p class="quiz-instruction">Answer correctly to reveal the square. Get it wrong and it blows up — even if it was safe.</p>
+      <p class="quiz-statement" id="quiz-statement"></p>
+      <div class="quiz-btns">
+        <button class="quiz-answer-btn quiz-myth-btn" id="quiz-myth">✕ MYTH</button>
+        <button class="quiz-answer-btn quiz-fact-btn" id="quiz-fact">✓ FACT</button>
+      </div>
+      <p class="quiz-score">Correct: <span class="qs-right" id="qs-right">0</span> &nbsp;|&nbsp; Wrong: <span class="qs-wrong" id="qs-wrong">0</span></p>
+    </div>
+  </div>
 
   <!-- Explosion overlay -->
   <div class="explosion-overlay" id="explosion-overlay">
@@ -407,6 +507,41 @@
   // ═══════════════════════════════════════════════════
   //  Myth Sweeper
   // ═══════════════════════════════════════════════════
+
+  const STATEMENTS = [
+    { text: "Stretching before exercise prevents injury", type: "myth" },
+    { text: "Muscle turns into fat when you stop training", type: "myth" },
+    { text: "Crunches burn belly fat", type: "myth" },
+    { text: "Cardio is the only way to lose weight", type: "myth" },
+    { text: "Lifting weights makes women bulky", type: "myth" },
+    { text: "No pain, no gain", type: "myth" },
+    { text: "Sweating means you are burning fat", type: "myth" },
+    { text: "Running always damages your knees", type: "myth" },
+    { text: "You need protein shakes to build muscle", type: "myth" },
+    { text: "More exercise is always better", type: "myth" },
+    { text: "You only use 10% of your brain", type: "myth" },
+    { text: "Eating carbs at night causes weight gain", type: "myth" },
+    { text: "Lactic acid causes post-workout soreness", type: "myth" },
+    { text: "You should exercise every day for best results", type: "myth" },
+    { text: "Fat turns into muscle when you train", type: "myth" },
+    { text: "Exercise improves mental health", type: "fact" },
+    { text: "Sleep is essential for muscle recovery", type: "fact" },
+    { text: "Dehydration reduces exercise performance", type: "fact" },
+    { text: "Strength training increases bone density", type: "fact" },
+    { text: "Regular exercise reduces heart disease risk", type: "fact" },
+    { text: "Warming up improves performance", type: "fact" },
+    { text: "Resistance training boosts metabolism", type: "fact" },
+    { text: "Good posture reduces back pain", type: "fact" },
+    { text: "Progressive overload builds strength", type: "fact" },
+    { text: "Protein helps repair muscle after exercise", type: "fact" },
+    { text: "Cardiovascular exercise strengthens the heart", type: "fact" },
+    { text: "Rest days are an important part of training", type: "fact" },
+  ];
+
+  let quizQueue = [];
+  let pendingReveal = null; // { row, col }
+  let quizRight = 0;
+  let quizWrong = 0;
 
   const NUM_COLOURS = ['','n1','n2','n3','n4','n5','n6','n7','n8'];
 
@@ -484,6 +619,7 @@
     timerSeconds = 0;
     hudTimer.textContent = '0:00';
     gameHint.textContent = 'Click any square to begin';
+    resetQuizQueue();
 
     // Cell size: fit grid in available space, max 40px
     const maxW = Math.min(window.innerWidth - 48, 640);
@@ -566,26 +702,84 @@
     return n;
   }
 
+  // ── Quiz ──────────────────────────────────────────
+  const quizModal     = document.getElementById('quiz-modal');
+  const quizStatement = document.getElementById('quiz-statement');
+  const quizMythBtn   = document.getElementById('quiz-myth');
+  const quizFactBtn   = document.getElementById('quiz-fact');
+  const qsRight       = document.getElementById('qs-right');
+  const qsWrong       = document.getElementById('qs-wrong');
+
+  function resetQuizQueue() {
+    quizQueue = [...STATEMENTS].sort(() => Math.random() - 0.5);
+    quizRight = 0;
+    quizWrong = 0;
+    qsRight.textContent = '0';
+    qsWrong.textContent = '0';
+  }
+
+  function showQuiz(row, col) {
+    if (!quizQueue.length) quizQueue = [...STATEMENTS].sort(() => Math.random() - 0.5);
+    const q = quizQueue.pop();
+    pendingReveal = { row, col, answer: q.type };
+    quizStatement.textContent = '"' + q.text + '"';
+    quizMythBtn.className = 'quiz-answer-btn quiz-myth-btn';
+    quizFactBtn.className = 'quiz-answer-btn quiz-fact-btn';
+    quizModal.classList.add('active');
+  }
+
+  function handleQuizAnswer(chosen) {
+    if (!pendingReveal) return;
+    const { row, col, answer } = pendingReveal;
+    const correct = chosen === answer;
+
+    // Flash feedback
+    const btn = chosen === 'myth' ? quizMythBtn : quizFactBtn;
+    btn.classList.add(correct ? 'correct' : 'wrong');
+
+    setTimeout(() => {
+      quizModal.classList.remove('active');
+      pendingReveal = null;
+
+      if (correct) {
+        quizRight++;
+        qsRight.textContent = quizRight;
+        // Proceed with normal reveal
+        if (firstClick) {
+          firstClick = false;
+          placeMines(row, col);
+          startTimer();
+          gameHint.textContent = 'Right-click or long-press to flag a myth';
+        }
+        revealCell(row, col);
+        if (gameState === 'dead') triggerExplosion(row, col);
+        else if (gameState === 'won') triggerWin();
+      } else {
+        quizWrong++;
+        qsWrong.textContent = quizWrong;
+        // Wrong answer — explode regardless
+        gameState = 'dead';
+        if (firstClick) {
+          firstClick = false;
+          placeMines(row, col);
+          startTimer();
+        }
+        grid[row][col].el.classList.add('myth-triggered');
+        grid[row][col].el.textContent = 'MYTH';
+        triggerExplosion(row, col);
+      }
+    }, 420);
+  }
+
+  quizMythBtn.addEventListener('click', () => handleQuizAnswer('myth'));
+  quizFactBtn.addEventListener('click', () => handleQuizAnswer('fact'));
+
   // ── Reveal ────────────────────────────────────────
   function handleReveal(row, col) {
     if (gameState !== 'playing') return;
     const cell = grid[row][col];
     if (cell.revealed || cell.flagged) return;
-
-    if (firstClick) {
-      firstClick = false;
-      placeMines(row, col);
-      startTimer();
-      gameHint.textContent = 'Right-click or long-press to flag a myth';
-    }
-
-    revealCell(row, col);
-
-    if (gameState === 'dead') {
-      triggerExplosion(row, col);
-    } else if (gameState === 'won') {
-      triggerWin();
-    }
+    showQuiz(row, col);
   }
 
   function revealCell(row, col) {
