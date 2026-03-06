@@ -282,11 +282,13 @@ function initMobileNavToggle() {
   const btn = document.createElement('button');
   btn.className = 'mobile-nav-toggle';
   btn.setAttribute('aria-label', 'Toggle navigation bar');
-  btn.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`;
+  const chevron = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`;
+  btn.innerHTML = chevron + `<span>Hide nav</span>`;
   document.body.appendChild(btn);
   btn.addEventListener('click', () => {
-    nav.classList.toggle('hidden');
-    btn.classList.toggle('nav-hidden');
+    const hidden = nav.classList.toggle('hidden');
+    btn.classList.toggle('nav-hidden', hidden);
+    btn.querySelector('span').textContent = hidden ? 'Show nav' : 'Hide nav';
   });
 }
 

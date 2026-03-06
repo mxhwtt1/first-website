@@ -1085,25 +1085,34 @@ ul { list-style: none; }
 .mobile-nav-toggle {
   display: none;
   position: fixed;
-  left: 10px;
-  bottom: calc(var(--mobile-nav-h) + 6px);
+  left: 12px;
+  bottom: calc(var(--mobile-nav-h) + 8px);
   z-index: 201;
-  width: 26px;
-  height: 26px;
-  border-radius: 50%;
-  background: #1a1a1a;
-  border: 1px solid #444;
-  color: #888;
+  height: 36px;
+  padding: 0 14px 0 10px;
+  gap: 6px;
+  border-radius: 99px;
+  background: #0068C4;
+  border: none;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: bottom 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  transition: bottom 0.3s ease, background 0.2s;
 }
+.mobile-nav-toggle:active { background: #004F96; }
 .mobile-nav-toggle svg {
   transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 .mobile-nav-toggle.nav-hidden {
-  bottom: 10px;
+  bottom: 12px;
+  background: #333;
 }
 .mobile-nav-toggle.nav-hidden svg {
   transform: rotate(180deg);
