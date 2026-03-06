@@ -3,9 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About the Programme | Hack Your Body: Fact vs Myth</title>
-  <meta name="description" content="What is the programme? What happens at sessions? Find clear, plain-English answers to your questions." />
+  <title>About | Hack Your Body: Fact vs Myth</title>
+  <meta name="description" content="About the programme — coming soon." />
   <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .wip-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 50vh;
+      text-align: center;
+      gap: 20px;
+      padding: 60px 24px;
+    }
+    .wip-icon {
+      font-size: 3rem;
+      line-height: 1;
+    }
+    .wip-title {
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: #f0f0f0;
+      margin: 0;
+    }
+    .wip-sub {
+      color: var(--color-muted);
+      font-size: 0.95rem;
+      max-width: 380px;
+      margin: 0;
+      line-height: 1.6;
+    }
+    .wip-badge {
+      display: inline-block;
+      background: rgba(255,160,30,0.12);
+      border: 1.5px solid rgba(255,160,30,0.5);
+      color: #ffa01e;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 5px 14px;
+      border-radius: 99px;
+    }
+  </style>
 </head>
 <body>
 
@@ -19,231 +60,22 @@
       <a href="index.html" class="logo"><span>Hack</span> Your Body</a>
       <nav aria-label="Main navigation">
         <a href="practice.html">Practice</a>
-        <a href="about.html">About</a>
+        <a href="about.html" class="active">About</a>
         <a href="contact.html">Contact</a>
       </nav>
     </div>
   </header>
 
-  <!-- Page hero -->
-  <section class="page-hero">
-    <div class="container">
-      <h1>About the Programme</h1>
-      <p>What it is, what to expect, and why it works — explained clearly.</p>
-    </div>
-  </section>
-
   <main>
-    <section class="section">
-      <div class="container">
-
-        <article class="prose">
-          <h2>What is the programme?</h2>
-          <p>
-            This is a free NHS programme that helps you recover and stay well after a heart event.
-            It combines supervised exercise, education about your heart, and emotional support — all in one place.
-          </p>
-          <p>
-            It is run by a team of specialists — including physiotherapists, nurses, dietitians, and psychologists —
-            who work together to support your recovery. You do not have to face this alone.
-          </p>
-
-          <h2>Who is it for?</h2>
-          <p>CR is suitable for people who have had:</p>
-          <ul>
-            <li>A heart attack (myocardial infarction)</li>
-            <li>A coronary artery bypass graft (CABG)</li>
-            <li>A stent or angioplasty (PCI)</li>
-            <li>Heart failure</li>
-            <li>Heart valve surgery</li>
-            <li>Stable angina</li>
-            <li>Certain other cardiac conditions — ask your team</li>
-          </ul>
-          <p>
-            Age, fitness level, weight, and smoking status are <strong>not barriers</strong> to joining.
-            The programme is designed to meet you where you are right now.
-          </p>
-        </article>
-
-        <!-- Stages timeline -->
-        <h2 class="section-title" style="margin: 48px 0 24px;">The four stages of CR</h2>
-        <div class="stages" role="list">
-          <div class="stage-item" role="listitem">
-            <div class="stage-num" aria-hidden="true">1</div>
-            <div class="stage-body">
-              <h3>Stage 1 — In hospital</h3>
-              <p>
-                While you are still in hospital after your heart event, a CR team member may visit you.
-                They will give you basic information about your condition and what to expect when you go home.
-              </p>
-            </div>
-          </div>
-          <div class="stage-item" role="listitem">
-            <div class="stage-num" aria-hidden="true">2</div>
-            <div class="stage-body">
-              <h3>Stage 2 — Early recovery at home</h3>
-              <p>
-                In the first few weeks at home, you are encouraged to rest and gradually increase gentle activity.
-                You may receive a home visit or phone call from the CR team. This is a normal and important part of recovery.
-              </p>
-            </div>
-          </div>
-          <div class="stage-item" role="listitem">
-            <div class="stage-num" aria-hidden="true">3</div>
-            <div class="stage-body">
-              <h3>Stage 3 — Outpatient CR programme</h3>
-              <p>
-                This is the main programme — usually 6 to 8 weeks of group sessions at a local venue.
-                Sessions typically include supervised exercise, health talks, and time to ask questions.
-                Most people attend once or twice a week. This is free on the NHS.
-              </p>
-            </div>
-          </div>
-          <div class="stage-item" role="listitem">
-            <div class="stage-num" aria-hidden="true">4</div>
-            <div class="stage-body">
-              <h3>Stage 4 — Long-term maintenance</h3>
-              <p>
-                After completing Stage 3, you will be supported to continue being active independently.
-                This might include community exercise groups, walking programmes, or home-based activity plans.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <!-- What to expect -->
-        <h2 class="section-title" style="margin: 48px 0 24px;">What to expect at a Stage 3 session</h2>
-        <div class="info-grid">
-          <div class="info-card">
-            <div class="info-card-icon">&#9203;</div>
-            <h3>How long?</h3>
-            <p>Sessions usually last around 1 to 1.5 hours, including a warm-up, main exercise, and cool-down.</p>
-          </div>
-          <div class="info-card">
-            <div class="info-card-icon">&#128101;</div>
-            <h3>Group or individual?</h3>
-            <p>Most sessions are small groups, but your exercise programme is personal to you. You work at your own level.</p>
-          </div>
-          <div class="info-card">
-            <div class="info-card-icon">&#128203;</div>
-            <h3>What happens?</h3>
-            <p>Warm-up exercises, aerobic activity (walking, cycling, circuits), cool-down, and often a short talk on a health topic.</p>
-          </div>
-          <div class="info-card">
-            <div class="info-card-icon">&#129657;</div>
-            <h3>Is it safe?</h3>
-            <p>Yes. Your blood pressure and heart rate are monitored. The team is trained to respond to any situation that arises.</p>
-          </div>
-          <div class="info-card">
-            <div class="info-card-icon">&#128149;</div>
-            <h3>What to bring?</h3>
-            <p>Comfortable clothing and trainers, any medications you take, and a bottle of water. That is all you need.</p>
-          </div>
-          <div class="info-card">
-            <div class="info-card-icon">&#128172;</div>
-            <h3>Emotional support</h3>
-            <p>Feeling anxious or low is normal. The team and other participants understand — you are not alone in how you feel.</p>
-          </div>
-        </div>
-
-        <!-- FAQs -->
-        <h2 class="section-title" style="margin: 56px 0 24px;">Frequently asked questions</h2>
-        <div class="faq-list" role="list">
-
-          <div class="faq-item" role="listitem">
-            <button class="faq-question" aria-expanded="false" aria-controls="faq1">
-              Is it safe for me?
-              <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="faq-answer" id="faq1" role="region">
-              Yes, for almost everyone. Before your first session you will have an individual assessment that checks your fitness,
-              medical history, and any risk factors. The exercise programme is then designed specifically for you.
-              The team monitors you at every session. Serious events during CR are extremely rare.
-            </div>
-          </div>
-
-          <div class="faq-item" role="listitem">
-            <button class="faq-question" aria-expanded="false" aria-controls="faq2">
-              Do I need to be referred? Can I self-refer?
-              <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="faq-answer" id="faq2" role="region">
-              Most people are referred automatically by the hospital after a cardiac event.
-              If you were not referred, or if some time has passed, you can ask your GP, cardiologist, or cardiac nurse to refer you.
-              In some areas self-referral is possible — contact us to find out.
-            </div>
-          </div>
-
-          <div class="faq-item" role="listitem">
-            <button class="faq-question" aria-expanded="false" aria-controls="faq3">
-              What if I feel anxious or scared about exercising?
-              <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="faq-answer" id="faq3" role="region">
-              This is one of the most common feelings people have before starting — and the team fully expects it.
-              Tell your team how you feel at your first appointment. They will work at your pace, explain exactly what is happening,
-              and support you every step of the way. Many people who were very anxious at the start find it to be life-changing.
-            </div>
-          </div>
-
-          <div class="faq-item" role="listitem">
-            <button class="faq-question" aria-expanded="false" aria-controls="faq4">
-              What if I have other health problems as well?
-              <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="faq-answer" id="faq4" role="region">
-              The team are experienced in working with people who have multiple health conditions — such as diabetes,
-              arthritis, obesity, or lung disease. Your programme will be adapted to take all of your needs into account.
-              Just be honest about everything at your assessment.
-            </div>
-          </div>
-
-          <div class="faq-item" role="listitem">
-            <button class="faq-question" aria-expanded="false" aria-controls="faq5">
-              How many sessions are there? What if I miss some?
-              <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="faq-answer" id="faq5" role="region">
-              Most Stage 3 programmes run for 6 to 8 weeks, typically one or two sessions per week.
-              If you miss sessions, do not give up — contact the team. Every session you attend provides benefit,
-              and partial attendance is far better than stopping completely.
-            </div>
-          </div>
-
-          <div class="faq-item" role="listitem">
-            <button class="faq-question" aria-expanded="false" aria-controls="faq6">
-              Can my family member or carer come with me?
-              <svg class="chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true">
-                <path d="M6 9l6 6 6-6"/>
-              </svg>
-            </button>
-            <div class="faq-answer" id="faq6" role="region">
-              Yes — family members and carers are welcome to attend with you, especially at the start.
-              Education sessions in particular are very helpful for people who support someone who has had a heart event.
-              Let the team know when you book.
-            </div>
-          </div>
-
-        </div>
-
-        <div class="disclaimer" role="note" style="margin-top:48px;">
-          <strong>Medical disclaimer</strong>
-          This page provides general information about the programme. It does not replace the advice of your own team, GP, or consultant.
-          If you have specific concerns about your health or treatment, please contact your team directly.
-        </div>
-
+    <div class="container">
+      <div class="wip-wrap">
+        <span class="wip-badge">Work in Progress</span>
+        <p class="wip-title">About the Programme</p>
+        <p class="wip-sub">
+          This page is being built. Check back soon for information about the cardiac rehabilitation programme, what to expect, and how it can help you.
+        </p>
       </div>
-    </section>
+    </div>
   </main>
 
   <!-- Footer -->
