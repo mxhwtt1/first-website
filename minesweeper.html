@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Myth Sweeper | Hack Your Body</title>
+  <meta name="description" content="A Minesweeper-style game where the mines are MYTHS. Don't click them!" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── Setup screen ──────────────────────────── */
+    .setup-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+      padding: 32px 0 60px;
+    }
+    .setup-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--color-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .size-options {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .size-btn {
+      background: #1a1a1a;
+      border: 2px solid #333;
+      border-radius: 12px;
+      color: #f0f0f0;
+      padding: 20px 28px;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      text-align: center;
+      min-width: 120px;
+    }
+    .size-btn:hover { border-color: #0068C4; }
+    .size-btn.selected { border-color: #7DF9FF; background: rgba(125,249,255,0.08); }
+    .size-btn strong { display: block; font-size: 1.1rem; margin-bottom: 4px; }
+    .size-btn span { font-size: 0.78rem; color: var(--color-muted); }
+    .custom-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 0.88rem;
+      color: var(--color-muted);
+    }
+    .custom-row input[type=range] { width: 140px; accent-color: #0068C4; }
+    .start-btn {
+      background: #0068C4;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 40px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .start-btn:hover { background: #004F96; }
+
+    /* ── Game screen ───────────────────────────── */
+    .game-screen { display: none; flex-direction: column; align-items: center; gap: 16px; padding: 20px 0 60px; }
+    .game-screen.active { display: flex; }
+    .setup-screen.hidden { display: none; }
+
+    .game-hud {
+      display: flex;
+      gap: 24px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--color-muted);
+      align-items: center;
+    }
+    .hud-myths { color: #f87171; }
+    .hud-safe  { color: #34d399; }
+    .hud-timer { color: #7DF9FF; font-variant-numeric: tabular-nums; }
+
+    .grid-scroll { overflow-x: auto; max-width: 100%; }
+    .ms-grid {
+      display: grid;
+      border: 2px solid #333;
+      border-radius: 8px;
+      overflow: hidden;
+      width: fit-content;
+      margin: 0 auto;
+      position: relative;
+    }
+    .ms-grid.shake {
+      animation: shake 0.5s ease;
+    }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      10%,50%,90% { transform: translateX(-8px) rotate(-1deg); }
+      30%,70% { transform: translateX(8px) rotate(1deg); }
+    }
+
+    .ms-cell {
+      width: var(--cell-size);
+      height: var(--cell-size);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: calc(var(--cell-size) * 0.38);
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid #2a2a2a;
+      background: #1e1e1e;
+      user-select: none;
+      -webkit-user-select: none;
+      transition: background 0.1s;
+      position: relative;
+      box-sizing: border-box;
+      line-height: 1;
+    }
+    .ms-cell:hover:not(.revealed):not(.flagged) { background: #2a2a2a; }
+    .ms-cell.revealed {
+      background: #111;
+      cursor: default;
+      border-color: #222;
+    }
+    .ms-cell.flagged { background: #1e1e1e; }
+    .ms-cell.flagged::after { content: '🚩'; font-size: calc(var(--cell-size) * 0.45); }
+    .ms-cell.myth-revealed {
+      background: #3b0a0a;
+      border-color: #f87171;
+      color: #f87171;
+      font-size: calc(var(--cell-size) * 0.28);
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+    .ms-cell.myth-triggered {
+      background: #7f1d1d;
+      border-color: #ef4444;
+      color: #fff;
+      animation: pulse-myth 0.3s ease;
+    }
+    @keyframes pulse-myth {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.3); }
+      100% { transform: scale(1); }
+    }
+    /* Number colours */
+    .n1 { color: #60a5fa; }
+    .n2 { color: #34d399; }
+    .n3 { color: #f87171; }
+    .n4 { color: #818cf8; }
+    .n5 { color: #f97316; }
+    .n6 { color: #22d3ee; }
+    .n7 { color: #e879f9; }
+    .n8 { color: #94a3b8; }
+
+    /* ── Explosion overlay ─────────────────────── */
+    .explosion-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0,0,0,0);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .explosion-overlay.active {
+      display: flex;
+      animation: explode-bg 0.6s ease forwards;
+    }
+    @keyframes explode-bg {
+      0%   { background: rgba(0,0,0,0); }
+      30%  { background: rgba(200,20,20,0.7); }
+      100% { background: rgba(0,0,0,0.85); }
+    }
+    .explosion-msg {
+      font-size: clamp(2rem, 8vw, 3.5rem);
+      font-weight: 900;
+      color: #f87171;
+      text-align: center;
+      animation: pop-in 0.4s 0.3s both;
+      text-shadow: 0 0 30px rgba(248,113,113,0.8);
+    }
+    .explosion-sub {
+      font-size: 1.1rem;
+      color: #f0f0f0;
+      animation: pop-in 0.4s 0.5s both;
+      text-align: center;
+      padding: 0 24px;
+    }
+    .explosion-emoji {
+      font-size: clamp(3rem, 12vw, 6rem);
+      animation: pop-in 0.4s 0.1s both;
+    }
+    @keyframes pop-in {
+      0% { transform: scale(0.5); opacity: 0; }
+      70% { transform: scale(1.1); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .overlay-btns { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; animation: pop-in 0.4s 0.7s both; margin-top: 8px; }
+    .overlay-btn {
+      padding: 12px 28px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+    .overlay-btn-primary { background: #0068C4; color: #fff; }
+    .overlay-btn-secondary { background: #222; color: #f0f0f0; border: 2px solid #444; }
+
+    /* ── Win overlay ───────────────────────────── */
+    .win-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 500;
+      background: rgba(0,0,0,0.85);
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .win-overlay.active { display: flex; }
+    .win-msg {
+      font-size: clamp(2rem, 8vw, 3rem);
+      font-weight: 900;
+      color: #34d399;
+      text-align: center;
+      animation: pop-in 0.4s both;
+      text-shadow: 0 0 30px rgba(52,211,153,0.6);
+    }
+    .win-sub { font-size: 1.1rem; color: #f0f0f0; animation: pop-in 0.4s 0.2s both; text-align: center; }
+    .win-emoji { font-size: clamp(3rem, 12vw, 6rem); animation: pop-in 0.4s both; }
+
+    .game-hint {
+      font-size: 0.78rem;
+      color: #555;
+      text-align: center;
+    }
+    .back-to-setup {
+      background: transparent;
+      border: 2px solid #333;
+      color: var(--color-muted);
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .back-to-setup:hover { border-color: #0068C4; color: #f0f0f0; }
+  </style>
+</head>
+<body>
+
+  <!-- Desktop header -->
+  <header class="site-header">
+    <div class="container">
+      <button class="back-btn" onclick="history.back()" aria-label="Go back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back
+      </button>
+      <a href="index.html" class="logo"><span>Hack</span> Your Body</a>
+      <nav aria-label="Main navigation">
+        <a href="practice.html">Practice</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Myth Sweeper</h1>
+      <p>Uncover the safe squares. One wrong click and the myths blow up in your face.</p>
+    </div>
+  </section>
+
+  <main>
+    <div class="container">
+
+      <!-- ── Setup Screen ── -->
+      <div class="setup-screen" id="setup-screen">
+        <p class="setup-title">Choose your map size</p>
+
+        <div class="size-options">
+          <button class="size-btn selected" data-rows="8" data-cols="8" data-myths="10">
+            <strong>Small</strong>
+            <span>8 × 8 · 10 myths</span>
+          </button>
+          <button class="size-btn" data-rows="12" data-cols="12" data-myths="25">
+            <strong>Medium</strong>
+            <span>12 × 12 · 25 myths</span>
+          </button>
+          <button class="size-btn" data-rows="16" data-cols="16" data-myths="45">
+            <strong>Large</strong>
+            <span>16 × 16 · 45 myths</span>
+          </button>
+        </div>
+
+        <div class="custom-row">
+          <span>Custom myths:</span>
+          <input type="range" id="custom-myths" min="1" max="30" value="10" />
+          <span id="custom-myths-val">10</span>
+          <span style="font-size:0.75rem; color:#444;">(on selected grid)</span>
+        </div>
+
+        <button class="start-btn" id="start-btn">Start Game</button>
+
+        <p style="font-size:0.8rem; color:#555; text-align:center;">
+          Left-click to reveal &nbsp;·&nbsp; Right-click (or long-press) to flag a suspected myth
+        </p>
+      </div>
+
+      <!-- ── Game Screen ── -->
+      <div class="game-screen" id="game-screen">
+        <div class="game-hud">
+          <span class="hud-myths">💣 <span id="hud-myths">0</span> myths</span>
+          <span class="hud-safe">✓ <span id="hud-safe">0</span> safe</span>
+          <span class="hud-timer">⏱ <span id="hud-timer">0:00</span></span>
+        </div>
+        <div class="grid-scroll">
+          <div class="ms-grid" id="ms-grid"></div>
+        </div>
+        <p class="game-hint" id="game-hint">Click any square to begin</p>
+        <div style="display:flex;gap:12px;">
+          <button class="back-to-setup" id="restart-btn">↺ Restart</button>
+          <button class="back-to-setup" id="setup-btn">⚙ Change size</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Explosion overlay -->
+  <div class="explosion-overlay" id="explosion-overlay">
+    <div class="explosion-emoji">💥</div>
+    <div class="explosion-msg">MYTH DETECTED!</div>
+    <div class="explosion-sub">You clicked a myth and it blew up.<br>Better luck next time.</div>
+    <div class="overlay-btns">
+      <button class="overlay-btn overlay-btn-primary" id="boom-restart">↺ Try Again</button>
+      <button class="overlay-btn overlay-btn-secondary" id="boom-setup">Change Size</button>
+    </div>
+  </div>
+
+  <!-- Win overlay -->
+  <div class="win-overlay" id="win-overlay">
+    <div class="win-emoji">🏆</div>
+    <div class="win-msg">MYTH-FREE ZONE!</div>
+    <div class="win-sub" id="win-sub">All safe squares cleared!</div>
+    <div class="overlay-btns" style="animation: pop-in 0.4s 0.4s both;">
+      <button class="overlay-btn overlay-btn-primary" id="win-restart">↺ Play Again</button>
+      <button class="overlay-btn overlay-btn-secondary" id="win-setup">Change Size</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-meta">
+        <span>Last reviewed: March 2026</span>
+        <span>This site does not replace medical advice. Contact your team or GP for individual guidance.</span>
+      </div>
+      <div class="footer-links">
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile bottom nav -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/>
+      </svg>
+      Home
+    </a>
+    <a href="practice.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 9v6M9 12h6"/>
+      </svg>
+      Practice
+    </a>
+    <a href="about.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+      </svg>
+      About
+    </a>
+    <a href="contact.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.8 19.8 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+      </svg>
+      Contact
+    </a>
+  </nav>
+
+  <script src="js/app.js"></script>
+  <script>
+  // ═══════════════════════════════════════════════════
+  //  Myth Sweeper
+  // ═══════════════════════════════════════════════════
+
+  const NUM_COLOURS = ['','n1','n2','n3','n4','n5','n6','n7','n8'];
+
+  let config = { rows: 8, cols: 8, myths: 10 };
+  let grid = [];        // 2D array of cell objects
+  let gameState = 'idle'; // idle | playing | dead | won
+  let firstClick = true;
+  let safeRevealed = 0;
+  let flagCount = 0;
+  let timerInterval = null;
+  let timerSeconds = 0;
+
+  // ── Setup UI ──────────────────────────────────────
+  const setupScreen  = document.getElementById('setup-screen');
+  const gameScreen   = document.getElementById('game-screen');
+  const msGrid       = document.getElementById('ms-grid');
+  const explosionEl  = document.getElementById('explosion-overlay');
+  const winEl        = document.getElementById('win-overlay');
+  const customSlider = document.getElementById('custom-myths');
+  const customVal    = document.getElementById('custom-myths-val');
+  const hudMyths     = document.getElementById('hud-myths');
+  const hudSafe      = document.getElementById('hud-safe');
+  const hudTimer     = document.getElementById('hud-timer');
+  const gameHint     = document.getElementById('game-hint');
+
+  // Size buttons
+  document.querySelectorAll('.size-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      config.rows  = +btn.dataset.rows;
+      config.cols  = +btn.dataset.cols;
+      config.myths = +btn.dataset.myths;
+      // Keep custom slider within new max
+      const maxMyths = Math.floor(config.rows * config.cols * 0.4);
+      customSlider.max = maxMyths;
+      customSlider.value = config.myths;
+      customVal.textContent = config.myths;
+    });
+  });
+
+  customSlider.addEventListener('input', () => {
+    customVal.textContent = customSlider.value;
+    config.myths = +customSlider.value;
+  });
+
+  document.getElementById('start-btn').addEventListener('click', startGame);
+  document.getElementById('restart-btn').addEventListener('click', restartGame);
+  document.getElementById('setup-btn').addEventListener('click', showSetup);
+  document.getElementById('boom-restart').addEventListener('click', () => { explosionEl.classList.remove('active'); restartGame(); });
+  document.getElementById('boom-setup').addEventListener('click', () => { explosionEl.classList.remove('active'); showSetup(); });
+  document.getElementById('win-restart').addEventListener('click', () => { winEl.classList.remove('active'); restartGame(); });
+  document.getElementById('win-setup').addEventListener('click', () => { winEl.classList.remove('active'); showSetup(); });
+
+  function showSetup() {
+    stopTimer();
+    setupScreen.classList.remove('hidden');
+    gameScreen.classList.remove('active');
+  }
+
+  function restartGame() {
+    stopTimer();
+    startGame();
+  }
+
+  // ── Game init ─────────────────────────────────────
+  function startGame() {
+    setupScreen.classList.add('hidden');
+    gameScreen.classList.add('active');
+    firstClick = true;
+    safeRevealed = 0;
+    flagCount = 0;
+    gameState = 'playing';
+    stopTimer();
+    timerSeconds = 0;
+    hudTimer.textContent = '0:00';
+    gameHint.textContent = 'Click any square to begin';
+
+    // Cell size: fit grid in available space, max 40px
+    const maxW = Math.min(window.innerWidth - 48, 640);
+    const cellPx = Math.max(20, Math.min(40, Math.floor(maxW / config.cols)));
+    msGrid.style.setProperty('--cell-size', cellPx + 'px');
+    msGrid.style.gridTemplateColumns = `repeat(${config.cols}, ${cellPx}px)`;
+
+    // Init grid data
+    grid = Array.from({ length: config.rows }, () =>
+      Array.from({ length: config.cols }, () => ({
+        isMine: false, revealed: false, flagged: false, adjacent: 0, el: null
+      }))
+    );
+
+    // Render cells
+    msGrid.innerHTML = '';
+    msGrid.classList.remove('shake');
+    for (let r = 0; r < config.rows; r++) {
+      for (let c = 0; c < config.cols; c++) {
+        const cell = document.createElement('div');
+        cell.className = 'ms-cell';
+        cell.dataset.r = r;
+        cell.dataset.c = c;
+
+        // Left click — reveal
+        cell.addEventListener('click', () => handleReveal(r, c));
+
+        // Right click — flag
+        cell.addEventListener('contextmenu', e => { e.preventDefault(); handleFlag(r, c); });
+
+        // Long press — flag (mobile)
+        let pressTimer;
+        cell.addEventListener('touchstart', () => {
+          pressTimer = setTimeout(() => handleFlag(r, c), 500);
+        }, { passive: true });
+        cell.addEventListener('touchend', () => clearTimeout(pressTimer));
+        cell.addEventListener('touchmove', () => clearTimeout(pressTimer));
+
+        grid[r][c].el = cell;
+        msGrid.appendChild(cell);
+      }
+    }
+
+    updateHud();
+  }
+
+  // ── Mine placement (after first click) ───────────
+  function placeMines(safeR, safeC) {
+    let placed = 0;
+    const maxTries = config.rows * config.cols * 10;
+    let tries = 0;
+    while (placed < config.myths && tries < maxTries) {
+      tries++;
+      const r = Math.floor(Math.random() * config.rows);
+      const c = Math.floor(Math.random() * config.cols);
+      if (Math.abs(r - safeR) <= 1 && Math.abs(c - safeC) <= 1) continue;
+      if (grid[r][c].isMine) continue;
+      grid[r][c].isMine = true;
+      placed++;
+    }
+    // Calculate adjacency
+    for (let r = 0; r < config.rows; r++) {
+      for (let c = 0; c < config.cols; c++) {
+        if (!grid[r][c].isMine) {
+          grid[r][c].adjacent = countAdjacent(r, c);
+        }
+      }
+    }
+  }
+
+  function countAdjacent(row, col) {
+    let n = 0;
+    for (let dr = -1; dr <= 1; dr++) {
+      for (let dc = -1; dc <= 1; dc++) {
+        if (!dr && !dc) continue;
+        const r = row + dr, c = col + dc;
+        if (r >= 0 && r < config.rows && c >= 0 && c < config.cols && grid[r][c].isMine) n++;
+      }
+    }
+    return n;
+  }
+
+  // ── Reveal ────────────────────────────────────────
+  function handleReveal(row, col) {
+    if (gameState !== 'playing') return;
+    const cell = grid[row][col];
+    if (cell.revealed || cell.flagged) return;
+
+    if (firstClick) {
+      firstClick = false;
+      placeMines(row, col);
+      startTimer();
+      gameHint.textContent = 'Right-click or long-press to flag a myth';
+    }
+
+    revealCell(row, col);
+
+    if (gameState === 'dead') {
+      triggerExplosion(row, col);
+    } else if (gameState === 'won') {
+      triggerWin();
+    }
+  }
+
+  function revealCell(row, col) {
+    const cell = grid[row][col];
+    if (cell.revealed || cell.flagged) return;
+    cell.revealed = true;
+
+    if (cell.isMine) {
+      gameState = 'dead';
+      cell.el.classList.add('myth-triggered');
+      cell.el.textContent = 'MYTH';
+      return;
+    }
+
+    safeRevealed++;
+    cell.el.classList.add('revealed');
+    if (cell.adjacent > 0) {
+      cell.el.textContent = cell.adjacent;
+      cell.el.classList.add(NUM_COLOURS[cell.adjacent]);
+    }
+
+    if (cell.adjacent === 0) {
+      for (let dr = -1; dr <= 1; dr++) {
+        for (let dc = -1; dc <= 1; dc++) {
+          if (!dr && !dc) continue;
+          const r = row + dr, c = col + dc;
+          if (r >= 0 && r < config.rows && c >= 0 && c < config.cols) revealCell(r, c);
+        }
+      }
+    }
+
+    const totalSafe = config.rows * config.cols - config.myths;
+    if (safeRevealed >= totalSafe) gameState = 'won';
+
+    updateHud();
+  }
+
+  // ── Flag ──────────────────────────────────────────
+  function handleFlag(row, col) {
+    if (gameState !== 'playing') return;
+    const cell = grid[row][col];
+    if (cell.revealed) return;
+    cell.flagged = !cell.flagged;
+    cell.el.classList.toggle('flagged', cell.flagged);
+    cell.el.textContent = '';
+    flagCount += cell.flagged ? 1 : -1;
+    updateHud();
+  }
+
+  // ── Explosion ─────────────────────────────────────
+  function triggerExplosion(row, col) {
+    stopTimer();
+    // Reveal all myths
+    setTimeout(() => {
+      for (let r = 0; r < config.rows; r++) {
+        for (let c = 0; c < config.cols; c++) {
+          const cell = grid[r][c];
+          if (cell.isMine && !(r === row && c === col)) {
+            cell.el.classList.add('myth-revealed');
+            cell.el.textContent = 'MYTH';
+          }
+        }
+      }
+      msGrid.classList.add('shake');
+      setTimeout(() => {
+        msGrid.classList.remove('shake');
+        explosionEl.classList.add('active');
+      }, 500);
+    }, 200);
+  }
+
+  // ── Win ───────────────────────────────────────────
+  function triggerWin() {
+    stopTimer();
+    const mins = Math.floor(timerSeconds / 60);
+    const secs = timerSeconds % 60;
+    document.getElementById('win-sub').textContent =
+      `All safe squares cleared in ${mins > 0 ? mins + 'm ' : ''}${secs}s!`;
+    setTimeout(() => winEl.classList.add('active'), 400);
+  }
+
+  // ── HUD ───────────────────────────────────────────
+  function updateHud() {
+    const remaining = config.myths - flagCount;
+    hudMyths.textContent = remaining;
+    hudSafe.textContent = safeRevealed;
+  }
+
+  // ── Timer ─────────────────────────────────────────
+  function startTimer() {
+    timerSeconds = 0;
+    timerInterval = setInterval(() => {
+      timerSeconds++;
+      const m = Math.floor(timerSeconds / 60);
+      const s = String(timerSeconds % 60).padStart(2, '0');
+      hudTimer.textContent = `${m}:${s}`;
+    }, 1000);
+  }
+
+  function stopTimer() {
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+  </script>
+</body>
+</html>
