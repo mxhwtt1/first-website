@@ -114,7 +114,6 @@ ul { list-style: none; }
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  color: #000;
   text-decoration: none;
   font-size: 0.62rem;
   font-weight: 600;
@@ -122,9 +121,10 @@ ul { list-style: none; }
   text-transform: uppercase;
   flex-shrink: 0;
   transition: opacity 0.2s;
+  color: rgba(255,255,255,.75);
 }
-.home-icon-btn:hover { opacity: 0.7; }
-.home-icon-btn svg { width: 22px; height: 22px; }
+.home-icon-btn:hover { opacity: 0.8; }
+.home-icon-btn svg { width: 22px; height: 22px; color: #000; }
 
 /* ─── Desktop Header ─────────────────────────────── */
 .site-header {
