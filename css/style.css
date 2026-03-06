@@ -161,7 +161,7 @@ ul { list-style: none; }
   margin: 0 auto 24px;
   display: block;
 }
-.logo span { color: #B8FDFF; }
+.logo span { color: #4FA3FF; }
 .logo-est {
   font-size: 0.62rem;
   color: rgba(255,255,255,0.4);
@@ -683,7 +683,7 @@ ul { list-style: none; }
   line-height: 1.1;
   margin-bottom: 16px;
 }
-.hero-hack { color: var(--color-accent); }
+.hero-hack { color: #4FA3FF; }
 .hero h1 em {
   font-style: normal;
   color: #fff;
