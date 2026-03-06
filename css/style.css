@@ -537,6 +537,11 @@ ul { list-style: none; }
   color: #666;
   font-size: 0.85rem;
 }
+.nav-hub-img-placeholder svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
 .nav-hub-icon {
   flex: 1;
   display: flex;
