@@ -98,7 +98,7 @@
   <section class="page-hero">
     <div class="container">
       <h1>Asteroid Blaster</h1>
-      <p>Blast the myths. Spare the facts. How high can you score?</p>
+      <p>Blast the facts. Spare the myths. How high can you score?</p>
     </div>
   </section>
 
@@ -107,8 +107,8 @@
       <div class="game-wrap">
 
         <div class="game-legend">
-          <span><span class="legend-myth">■ MYTH</span> — shoot it (+10)</span>
-          <span><span class="legend-fact">■ FACT</span> — spare it (shooting costs a life)</span>
+          <span><span class="legend-fact">■ FACT</span> — shoot it (+10)</span>
+          <span><span class="legend-myth">■ MYTH</span> — spare it (shooting costs a life)</span>
         </div>
 
         <canvas id="game-canvas" width="680" height="520"></canvas>
@@ -445,7 +445,7 @@
 
     ctx.fillStyle = '#f0f0f0';
     ctx.font = '17px system-ui,sans-serif';
-    ctx.fillText('Blast the MYTHS. Spare the FACTS.', W / 2, 202);
+    ctx.fillText('Blast the FACTS. Spare the MYTHS.', W / 2, 202);
 
     ctx.fillStyle = '#888';
     ctx.font = '13px system-ui,sans-serif';
@@ -586,7 +586,7 @@
     // Asteroids reaching bottom
     const escaped = asteroids.filter(a => a.y > H + 10);
     escaped.forEach(a => {
-      if (a.stmt.type === 'myth') {
+      if (a.stmt.type === 'fact') {
         lives--;
         redFlash = 22;
         if (lives <= 0) gameState = 'gameover';
@@ -603,7 +603,7 @@
           const cx = a.x + AW / 2, cy = a.y + AH / 2;
           bullets.splice(bi, 1);
           asteroids.splice(ai, 1);
-          if (a.stmt.type === 'myth') {
+          if (a.stmt.type === 'fact') {
             score += 10;
             greenFlash = 14;
             burst(cx, cy, '#FFA040');
@@ -613,7 +613,7 @@
             lives--;
             redFlash = 30;
             burst(cx, cy, '#f87171');
-            feedbacks.push({ x: cx, y: cy, text: '✗  THAT\'S A FACT!', color: '#f87171', alpha: 1, vy: -1.8 });
+            feedbacks.push({ x: cx, y: cy, text: '✗  THAT\'S A MYTH!', color: '#f87171', alpha: 1, vy: -1.8 });
             if (lives <= 0) gameState = 'gameover';
           }
           break;
