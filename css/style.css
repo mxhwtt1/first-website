@@ -109,12 +109,16 @@ ul { list-style: none; }
 .btn-ghost:hover { background: var(--color-border); text-decoration: none; }
 
 /* ─── Home icon button ───────────────────────────── */
-.home-icon-btn {
+.back-btn {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  text-decoration: none;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
   font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: 0.6px;
@@ -123,8 +127,8 @@ ul { list-style: none; }
   transition: opacity 0.2s;
   color: rgba(255,255,255,.75);
 }
-.home-icon-btn:hover { opacity: 0.8; }
-.home-icon-btn svg { width: 22px; height: 22px; color: #000; }
+.back-btn:hover { opacity: 0.8; }
+.back-btn svg { width: 22px; height: 22px; color: #000; }
 
 /* ─── Desktop Header ─────────────────────────────── */
 .site-header {
