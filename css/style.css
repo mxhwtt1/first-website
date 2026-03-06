@@ -429,6 +429,8 @@ ul { list-style: none; }
 .carousel-overflow {
   flex: 1;
   overflow: hidden;
+  padding-top: 8px;
+  margin-top: -8px;
 }
 .carousel-track {
   display: flex;
