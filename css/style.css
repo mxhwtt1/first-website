@@ -718,10 +718,12 @@ ul { list-style: none; }
   letter-spacing: -0.2px;
 }
 .hero-tech {
-  color: #06b6d4;
   font-weight: 800;
   letter-spacing: 0.5px;
 }
+.hero-tech--pnf { color: #34d399; }
+.hero-tech--pap { color: #b464ff; }
+.hero-tech--ems { color: #ffa01e; }
 .hero-sub {
   font-size: clamp(0.95rem, 2.2vw, 1.1rem);
   color: rgba(240,246,255,.65);
