@@ -315,6 +315,7 @@ function initHamburgerMenu() {
 
     <div class="menu-section">
       <div class="menu-section-label">Games</div>
+      <a href="snakes.html" class="menu-link ${page === 'snakes.html' ? 'active' : ''}">Snakes &amp; Ladders</a>
       <a href="game.html" class="menu-link ${page === 'game.html' ? 'active' : ''}">Asteroid Blaster</a>
       <a href="minesweeper.html" class="menu-link ${page === 'minesweeper.html' ? 'active' : ''}">Myth Sweeper</a>
     </div>

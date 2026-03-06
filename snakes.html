@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Snakes &amp; Ladders | Hack Your Body: Fact vs Myth</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .snakes-outer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      padding: 0 0 60px;
+    }
+    .snakes-wrap {
+      width: 100%;
+      max-width: 500px;
+    }
+    #snakes-canvas {
+      display: block;
+      width: 100%;
+      border-radius: 12px;
+      border: 2px solid #1e3a6a;
+    }
+    .game-panel {
+      width: 100%;
+      max-width: 500px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+    .score-strip {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 100%;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 12px;
+      padding: 14px 20px;
+    }
+    .score-item { text-align: center; }
+    .score-name { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; }
+    .score-pos { font-size: 1.6rem; font-weight: 800; }
+    .score-pos.player-col { color: #7DF9FF; }
+    .score-pos.comp-col   { color: #fb923c; }
+    .dice-display { font-size: 2.4rem; min-width: 50px; text-align: center; }
+    .status-msg {
+      font-size: 0.93rem;
+      color: #b0b0b0;
+      text-align: center;
+      min-height: 22px;
+      line-height: 1.5;
+    }
+    .roll-btn {
+      background: #0068C4;
+      border: none;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 700;
+      padding: 14px 52px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s, opacity 0.2s;
+    }
+    .roll-btn:hover:not(:disabled) { background: #0080E8; }
+    .roll-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .game-legend {
+      display: flex;
+      gap: 20px;
+      font-size: 0.8rem;
+      color: #888;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .leg-snake  { color: #f87171; font-weight: 700; }
+    .leg-ladder { color: #fbbf24; font-weight: 700; }
+
+    /* ── Question modal ──────────────────────── */
+    .q-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,2,18,0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 24px;
+    }
+    .q-overlay.hidden { display: none; }
+    .q-card {
+      background: #0d1628;
+      border: 1.5px solid #2a4a8a;
+      border-radius: 20px;
+      padding: 32px 28px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+    }
+    .q-who {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+    .q-who.player { color: #7DF9FF; }
+    .q-who.comp   { color: #fb923c; }
+    .q-instruction { font-size: 0.82rem; color: #555; margin: 0 0 18px; }
+    .q-text {
+      font-size: 1.08rem;
+      color: #f0f0f0;
+      line-height: 1.55;
+      margin: 0 0 28px;
+      font-weight: 500;
+    }
+    .q-btns { display: flex; gap: 14px; justify-content: center; }
+    .q-btn {
+      padding: 12px 36px;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+      transition: opacity 0.15s;
+    }
+    .q-btn:hover { opacity: 0.85; }
+    .q-btn-true  { background: #22c55e; color: #fff; }
+    .q-btn-false { background: #ef4444; color: #fff; }
+    .q-result {
+      margin-top: 20px;
+      padding: 11px 16px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      display: none;
+      line-height: 1.4;
+    }
+    .q-result.correct { background: rgba(34,197,94,0.12); color: #22c55e; border: 1px solid rgba(34,197,94,0.3); }
+    .q-result.wrong   { background: rgba(239,68,68,0.12);  color: #ef4444;  border: 1px solid rgba(239,68,68,0.3); }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <button class="back-btn" onclick="history.back()" aria-label="Go back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back
+      </button>
+      <a href="index.html" class="logo"><span>Hack</span> Your Body</a>
+    </div>
+  </header>
+
+  <section class="page-hero">
+    <div class="container">
+      <h1>Snakes &amp; Ladders</h1>
+      <p>Race to 100 against the computer. Land on a ladder — answer right to climb. Land on a snake — answer wrong and slide down.</p>
+    </div>
+  </section>
+
+  <main>
+    <div class="container">
+      <div class="snakes-outer">
+
+        <div class="snakes-wrap">
+          <canvas id="snakes-canvas" width="500" height="500"></canvas>
+        </div>
+
+        <div class="game-panel">
+          <div class="score-strip">
+            <div class="score-item">
+              <div class="score-name">You</div>
+              <div class="score-pos player-col" id="player-pos">—</div>
+            </div>
+            <div class="dice-display" id="dice-display">🎲</div>
+            <div class="score-item">
+              <div class="score-name">Computer</div>
+              <div class="score-pos comp-col" id="comp-pos">—</div>
+            </div>
+          </div>
+
+          <p class="status-msg" id="status-msg">Click Roll Dice to begin!</p>
+          <button class="roll-btn" id="roll-btn">Roll Dice</button>
+
+          <div class="game-legend">
+            <span><span class="leg-ladder">▬ Ladder</span> — correct = climb up</span>
+            <span><span class="leg-snake">▬ Snake</span> — wrong = slide down</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Question overlay -->
+  <div class="q-overlay hidden" id="q-overlay">
+    <div class="q-card">
+      <p class="q-who player" id="q-who">Your Question</p>
+      <p class="q-instruction">True or False?</p>
+      <p class="q-text" id="q-text"></p>
+      <div class="q-btns" id="q-btns">
+        <button class="q-btn q-btn-true"  id="btn-true">True</button>
+        <button class="q-btn q-btn-false" id="btn-false">False</button>
+      </div>
+      <div class="q-result" id="q-result"></div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-meta">
+        <span>Last reviewed: March 2026</span>
+        <span>This site does not replace medical advice.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+  // ═══════════════════════════════════════════════
+  //  Snakes & Ladders — Fact vs Myth
+  // ═══════════════════════════════════════════════
+
+  const QUESTIONS = [
+    { q: "Exercise improves mental health",                       ans: true  },
+    { q: "Muscle turns into fat when you stop training",          ans: false },
+    { q: "Sleep is essential for muscle recovery",                ans: true  },
+    { q: "Crunches are the best way to burn belly fat",           ans: false },
+    { q: "Dehydration reduces exercise performance",              ans: true  },
+    { q: "Strength training increases bone density",              ans: true  },
+    { q: "Sweating means you are burning fat",                    ans: false },
+    { q: "Regular exercise reduces heart disease risk",           ans: true  },
+    { q: "Lifting weights makes women bulky",                     ans: false },
+    { q: "Warming up improves exercise performance",              ans: true  },
+    { q: "Running always damages your knees",                     ans: false },
+    { q: "Resistance training boosts metabolism",                 ans: true  },
+    { q: "You need protein shakes to build muscle",               ans: false },
+    { q: "Progressive overload builds strength over time",        ans: true  },
+    { q: "Lactic acid causes post-workout muscle soreness",       ans: false },
+    { q: "Good posture can reduce back pain",                     ans: true  },
+    { q: "More exercise is always better for your health",        ans: false },
+    { q: "Cardio is the only exercise that helps with weight loss", ans: false },
+    { q: "Eating carbs at night always causes weight gain",       ans: false },
+    { q: "Humans only use 10% of their brains",                   ans: false },
+  ];
+
+  // Snakes: head → tail
+  const SNAKES  = { 17:7, 54:34, 62:19, 87:24, 93:73, 95:75, 99:78 };
+  // Ladders: bottom → top
+  const LADDERS = { 4:14, 9:31, 20:38, 28:84, 40:59, 51:67, 63:81, 71:91 };
+
+  const CELL = 50;
+  const canvas = document.getElementById('snakes-canvas');
+  const ctx    = canvas.getContext('2d');
+
+  // ── State ──────────────────────────────────────
+  let playerPos = 0, compPos = 0;
+  let turn  = 'player';
+  let phase = 'idle'; // 'idle' | 'question' | 'comp' | 'gameover'
+  let usedQs = new Set();
+
+  // ── Helpers ────────────────────────────────────
+  function getPos(n) {
+    const idx = n - 1;
+    const row = Math.floor(idx / 10);
+    const col = idx % 10;
+    const actualCol = row % 2 === 0 ? col : 9 - col;
+    return { x: actualCol * CELL + CELL / 2, y: (9 - row) * CELL + CELL / 2 };
+  }
+
+  function pickQuestion() {
+    if (usedQs.size >= QUESTIONS.length) usedQs.clear();
+    let idx;
+    do { idx = Math.floor(Math.random() * QUESTIONS.length); } while (usedQs.has(idx));
+    usedQs.add(idx);
+    return QUESTIONS[idx];
+  }
+
+  const DICE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+
+  // ── Draw board ─────────────────────────────────
+  function drawBoard() {
+    ctx.fillStyle = '#06060f';
+    ctx.fillRect(0, 0, 500, 500);
+
+    for (let row = 0; row < 10; row++) {
+      for (let col = 0; col < 10; col++) {
+        ctx.fillStyle = (row + col) % 2 === 0 ? '#0c1630' : '#0a1020';
+        ctx.fillRect(col * CELL + 1, row * CELL + 1, CELL - 2, CELL - 2);
+      }
+    }
+
+    ctx.font = '8px system-ui,sans-serif';
+    ctx.fillStyle = 'rgba(90,120,170,0.55)';
+    ctx.textAlign = 'center';
+    for (let n = 1; n <= 100; n++) {
+      const p = getPos(n);
+      ctx.fillText(n, p.x, p.y - CELL / 2 + 10);
+    }
+
+    // Ladders first (under snakes)
+    Object.entries(LADDERS).forEach(([from, to]) => drawLadder(+from, +to));
+    Object.entries(SNAKES).forEach(([from, to])  => drawSnake(+from, +to));
+
+    // Pieces
+    if (compPos > 0)   drawPiece(compPos,   '#fb923c', 'CPU', 8);
+    if (playerPos > 0) drawPiece(playerPos, '#7DF9FF', 'YOU', -8);
+  }
+
+  function drawLadder(from, to) {
+    const f = getPos(from), t = getPos(to);
+    const dx = t.x - f.x, dy = t.y - f.y;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    const ux = dx/len, uy = dy/len;
+    const nx = -uy * 7, ny = ux * 7;
+
+    ctx.save();
+    ctx.globalAlpha = 0.85;
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 4;
+    ctx.lineCap = 'round';
+
+    for (const s of [-1, 1]) {
+      ctx.beginPath();
+      ctx.moveTo(f.x + nx*s, f.y + ny*s);
+      ctx.lineTo(t.x + nx*s, t.y + ny*s);
+      ctx.stroke();
+    }
+
+    ctx.lineWidth = 3;
+    const rungs = Math.max(2, Math.floor(len / 26));
+    for (let i = 0; i <= rungs; i++) {
+      const p = i / rungs;
+      const rx = f.x + dx*p, ry = f.y + dy*p;
+      ctx.beginPath();
+      ctx.moveTo(rx - nx, ry - ny);
+      ctx.lineTo(rx + nx, ry + ny);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function drawSnake(head, tail) {
+    const h = getPos(head), t = getPos(tail);
+    const dx = t.x - h.x, dy = t.y - h.y;
+    const len = Math.sqrt(dx*dx + dy*dy);
+    const ux = dx/len, uy = dy/len;
+    const nx = -uy, ny = ux;
+    const SEGS = 8, AMP = 15;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(h.x, h.y);
+    for (let i = 1; i <= SEGS; i++) {
+      const pm = (i - 0.5) / SEGS;
+      const sign = i % 2 === 0 ? 1 : -1;
+      ctx.quadraticCurveTo(
+        h.x + ux*len*pm + nx*AMP*sign,
+        h.y + uy*len*pm + ny*AMP*sign,
+        h.x + ux*len*(i/SEGS),
+        h.y + uy*len*(i/SEGS)
+      );
+    }
+    ctx.strokeStyle = '#ef4444';
+    ctx.lineWidth = 7;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.globalAlpha = 0.75;
+    ctx.stroke();
+
+    // Head circle
+    ctx.beginPath();
+    ctx.arc(h.x, h.y, 8, 0, Math.PI * 2);
+    ctx.fillStyle = '#dc2626';
+    ctx.globalAlpha = 1;
+    ctx.fill();
+
+    // Eyes
+    ctx.fillStyle = '#fff';
+    ctx.beginPath(); ctx.arc(h.x - 3, h.y - 2, 2, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(h.x + 3, h.y - 2, 2, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#000';
+    ctx.beginPath(); ctx.arc(h.x - 3, h.y - 2, 0.9, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(h.x + 3, h.y - 2, 0.9, 0, Math.PI*2); ctx.fill();
+
+    ctx.restore();
+  }
+
+  function drawPiece(pos, color, label, xOff) {
+    const p = getPos(pos);
+    ctx.save();
+    ctx.shadowBlur = 14;
+    ctx.shadowColor = color;
+    ctx.beginPath();
+    ctx.arc(p.x + xOff, p.y + 5, 13, 0, Math.PI * 2);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#000';
+    ctx.font = 'bold 6.5px system-ui,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(label, p.x + xOff, p.y + 8);
+    ctx.restore();
+  }
+
+  // ── UI refs ────────────────────────────────────
+  const rollBtn    = document.getElementById('roll-btn');
+  const statusEl   = document.getElementById('status-msg');
+  const diceEl     = document.getElementById('dice-display');
+  const playerPosEl = document.getElementById('player-pos');
+  const compPosEl   = document.getElementById('comp-pos');
+  const qOverlay   = document.getElementById('q-overlay');
+  const qWhoEl     = document.getElementById('q-who');
+  const qTextEl    = document.getElementById('q-text');
+  const qBtnsEl    = document.getElementById('q-btns');
+  const qResultEl  = document.getElementById('q-result');
+  const btnTrue    = document.getElementById('btn-true');
+  const btnFalse   = document.getElementById('btn-false');
+
+  function setStatus(msg) { statusEl.textContent = msg; }
+
+  function updateDisplay() {
+    playerPosEl.textContent = playerPos > 0 ? playerPos : '—';
+    compPosEl.textContent   = compPos   > 0 ? compPos   : '—';
+  }
+
+  // ── Question logic ─────────────────────────────
+  function showQuestion(isPlayer, onAnswer) {
+    const q = pickQuestion();
+    phase = 'question';
+    qOverlay.classList.remove('hidden');
+    qWhoEl.textContent = isPlayer ? 'Your Question' : "Computer's Question";
+    qWhoEl.className   = 'q-who ' + (isPlayer ? 'player' : 'comp');
+    qTextEl.textContent = q.q;
+    qResultEl.style.display = 'none';
+    qBtnsEl.style.display = 'flex';
+
+    if (isPlayer) {
+      btnTrue.onclick  = () => resolveAnswer(true,  q.ans, onAnswer);
+      btnFalse.onclick = () => resolveAnswer(false, q.ans, onAnswer);
+    } else {
+      // Computer "thinks" then auto-answers with 55% accuracy
+      qBtnsEl.style.display = 'none';
+      const correct = Math.random() < 0.55;
+      setTimeout(() => showResult(correct, q.ans, () => {
+        setTimeout(() => { qOverlay.classList.add('hidden'); onAnswer(correct); }, 900);
+      }), 1300);
+    }
+  }
+
+  function resolveAnswer(chosen, correctAns, onAnswer) {
+    btnTrue.onclick = null; btnFalse.onclick = null;
+    const correct = chosen === correctAns;
+    showResult(correct, correctAns, () => {
+      setTimeout(() => { qOverlay.classList.add('hidden'); onAnswer(correct); }, 900);
+    });
+  }
+
+  function showResult(correct, correctAns, cb) {
+    qBtnsEl.style.display = 'none';
+    qResultEl.style.display = 'block';
+    qResultEl.className = 'q-result ' + (correct ? 'correct' : 'wrong');
+    qResultEl.textContent = correct
+      ? '✓ Correct!'
+      : '✗ Wrong — the answer is ' + (correctAns ? 'True' : 'False');
+    setTimeout(cb, 1300);
+  }
+
+  // ── Landing logic ──────────────────────────────
+  function processLanding(isPlayer, onDone) {
+    const pos = isPlayer ? playerPos : compPos;
+    const name = isPlayer ? 'You' : 'Computer';
+
+    if (LADDERS[pos] !== undefined) {
+      const dest = LADDERS[pos];
+      setStatus(name + ' landed on a ladder! Answer to climb...');
+      showQuestion(isPlayer, correct => {
+        if (correct) {
+          if (isPlayer) playerPos = dest; else compPos = dest;
+          setStatus(name + ' climbed the ladder to ' + dest + '!');
+        } else {
+          setStatus(name + ' got it wrong — no climb!');
+        }
+        updateDisplay(); drawBoard();
+        if (checkWin(isPlayer)) return;
+        onDone();
+      });
+
+    } else if (SNAKES[pos] !== undefined) {
+      const dest = SNAKES[pos];
+      setStatus(name + ' landed on a snake! Answer to avoid sliding down...');
+      showQuestion(isPlayer, correct => {
+        if (correct) {
+          setStatus(name + ' answered correctly — snake avoided!');
+        } else {
+          if (isPlayer) playerPos = dest; else compPos = dest;
+          setStatus(name + ' got it wrong — slid down to ' + dest + '!');
+        }
+        updateDisplay(); drawBoard();
+        onDone();
+      });
+
+    } else {
+      onDone();
+    }
+  }
+
+  function checkWin(isPlayer) {
+    const pos = isPlayer ? playerPos : compPos;
+    if (pos >= 100) {
+      setStatus((isPlayer ? 'You win!' : 'Computer wins!') + ' Reached square 100!');
+      phase = 'gameover';
+      rollBtn.textContent = 'Play Again';
+      rollBtn.disabled = false;
+      rollBtn.onclick = restartGame;
+      return true;
+    }
+    return false;
+  }
+
+  // ── Turn management ────────────────────────────
+  function endTurn() {
+    if (phase === 'gameover') return;
+    turn = turn === 'player' ? 'comp' : 'player';
+    if (turn === 'player') {
+      phase = 'idle';
+      rollBtn.disabled = false;
+      setStatus('Your turn — roll the dice!');
+    } else {
+      compTurn();
+    }
+  }
+
+  function moveAndProcess(isPlayer, die, onDone) {
+    let pos = (isPlayer ? playerPos : compPos) + die;
+    if (pos > 100) pos = 100 - (pos - 100); // bounce back from 100
+    if (isPlayer) playerPos = pos; else compPos = pos;
+    updateDisplay(); drawBoard();
+    if (checkWin(isPlayer)) return;
+    setTimeout(() => processLanding(isPlayer, onDone), 500);
+  }
+
+  function compTurn() {
+    phase = 'comp';
+    rollBtn.disabled = true;
+    setStatus("Computer's turn...");
+    setTimeout(() => {
+      const die = Math.floor(Math.random() * 6) + 1;
+      diceEl.textContent = DICE_FACES[die - 1];
+      setStatus('Computer rolled a ' + die + '!');
+      moveAndProcess(false, die, endTurn);
+    }, 1000);
+  }
+
+  function playerRoll() {
+    if (phase !== 'idle') return;
+    phase = 'rolling';
+    rollBtn.disabled = true;
+    const die = Math.floor(Math.random() * 6) + 1;
+    diceEl.textContent = DICE_FACES[die - 1];
+    setStatus('You rolled a ' + die + '!');
+    moveAndProcess(true, die, endTurn);
+  }
+
+  function restartGame() {
+    playerPos = 0; compPos = 0;
+    turn = 'player'; phase = 'idle';
+    usedQs.clear();
+    diceEl.textContent = '🎲';
+    rollBtn.textContent = 'Roll Dice';
+    rollBtn.disabled = false;
+    rollBtn.onclick = playerRoll;
+    updateDisplay();
+    setStatus('Click Roll Dice to begin!');
+    drawBoard();
+  }
+
+  rollBtn.onclick = playerRoll;
+  drawBoard();
+  updateDisplay();
+  </script>
+</body>
+</html>
