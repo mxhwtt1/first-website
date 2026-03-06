@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Whack-a-Myth | Hack Your Body: Fact vs Myth</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    /* ── Layout ─────────────────────────────────── */
+    .whack-outer {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 22px;
+      padding: 0 0 60px;
+    }
+
+    /* ── HUD strip ──────────────────────────────── */
+    .hud-strip {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 14px;
+      padding: 14px 22px;
+      gap: 16px;
+    }
+    .hud-item { text-align: center; }
+    .hud-label {
+      font-size: 0.65rem;
+      color: #555;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      margin-bottom: 4px;
+    }
+    .hud-score {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #7DF9FF;
+      line-height: 1;
+    }
+    .hud-hearts {
+      font-size: 1.5rem;
+      line-height: 1;
+      letter-spacing: 2px;
+    }
+    .hud-timer-wrap {
+      flex: 1;
+      text-align: center;
+    }
+    .hud-timer-num {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #f0f0f0;
+      line-height: 1;
+    }
+    .hud-timer-num.urgent { color: #ef4444; }
+    .timer-bar-track {
+      margin-top: 6px;
+      height: 4px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .timer-bar-fill {
+      height: 100%;
+      background: #4FA3FF;
+      border-radius: 2px;
+      transition: width 0.95s linear, background 0.4s;
+    }
+    .timer-bar-fill.urgent { background: #ef4444; }
+
+    /* ── Board grid ─────────────────────────────── */
+    .whack-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      width: 100%;
+      max-width: 560px;
+    }
+
+    /* ── Hole + mole ────────────────────────────── */
+    .hole {
+      aspect-ratio: 1 / 1;
+      background: rgba(6,6,15,0.6);
+      border: 1.5px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hole-empty {
+      width: 60%;
+      height: 60%;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.5);
+      border: 2px solid rgba(255,255,255,0.04);
+    }
+    .mole {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 10px;
+      cursor: pointer;
+      border-radius: 17px;
+      text-align: center;
+      pointer-events: none;
+      /* spring pop animation */
+      transform: scale(0.3) translateY(20%);
+      opacity: 0;
+      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  opacity   0.15s ease;
+      user-select: none;
+    }
+    .mole.up {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .mole.is-myth {
+      background: rgba(239,68,68,0.14);
+      border: 1.5px solid rgba(239,68,68,0.3);
+    }
+    .mole.is-fact {
+      background: rgba(79,163,255,0.12);
+      border: 1.5px solid rgba(79,163,255,0.25);
+    }
+    .mole.hit-good {
+      background: rgba(34,197,94,0.25) !important;
+      border-color: #22c55e !important;
+    }
+    .mole.hit-bad {
+      background: rgba(239,68,68,0.35) !important;
+      border-color: #ef4444 !important;
+    }
+    .mole-label {
+      font-size: 0.6rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+      flex-shrink: 0;
+    }
+    .mole.is-myth .mole-label { background: rgba(239,68,68,0.2); color: #f87171; }
+    .mole.is-fact .mole-label { background: rgba(79,163,255,0.2); color: #7DF9FF; }
+    .mole-text {
+      font-size: 0.78rem;
+      line-height: 1.35;
+      color: #e0e0e0;
+      font-weight: 500;
+    }
+
+    /* ── Instructions ───────────────────────────── */
+    .whack-instructions {
+      width: 100%;
+      max-width: 560px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+      font-size: 0.82rem;
+      color: #888;
+    }
+    .instr-myth { color: #f87171; font-weight: 700; }
+    .instr-fact { color: #7DF9FF; font-weight: 700; }
+
+    /* ── Start/Game-over overlay ────────────────── */
+    .game-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2,2,18,0.92);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+      padding: 24px;
+    }
+    .game-overlay.hidden { display: none; }
+    .overlay-card {
+      background: #0d1628;
+      border: 1.5px solid #2a4a8a;
+      border-radius: 24px;
+      padding: 40px 32px;
+      max-width: 380px;
+      width: 100%;
+      text-align: center;
+    }
+    .overlay-title {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #f0f0f0;
+      margin: 0 0 8px;
+    }
+    .overlay-sub {
+      font-size: 0.95rem;
+      color: #888;
+      margin: 0 0 28px;
+      line-height: 1.5;
+    }
+    .overlay-score-big {
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #7DF9FF;
+      line-height: 1;
+      margin: 0 0 6px;
+    }
+    .overlay-score-label {
+      font-size: 0.75rem;
+      color: #555;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin: 0 0 28px;
+    }
+    .start-btn {
+      background: #0068C4;
+      border: none;
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      padding: 16px 56px;
+      border-radius: 14px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.2s;
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    .start-btn:hover { background: #0080E8; }
+    .home-btn {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #888;
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 11px 32px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: border-color 0.2s, color 0.2s;
+      display: block;
+      width: 100%;
+    }
+    .home-btn:hover { border-color: rgba(255,255,255,0.3); color: #ddd; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container">
+      <button class="back-btn" onclick="history.back()" aria-label="Go back">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+        Back
+      </button>
+      <a href="index.html" class="logo"><span>Hack</span> Your Body</a>
+    </div>
+  </header>
+
+  <section class="page-hero">
+    <div class="container">
+      <h1>Whack-a-Myth</h1>
+      <p>Myths pop up — click them fast! But if it's a fact, leave it alone or lose a heart.</p>
+    </div>
+  </section>
+
+  <main>
+    <div class="container">
+      <div class="whack-outer">
+
+        <!-- HUD -->
+        <div class="hud-strip">
+          <div class="hud-item">
+            <div class="hud-label">Score</div>
+            <div class="hud-score" id="score-display">0</div>
+          </div>
+          <div class="hud-timer-wrap">
+            <div class="hud-label">Time</div>
+            <div class="hud-timer-num" id="timer-display">60</div>
+            <div class="timer-bar-track">
+              <div class="timer-bar-fill" id="timer-bar" style="width:100%"></div>
+            </div>
+          </div>
+          <div class="hud-item">
+            <div class="hud-label">Hearts</div>
+            <div class="hud-hearts" id="hearts-display">&#10084;&#10084;&#10084;</div>
+          </div>
+        </div>
+
+        <!-- Board -->
+        <div class="whack-board" id="whack-board">
+          <!-- 9 holes generated by JS -->
+        </div>
+
+        <!-- Instructions -->
+        <div class="whack-instructions">
+          <span><span class="instr-myth">MYTH</span> — click it! (+10)</span>
+          <span><span class="instr-fact">FACT</span> — ignore it! (clicking = -1 heart)</span>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Start overlay -->
+  <div class="game-overlay" id="start-overlay">
+    <div class="overlay-card">
+      <div class="overlay-title">Whack-a-Myth</div>
+      <div class="overlay-sub">
+        Myths pop up — whack them before they disappear.<br>
+        But careful: clicking a <strong style="color:#7DF9FF">FACT</strong> costs you a heart!
+      </div>
+      <div style="display:flex;gap:20px;justify-content:center;margin-bottom:28px;font-size:0.85rem;color:#888;">
+        <span><span class="instr-myth">MYTH</span> = click it (+10)</span>
+        <span><span class="instr-fact">FACT</span> = ignore it</span>
+        <span>3 hearts &bull; 60 sec</span>
+      </div>
+      <button class="start-btn" id="start-btn">Start Game</button>
+    </div>
+  </div>
+
+  <!-- Game-over overlay -->
+  <div class="game-overlay hidden" id="gameover-overlay">
+    <div class="overlay-card">
+      <div class="overlay-title" id="gameover-title">Time's Up!</div>
+      <div class="overlay-score-big" id="final-score">0</div>
+      <div class="overlay-score-label">points</div>
+      <div class="overlay-sub" id="gameover-sub">Nice work! How many myths did you catch?</div>
+      <button class="start-btn" id="play-again-btn">Play Again</button>
+      <button class="home-btn" onclick="window.location.href='index.html'">Go Home</button>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-meta">
+        <span>Last reviewed: March 2026</span>
+        <span>This site does not replace medical advice.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script>
+  // ═══════════════════════════════════════════════
+  //  Whack-a-Myth
+  // ═══════════════════════════════════════════════
+
+  const ITEMS = [
+    // Myths — click these!
+    { text: "Muscle turns to fat when you stop training",     type: 'myth' },
+    { text: "You only use 10% of your brain",                 type: 'myth' },
+    { text: "Crunches are the best way to lose belly fat",    type: 'myth' },
+    { text: "Sweating means you are burning fat",             type: 'myth' },
+    { text: "Lifting weights makes women bulky",              type: 'myth' },
+    { text: "Running always damages your knees",              type: 'myth' },
+    { text: "You need protein shakes to build muscle",        type: 'myth' },
+    { text: "Lactic acid causes delayed muscle soreness",     type: 'myth' },
+    { text: "More exercise is always better",                 type: 'myth' },
+    { text: "Eating carbs at night causes weight gain",       type: 'myth' },
+    { text: "You must detox your body regularly",             type: 'myth' },
+    { text: "Cardio is the only way to lose weight",          type: 'myth' },
+    // Facts — do NOT click!
+    { text: "Sleep is essential for muscle recovery",         type: 'fact' },
+    { text: "Exercise reduces heart disease risk",            type: 'fact' },
+    { text: "Dehydration reduces performance",                type: 'fact' },
+    { text: "Strength training builds bone density",          type: 'fact' },
+    { text: "Warm-ups improve exercise performance",          type: 'fact' },
+    { text: "Resistance training boosts metabolism",          type: 'fact' },
+    { text: "Progressive overload builds strength",           type: 'fact' },
+    { text: "Good posture can reduce back pain",              type: 'fact' },
+    { text: "Exercise improves mental health",                type: 'fact' },
+    { text: "Staying hydrated improves performance",          type: 'fact' },
+  ];
+
+  // ── DOM ────────────────────────────────────────
+  const board         = document.getElementById('whack-board');
+  const scoreEl       = document.getElementById('score-display');
+  const timerEl       = document.getElementById('timer-display');
+  const timerBarEl    = document.getElementById('timer-bar');
+  const heartsEl      = document.getElementById('hearts-display');
+  const startOverlay  = document.getElementById('start-overlay');
+  const gameoverOverlay = document.getElementById('gameover-overlay');
+  const finalScoreEl  = document.getElementById('final-score');
+  const gameoverTitle = document.getElementById('gameover-title');
+  const gameoverSub   = document.getElementById('gameover-sub');
+
+  // ── Build board holes ──────────────────────────
+  const holes  = [];
+  const moles  = [];
+  const active = new Array(9).fill(false);
+
+  for (let i = 0; i < 9; i++) {
+    const hole = document.createElement('div');
+    hole.className = 'hole';
+
+    const empty = document.createElement('div');
+    empty.className = 'hole-empty';
+    hole.appendChild(empty);
+
+    const mole = document.createElement('div');
+    mole.className = 'mole';
+    mole.innerHTML = `<span class="mole-label"></span><span class="mole-text"></span>`;
+    hole.appendChild(mole);
+    board.appendChild(hole);
+
+    holes.push(hole);
+    moles.push(mole);
+  }
+
+  // ── Game state ─────────────────────────────────
+  let score       = 0;
+  let hearts      = 3;
+  let timeLeft    = 60;
+  let running     = false;
+  let timerId     = null;
+  let peepIds     = [];
+  let hideIds     = [];
+
+  // ── Difficulty schedule ────────────────────────
+  // Returns { interval, displayTime } based on elapsed seconds
+  function difficulty(elapsed) {
+    if (elapsed < 15) return { interval: 1300, displayTime: 1800 };
+    if (elapsed < 30) return { interval: 1050, displayTime: 1500 };
+    if (elapsed < 45) return { interval: 850,  displayTime: 1250 };
+    return             { interval: 680,  displayTime: 1050 };
+  }
+
+  // ── Show a mole ────────────────────────────────
+  function peep() {
+    if (!running) return;
+
+    const elapsed = 60 - timeLeft;
+    const { interval, displayTime } = difficulty(elapsed);
+
+    // Pick a random inactive hole
+    const inactive = holes.map((_, i) => i).filter(i => !active[i]);
+    if (inactive.length > 0) {
+      const idx  = inactive[Math.floor(Math.random() * inactive.length)];
+      const item = ITEMS[Math.floor(Math.random() * ITEMS.length)];
+
+      const mole = moles[idx];
+      mole.querySelector('.mole-label').textContent = item.type === 'myth' ? 'MYTH' : 'FACT';
+      mole.querySelector('.mole-text').textContent  = item.text;
+      mole.className = 'mole is-' + item.type;
+      mole._itemType = item.type;
+
+      active[idx] = true;
+      // Trigger reflow for transition
+      void mole.offsetWidth;
+      mole.classList.add('up');
+
+      // Auto-hide after displayTime
+      const hideId = setTimeout(() => {
+        hideMole(idx);
+      }, displayTime);
+      hideIds.push(hideId);
+    }
+
+    // Schedule next pop
+    const pid = setTimeout(peep, interval + Math.random() * 400 - 200);
+    peepIds.push(pid);
+  }
+
+  function hideMole(idx) {
+    const mole = moles[idx];
+    mole.classList.remove('up', 'hit-good', 'hit-bad');
+    active[idx] = false;
+  }
+
+  // ── Click handler ──────────────────────────────
+  board.addEventListener('click', e => {
+    if (!running) return;
+    const mole = e.target.closest('.mole.up');
+    if (!mole) return;
+    const idx = moles.indexOf(mole);
+    if (idx < 0 || !active[idx]) return;
+
+    const type = mole._itemType;
+    // Clear auto-hide for this hole
+    active[idx] = false;
+
+    if (type === 'myth') {
+      score += 10;
+      scoreEl.textContent = score;
+      mole.classList.add('hit-good');
+      setTimeout(() => { mole.classList.remove('up', 'hit-good'); }, 280);
+    } else {
+      // Clicked a fact — lose a heart
+      hearts = Math.max(0, hearts - 1);
+      updateHearts();
+      mole.classList.add('hit-bad');
+      setTimeout(() => { mole.classList.remove('up', 'hit-bad'); }, 340);
+      if (hearts === 0) {
+        setTimeout(endGame, 380);
+      }
+    }
+  });
+
+  // ── Hearts display ─────────────────────────────
+  function updateHearts() {
+    const full  = '&#10084;';
+    const empty = '<span style="opacity:0.2">&#10084;</span>';
+    heartsEl.innerHTML = full.repeat(hearts) + empty.repeat(3 - hearts);
+  }
+
+  // ── Timer ──────────────────────────────────────
+  function tickTimer() {
+    timeLeft--;
+    const pct = (timeLeft / 60) * 100;
+    timerEl.textContent = timeLeft;
+    timerBarEl.style.width = pct + '%';
+    if (timeLeft <= 10) {
+      timerEl.classList.add('urgent');
+      timerBarEl.classList.add('urgent');
+    }
+    if (timeLeft <= 0) endGame();
+  }
+
+  // ── Start / end ────────────────────────────────
+  function startGame() {
+    score    = 0;
+    hearts   = 3;
+    timeLeft = 60;
+    running  = true;
+
+    scoreEl.textContent = '0';
+    timerEl.textContent = '60';
+    timerEl.classList.remove('urgent');
+    timerBarEl.style.width = '100%';
+    timerBarEl.classList.remove('urgent');
+    updateHearts();
+
+    // Clear all holes
+    for (let i = 0; i < 9; i++) {
+      moles[i].classList.remove('up', 'hit-good', 'hit-bad');
+      active[i] = false;
+    }
+
+    startOverlay.classList.add('hidden');
+    gameoverOverlay.classList.add('hidden');
+
+    timerId = setInterval(tickTimer, 1000);
+    peep();
+  }
+
+  function endGame() {
+    running = false;
+    clearInterval(timerId);
+    peepIds.forEach(clearTimeout);
+    hideIds.forEach(clearTimeout);
+    peepIds = []; hideIds = [];
+
+    // Hide all active moles
+    for (let i = 0; i < 9; i++) {
+      if (active[i]) hideMole(i);
+    }
+
+    finalScoreEl.textContent = score;
+    if (hearts === 0) {
+      gameoverTitle.textContent = 'No Hearts Left!';
+      gameoverSub.textContent   = 'You clicked a fact once too often. Score: ' + score + ' points.';
+    } else {
+      gameoverTitle.textContent = "Time's Up!";
+      const rating = score >= 100 ? 'Excellent work!' : score >= 60 ? 'Nice effort!' : 'Keep practising!';
+      gameoverSub.textContent = rating + ' You scored ' + score + ' points.';
+    }
+
+    gameoverOverlay.classList.remove('hidden');
+  }
+
+  document.getElementById('start-btn').addEventListener('click', startGame);
+  document.getElementById('play-again-btn').addEventListener('click', startGame);
+  </script>
+</body>
+</html>

@@ -13,6 +13,16 @@
       gap: 20px;
       padding: 0 0 60px;
     }
+    @media (min-width: 880px) {
+      .snakes-outer {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 32px;
+      }
+      .snakes-wrap { flex: 0 0 500px; }
+      .game-panel  { flex: 0 0 250px; max-width: 250px; }
+    }
     .snakes-wrap {
       width: 100%;
       max-width: 500px;
@@ -46,7 +56,8 @@
     .score-pos { font-size: 1.6rem; font-weight: 800; }
     .score-pos.player-col { color: #7DF9FF; }
     .score-pos.comp-col   { color: #fb923c; }
-    .dice-display { font-size: 2.4rem; min-width: 50px; text-align: center; }
+    .dice-display { font-size: 2.6rem; min-width: 50px; text-align: center; transition: transform 0.08s; }
+    .dice-display.spin { transform: scale(1.25); }
     .status-msg {
       font-size: 0.93rem;
       color: #b0b0b0;
@@ -227,26 +238,26 @@
   // ═══════════════════════════════════════════════
 
   const QUESTIONS = [
-    { q: "Exercise improves mental health",                       ans: true  },
-    { q: "Muscle turns into fat when you stop training",          ans: false },
-    { q: "Sleep is essential for muscle recovery",                ans: true  },
-    { q: "Crunches are the best way to burn belly fat",           ans: false },
-    { q: "Dehydration reduces exercise performance",              ans: true  },
-    { q: "Strength training increases bone density",              ans: true  },
-    { q: "Sweating means you are burning fat",                    ans: false },
-    { q: "Regular exercise reduces heart disease risk",           ans: true  },
-    { q: "Lifting weights makes women bulky",                     ans: false },
-    { q: "Warming up improves exercise performance",              ans: true  },
-    { q: "Running always damages your knees",                     ans: false },
-    { q: "Resistance training boosts metabolism",                 ans: true  },
-    { q: "You need protein shakes to build muscle",               ans: false },
-    { q: "Progressive overload builds strength over time",        ans: true  },
-    { q: "Lactic acid causes post-workout muscle soreness",       ans: false },
-    { q: "Good posture can reduce back pain",                     ans: true  },
-    { q: "More exercise is always better for your health",        ans: false },
+    { q: "Exercise improves mental health",                         ans: true  },
+    { q: "Muscle turns into fat when you stop training",            ans: false },
+    { q: "Sleep is essential for muscle recovery",                  ans: true  },
+    { q: "Crunches are the best way to burn belly fat",             ans: false },
+    { q: "Dehydration reduces exercise performance",                ans: true  },
+    { q: "Strength training increases bone density",                ans: true  },
+    { q: "Sweating means you are burning fat",                      ans: false },
+    { q: "Regular exercise reduces heart disease risk",             ans: true  },
+    { q: "Lifting weights makes women bulky",                       ans: false },
+    { q: "Warming up improves exercise performance",                ans: true  },
+    { q: "Running always damages your knees",                       ans: false },
+    { q: "Resistance training boosts metabolism",                   ans: true  },
+    { q: "You need protein shakes to build muscle",                 ans: false },
+    { q: "Progressive overload builds strength over time",          ans: true  },
+    { q: "Lactic acid causes post-workout muscle soreness",         ans: false },
+    { q: "Good posture can reduce back pain",                       ans: true  },
+    { q: "More exercise is always better for your health",          ans: false },
     { q: "Cardio is the only exercise that helps with weight loss", ans: false },
-    { q: "Eating carbs at night always causes weight gain",       ans: false },
-    { q: "Humans only use 10% of their brains",                   ans: false },
+    { q: "Eating carbs at night always causes weight gain",         ans: false },
+    { q: "Humans only use 10% of their brains",                     ans: false },
   ];
 
   // Snakes: head → tail
@@ -254,17 +265,21 @@
   // Ladders: bottom → top
   const LADDERS = { 4:14, 9:31, 20:38, 28:84, 40:59, 51:67, 63:81, 71:91 };
 
-  const CELL = 50;
+  const CELL   = 50;
   const canvas = document.getElementById('snakes-canvas');
   const ctx    = canvas.getContext('2d');
 
-  // ── State ──────────────────────────────────────
+  // ── State ──────────────────────────────────────────────
   let playerPos = 0, compPos = 0;
   let turn  = 'player';
-  let phase = 'idle'; // 'idle' | 'question' | 'comp' | 'gameover'
+  let phase = 'idle'; // 'idle' | 'moving' | 'question' | 'comp' | 'gameover'
   let usedQs = new Set();
 
-  // ── Helpers ────────────────────────────────────
+  // ── Visual positions (animated pixel coords) ───────────
+  let vizPlayer = null;
+  let vizComp   = null;
+
+  // ── Helpers ────────────────────────────────────────────
   function getPos(n) {
     const idx = n - 1;
     const row = Math.floor(idx / 10);
@@ -281,9 +296,80 @@
     return QUESTIONS[idx];
   }
 
+  function easeInOut(t) { return t < 0.5 ? 2*t*t : -1 + (4 - 2*t)*t; }
+
   const DICE_FACES = ['⚀','⚁','⚂','⚃','⚄','⚅'];
 
-  // ── Draw board ─────────────────────────────────
+  // ── Dice animation ─────────────────────────────────────
+  function animateDice(finalVal, onDone) {
+    let count = 0;
+    diceEl.classList.add('spin');
+    const id = setInterval(() => {
+      diceEl.textContent = DICE_FACES[Math.floor(Math.random() * 6)];
+      if (++count >= 14) {
+        clearInterval(id);
+        diceEl.textContent = DICE_FACES[finalVal - 1];
+        diceEl.classList.remove('spin');
+        setTimeout(onDone, 120);
+      }
+    }, 55);
+  }
+
+  // ── Piece movement animation (square-by-square) ────────
+  // path = array of square numbers to traverse
+  function animatePath(isPlayer, path, onDone) {
+    if (path.length <= 1) {
+      if (path.length === 1) {
+        const p = getPos(path[0]);
+        if (isPlayer) vizPlayer = { x: p.x, y: p.y };
+        else           vizComp   = { x: p.x, y: p.y };
+        drawBoard();
+      }
+      onDone();
+      return;
+    }
+
+    let idx  = 0;
+    let t    = 0;
+    let last = null;
+    const STEP_MS = 160; // ms per square
+
+    // Place piece at start immediately
+    const startP = getPos(path[0]);
+    if (isPlayer) vizPlayer = { x: startP.x, y: startP.y };
+    else           vizComp   = { x: startP.x, y: startP.y };
+
+    function tick(ts) {
+      if (last === null) last = ts;
+      const dt = Math.min(ts - last, 50);
+      last = ts;
+      t += dt / STEP_MS;
+
+      if (t >= 1) {
+        t = 0;
+        idx++;
+        if (idx >= path.length - 1) {
+          const end = getPos(path[path.length - 1]);
+          if (isPlayer) vizPlayer = { x: end.x, y: end.y };
+          else           vizComp   = { x: end.x, y: end.y };
+          drawBoard();
+          onDone();
+          return;
+        }
+      }
+
+      const from = getPos(path[idx]);
+      const to   = getPos(path[idx + 1]);
+      const e    = easeInOut(t);
+      if (isPlayer) vizPlayer = { x: from.x + (to.x - from.x)*e, y: from.y + (to.y - from.y)*e };
+      else           vizComp   = { x: from.x + (to.x - from.x)*e, y: from.y + (to.y - from.y)*e };
+      drawBoard();
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // ── Draw board ─────────────────────────────────────────
   function drawBoard() {
     ctx.fillStyle = '#06060f';
     ctx.fillRect(0, 0, 500, 500);
@@ -303,13 +389,11 @@
       ctx.fillText(n, p.x, p.y - CELL / 2 + 10);
     }
 
-    // Ladders first (under snakes)
     Object.entries(LADDERS).forEach(([from, to]) => drawLadder(+from, +to));
     Object.entries(SNAKES).forEach(([from, to])  => drawSnake(+from, +to));
 
-    // Pieces
-    if (compPos > 0)   drawPiece(compPos,   '#fb923c', 'CPU', 8);
-    if (playerPos > 0) drawPiece(playerPos, '#7DF9FF', 'YOU', -8);
+    if (vizComp)   drawPiece(vizComp.x + 8,   vizComp.y,   '#fb923c', 'CPU');
+    if (vizPlayer) drawPiece(vizPlayer.x - 8, vizPlayer.y, '#7DF9FF', 'YOU');
   }
 
   function drawLadder(from, to) {
@@ -357,7 +441,7 @@
     ctx.beginPath();
     ctx.moveTo(h.x, h.y);
     for (let i = 1; i <= SEGS; i++) {
-      const pm = (i - 0.5) / SEGS;
+      const pm   = (i - 0.5) / SEGS;
       const sign = i % 2 === 0 ? 1 : -1;
       ctx.quadraticCurveTo(
         h.x + ux*len*pm + nx*AMP*sign,
@@ -373,17 +457,15 @@
     ctx.globalAlpha = 0.75;
     ctx.stroke();
 
-    // Head circle
     ctx.beginPath();
     ctx.arc(h.x, h.y, 8, 0, Math.PI * 2);
     ctx.fillStyle = '#dc2626';
     ctx.globalAlpha = 1;
     ctx.fill();
 
-    // Eyes
     ctx.fillStyle = '#fff';
-    ctx.beginPath(); ctx.arc(h.x - 3, h.y - 2, 2, 0, Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.arc(h.x + 3, h.y - 2, 2, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(h.x - 3, h.y - 2, 2,   0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.arc(h.x + 3, h.y - 2, 2,   0, Math.PI*2); ctx.fill();
     ctx.fillStyle = '#000';
     ctx.beginPath(); ctx.arc(h.x - 3, h.y - 2, 0.9, 0, Math.PI*2); ctx.fill();
     ctx.beginPath(); ctx.arc(h.x + 3, h.y - 2, 0.9, 0, Math.PI*2); ctx.fill();
@@ -391,36 +473,35 @@
     ctx.restore();
   }
 
-  function drawPiece(pos, color, label, xOff) {
-    const p = getPos(pos);
+  function drawPiece(vx, vy, color, label) {
     ctx.save();
-    ctx.shadowBlur = 14;
+    ctx.shadowBlur  = 14;
     ctx.shadowColor = color;
     ctx.beginPath();
-    ctx.arc(p.x + xOff, p.y + 5, 13, 0, Math.PI * 2);
+    ctx.arc(vx, vy, 13, 0, Math.PI * 2);
     ctx.fillStyle = color;
     ctx.fill();
     ctx.shadowBlur = 0;
     ctx.fillStyle = '#000';
     ctx.font = 'bold 6.5px system-ui,sans-serif';
     ctx.textAlign = 'center';
-    ctx.fillText(label, p.x + xOff, p.y + 8);
+    ctx.fillText(label, vx, vy + 4);
     ctx.restore();
   }
 
-  // ── UI refs ────────────────────────────────────
-  const rollBtn    = document.getElementById('roll-btn');
-  const statusEl   = document.getElementById('status-msg');
-  const diceEl     = document.getElementById('dice-display');
+  // ── UI refs ────────────────────────────────────────────
+  const rollBtn     = document.getElementById('roll-btn');
+  const statusEl    = document.getElementById('status-msg');
+  const diceEl      = document.getElementById('dice-display');
   const playerPosEl = document.getElementById('player-pos');
   const compPosEl   = document.getElementById('comp-pos');
-  const qOverlay   = document.getElementById('q-overlay');
-  const qWhoEl     = document.getElementById('q-who');
-  const qTextEl    = document.getElementById('q-text');
-  const qBtnsEl    = document.getElementById('q-btns');
-  const qResultEl  = document.getElementById('q-result');
-  const btnTrue    = document.getElementById('btn-true');
-  const btnFalse   = document.getElementById('btn-false');
+  const qOverlay    = document.getElementById('q-overlay');
+  const qWhoEl      = document.getElementById('q-who');
+  const qTextEl     = document.getElementById('q-text');
+  const qBtnsEl     = document.getElementById('q-btns');
+  const qResultEl   = document.getElementById('q-result');
+  const btnTrue     = document.getElementById('btn-true');
+  const btnFalse    = document.getElementById('btn-false');
 
   function setStatus(msg) { statusEl.textContent = msg; }
 
@@ -429,22 +510,21 @@
     compPosEl.textContent   = compPos   > 0 ? compPos   : '—';
   }
 
-  // ── Question logic ─────────────────────────────
+  // ── Question logic ─────────────────────────────────────
   function showQuestion(isPlayer, onAnswer) {
     const q = pickQuestion();
     phase = 'question';
     qOverlay.classList.remove('hidden');
-    qWhoEl.textContent = isPlayer ? 'Your Question' : "Computer's Question";
-    qWhoEl.className   = 'q-who ' + (isPlayer ? 'player' : 'comp');
+    qWhoEl.textContent  = isPlayer ? 'Your Question' : "Computer's Question";
+    qWhoEl.className    = 'q-who ' + (isPlayer ? 'player' : 'comp');
     qTextEl.textContent = q.q;
     qResultEl.style.display = 'none';
-    qBtnsEl.style.display = 'flex';
+    qBtnsEl.style.display   = 'flex';
 
     if (isPlayer) {
       btnTrue.onclick  = () => resolveAnswer(true,  q.ans, onAnswer);
       btnFalse.onclick = () => resolveAnswer(false, q.ans, onAnswer);
     } else {
-      // Computer "thinks" then auto-answers with 55% accuracy
       qBtnsEl.style.display = 'none';
       const correct = Math.random() < 0.55;
       setTimeout(() => showResult(correct, q.ans, () => {
@@ -462,47 +542,58 @@
   }
 
   function showResult(correct, correctAns, cb) {
-    qBtnsEl.style.display = 'none';
+    qBtnsEl.style.display   = 'none';
     qResultEl.style.display = 'block';
-    qResultEl.className = 'q-result ' + (correct ? 'correct' : 'wrong');
-    qResultEl.textContent = correct
-      ? '✓ Correct!'
-      : '✗ Wrong — the answer is ' + (correctAns ? 'True' : 'False');
+    qResultEl.className     = 'q-result ' + (correct ? 'correct' : 'wrong');
+    qResultEl.textContent   = correct
+      ? 'Correct!'
+      : 'Wrong — the answer is ' + (correctAns ? 'True' : 'False');
     setTimeout(cb, 1300);
   }
 
-  // ── Landing logic ──────────────────────────────
+  // ── Landing logic ──────────────────────────────────────
   function processLanding(isPlayer, onDone) {
-    const pos = isPlayer ? playerPos : compPos;
+    const pos  = isPlayer ? playerPos : compPos;
     const name = isPlayer ? 'You' : 'Computer';
 
     if (LADDERS[pos] !== undefined) {
       const dest = LADDERS[pos];
-      setStatus(name + ' landed on a ladder! Answer to climb...');
+      setStatus(name + ' landed on a ladder! Answer correctly to climb...');
       showQuestion(isPlayer, correct => {
         if (correct) {
+          const from = isPlayer ? playerPos : compPos;
           if (isPlayer) playerPos = dest; else compPos = dest;
-          setStatus(name + ' climbed the ladder to ' + dest + '!');
+          setStatus(name + ' answered correctly — climbing to ' + dest + '!');
+          updateDisplay();
+          const path = [];
+          for (let s = from; s <= dest; s++) path.push(s);
+          animatePath(isPlayer, path, () => {
+            if (checkWin(isPlayer)) return;
+            onDone();
+          });
         } else {
           setStatus(name + ' got it wrong — no climb!');
+          updateDisplay();
+          onDone();
         }
-        updateDisplay(); drawBoard();
-        if (checkWin(isPlayer)) return;
-        onDone();
       });
 
     } else if (SNAKES[pos] !== undefined) {
       const dest = SNAKES[pos];
-      setStatus(name + ' landed on a snake! Answer to avoid sliding down...');
+      setStatus(name + ' landed on a snake! Answer correctly to avoid sliding...');
       showQuestion(isPlayer, correct => {
         if (correct) {
           setStatus(name + ' answered correctly — snake avoided!');
+          onDone();
         } else {
+          const from = isPlayer ? playerPos : compPos;
           if (isPlayer) playerPos = dest; else compPos = dest;
-          setStatus(name + ' got it wrong — slid down to ' + dest + '!');
+          setStatus(name + ' got it wrong — sliding down to ' + dest + '!');
+          updateDisplay();
+          const path = [];
+          for (let s = from; s >= dest; s--) path.push(s);
+          animatePath(isPlayer, path, onDone);
         }
-        updateDisplay(); drawBoard();
-        onDone();
       });
 
     } else {
@@ -516,14 +607,14 @@
       setStatus((isPlayer ? 'You win!' : 'Computer wins!') + ' Reached square 100!');
       phase = 'gameover';
       rollBtn.textContent = 'Play Again';
-      rollBtn.disabled = false;
-      rollBtn.onclick = restartGame;
+      rollBtn.disabled    = false;
+      rollBtn.onclick     = restartGame;
       return true;
     }
     return false;
   }
 
-  // ── Turn management ────────────────────────────
+  // ── Turn management ────────────────────────────────────
   function endTurn() {
     if (phase === 'gameover') return;
     turn = turn === 'player' ? 'comp' : 'player';
@@ -536,13 +627,45 @@
     }
   }
 
+  function buildMovePath(from, die) {
+    let to = from + die;
+    const path = [];
+    if (to > 100) {
+      const excess = to - 100;
+      to = 100 - excess;
+      for (let s = from; s <= 100; s++) path.push(s);
+      for (let s = 99; s >= to; s--) path.push(s);
+    } else {
+      for (let s = from; s <= to; s++) path.push(s);
+    }
+    return { path, to };
+  }
+
   function moveAndProcess(isPlayer, die, onDone) {
-    let pos = (isPlayer ? playerPos : compPos) + die;
-    if (pos > 100) pos = 100 - (pos - 100); // bounce back from 100
-    if (isPlayer) playerPos = pos; else compPos = pos;
-    updateDisplay(); drawBoard();
-    if (checkWin(isPlayer)) return;
-    setTimeout(() => processLanding(isPlayer, onDone), 500);
+    const from = isPlayer ? playerPos : compPos;
+
+    if (from === 0) {
+      // First move: place piece instantly at target
+      const to = die;
+      if (isPlayer) playerPos = to; else compPos = to;
+      updateDisplay();
+      const p = getPos(to);
+      if (isPlayer) vizPlayer = { x: p.x, y: p.y };
+      else           vizComp   = { x: p.x, y: p.y };
+      drawBoard();
+      if (checkWin(isPlayer)) return;
+      setTimeout(() => processLanding(isPlayer, onDone), 350);
+      return;
+    }
+
+    const { path, to } = buildMovePath(from, die);
+    if (isPlayer) playerPos = to; else compPos = to;
+    updateDisplay();
+
+    animatePath(isPlayer, path, () => {
+      if (checkWin(isPlayer)) return;
+      setTimeout(() => processLanding(isPlayer, onDone), 350);
+    });
   }
 
   function compTurn() {
@@ -551,10 +674,11 @@
     setStatus("Computer's turn...");
     setTimeout(() => {
       const die = Math.floor(Math.random() * 6) + 1;
-      diceEl.textContent = DICE_FACES[die - 1];
-      setStatus('Computer rolled a ' + die + '!');
-      moveAndProcess(false, die, endTurn);
-    }, 1000);
+      animateDice(die, () => {
+        setStatus('Computer rolled a ' + die + '!');
+        moveAndProcess(false, die, endTurn);
+      });
+    }, 900);
   }
 
   function playerRoll() {
@@ -562,19 +686,21 @@
     phase = 'rolling';
     rollBtn.disabled = true;
     const die = Math.floor(Math.random() * 6) + 1;
-    diceEl.textContent = DICE_FACES[die - 1];
-    setStatus('You rolled a ' + die + '!');
-    moveAndProcess(true, die, endTurn);
+    animateDice(die, () => {
+      setStatus('You rolled a ' + die + '!');
+      moveAndProcess(true, die, endTurn);
+    });
   }
 
   function restartGame() {
     playerPos = 0; compPos = 0;
+    vizPlayer = null; vizComp = null;
     turn = 'player'; phase = 'idle';
     usedQs.clear();
-    diceEl.textContent = '🎲';
+    diceEl.textContent  = '🎲';
     rollBtn.textContent = 'Roll Dice';
-    rollBtn.disabled = false;
-    rollBtn.onclick = playerRoll;
+    rollBtn.disabled    = false;
+    rollBtn.onclick     = playerRoll;
     updateDisplay();
     setStatus('Click Roll Dice to begin!');
     drawBoard();

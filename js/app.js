@@ -318,6 +318,7 @@ function initHamburgerMenu() {
       <a href="snakes.html" class="menu-link ${page === 'snakes.html' ? 'active' : ''}">Snakes &amp; Ladders</a>
       <a href="game.html" class="menu-link ${page === 'game.html' ? 'active' : ''}">Asteroid Blaster</a>
       <a href="minesweeper.html" class="menu-link ${page === 'minesweeper.html' ? 'active' : ''}">Myth Sweeper</a>
+      <a href="whack.html" class="menu-link ${page === 'whack.html' ? 'active' : ''}">Whack-a-Myth</a>
     </div>
 
     <div class="menu-divider"></div>

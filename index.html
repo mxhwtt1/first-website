@@ -94,51 +94,64 @@
                 <div class="nav-hub-img-placeholder">
                   <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
                     <rect width="200" height="130" fill="#080818"/>
-                    <!-- Mini board grid (4x4) -->
-                    <rect x="10" y="10" width="110" height="110" rx="4" fill="#0a1020"/>
-                    <rect x="10" y="10" width="27" height="27" fill="#0c1630"/>
-                    <rect x="37" y="10" width="27" height="27" fill="#0a1020"/>
-                    <rect x="64" y="10" width="27" height="27" fill="#0c1630"/>
-                    <rect x="91" y="10" width="29" height="27" fill="#0a1020"/>
-                    <rect x="10" y="37" width="27" height="27" fill="#0a1020"/>
-                    <rect x="37" y="37" width="27" height="27" fill="#0c1630"/>
-                    <rect x="64" y="37" width="27" height="27" fill="#0a1020"/>
-                    <rect x="91" y="37" width="29" height="27" fill="#0c1630"/>
-                    <rect x="10" y="64" width="27" height="27" fill="#0c1630"/>
-                    <rect x="37" y="64" width="27" height="27" fill="#0a1020"/>
-                    <rect x="64" y="64" width="27" height="27" fill="#0c1630"/>
-                    <rect x="91" y="64" width="29" height="27" fill="#0a1020"/>
-                    <rect x="10" y="91" width="27" height="27" fill="#0a1020"/>
-                    <rect x="37" y="91" width="27" height="27" fill="#0c1630"/>
-                    <rect x="64" y="91" width="27" height="27" fill="#0a1020"/>
-                    <rect x="91" y="91" width="29" height="27" fill="#0c1630"/>
-                    <!-- Ladder (bottom-left to top-right area) -->
-                    <line x1="24" y1="105" x2="78" y2="24" stroke="#fbbf24" stroke-width="3" opacity="0.85"/>
-                    <line x1="34" y1="105" x2="88" y2="24" stroke="#fbbf24" stroke-width="3" opacity="0.85"/>
-                    <line x1="30" y1="97" x2="82" y2="41" stroke="#fbbf24" stroke-width="2" opacity="0.7"/>
-                    <line x1="28" y1="80" x2="80" y2="57" stroke="#fbbf24" stroke-width="2" opacity="0.7"/>
-                    <!-- Snake (top-right to mid-left) -->
-                    <path d="M105,23 Q90,40 105,57 Q118,73 100,90 Q80,105 65,95" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>
+                    <!-- 4×4 board grid (cells 48×31) -->
+                    <rect x="4"   y="3"  width="48" height="31" fill="#0c1630"/>
+                    <rect x="52"  y="3"  width="48" height="31" fill="#0a1020"/>
+                    <rect x="100" y="3"  width="48" height="31" fill="#0c1630"/>
+                    <rect x="148" y="3"  width="52" height="31" fill="#0a1020"/>
+                    <rect x="4"   y="34" width="48" height="31" fill="#0a1020"/>
+                    <rect x="52"  y="34" width="48" height="31" fill="#112240"/>
+                    <rect x="100" y="34" width="48" height="31" fill="#0a1020"/>
+                    <rect x="148" y="34" width="52" height="31" fill="#0c1630"/>
+                    <rect x="4"   y="65" width="48" height="31" fill="#0c1630"/>
+                    <rect x="52"  y="65" width="48" height="31" fill="#112240"/>
+                    <rect x="100" y="65" width="48" height="31" fill="#0c1630"/>
+                    <rect x="148" y="65" width="52" height="31" fill="#0a1020"/>
+                    <rect x="4"   y="96" width="48" height="31" fill="#0a1020"/>
+                    <rect x="52"  y="96" width="48" height="31" fill="#112240"/>
+                    <rect x="100" y="96" width="48" height="31" fill="#0a1020"/>
+                    <rect x="148" y="96" width="52" height="31" fill="#0c1630"/>
+                    <!-- Cell numbers -->
+                    <text x="28"  y="13"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">16</text>
+                    <text x="76"  y="13"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">15</text>
+                    <text x="124" y="13"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">14</text>
+                    <text x="174" y="13"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">13</text>
+                    <text x="28"  y="44"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">9</text>
+                    <text x="76"  y="44"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.45)" font-family="monospace">10</text>
+                    <text x="124" y="44"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">11</text>
+                    <text x="174" y="44"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">12</text>
+                    <text x="28"  y="75"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">8</text>
+                    <text x="76"  y="75"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.45)" font-family="monospace">7</text>
+                    <text x="124" y="75"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">6</text>
+                    <text x="174" y="75"  text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">5</text>
+                    <text x="28"  y="106" text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">1</text>
+                    <text x="76"  y="106" text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.45)" font-family="monospace">2</text>
+                    <text x="124" y="106" text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">3</text>
+                    <text x="174" y="106" text-anchor="middle" font-size="7" fill="rgba(90,120,170,0.5)" font-family="monospace">4</text>
+                    <!-- Ladder in col 1 (x=52-100): vertical rails + rungs -->
+                    <line x1="68" y1="6"   x2="68" y2="124" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="84" y1="6"   x2="84" y2="124" stroke="#fbbf24" stroke-width="3.5" stroke-linecap="round" opacity="0.9"/>
+                    <line x1="68" y1="18"  x2="84" y2="18"  stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+                    <line x1="68" y1="34"  x2="84" y2="34"  stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+                    <line x1="68" y1="50"  x2="84" y2="50"  stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+                    <line x1="68" y1="65"  x2="84" y2="65"  stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+                    <line x1="68" y1="80"  x2="84" y2="80"  stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+                    <line x1="68" y1="96"  x2="84" y2="96"  stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+                    <line x1="68" y1="111" x2="84" y2="111" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round" opacity="0.85"/>
+                    <!-- Snake diagonal top-right to bottom-left -->
+                    <path d="M174,19 Q162,38 148,32 Q130,24 120,50 Q110,74 100,80 Q84,88 76,80" fill="none" stroke="#ef4444" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.82"/>
                     <!-- Snake head -->
-                    <circle cx="105" cy="23" r="7" fill="#dc2626" opacity="0.9"/>
-                    <circle cx="102" cy="21" r="1.5" fill="#fff"/>
-                    <circle cx="108" cy="21" r="1.5" fill="#fff"/>
-                    <!-- Player piece -->
-                    <circle cx="23" cy="23" r="8" fill="#7DF9FF" opacity="0.9"/>
-                    <text x="23" y="26" text-anchor="middle" font-size="5.5" fill="#000" font-weight="700" font-family="sans-serif">YOU</text>
+                    <circle cx="174" cy="19" r="8" fill="#dc2626" opacity="0.95"/>
+                    <circle cx="171" cy="16" r="2" fill="#fff"/>
+                    <circle cx="177" cy="16" r="2" fill="#fff"/>
+                    <circle cx="171" cy="16" r="1" fill="#222"/>
+                    <circle cx="177" cy="16" r="1" fill="#222"/>
+                    <!-- YOU piece -->
+                    <circle cx="28" cy="112" r="10" fill="#7DF9FF" opacity="0.95"/>
+                    <text x="28" y="115" text-anchor="middle" font-size="5.5" fill="#000" font-weight="700" font-family="sans-serif">YOU</text>
                     <!-- CPU piece -->
-                    <circle cx="99" cy="104" r="8" fill="#fb923c" opacity="0.9"/>
-                    <text x="99" y="107" text-anchor="middle" font-size="5" fill="#000" font-weight="700" font-family="sans-serif">CPU</text>
-                    <!-- Side panel -->
-                    <rect x="128" y="10" width="62" height="110" rx="6" fill="#0c1225" stroke="#1a3050" stroke-width="1"/>
-                    <text x="159" y="28" text-anchor="middle" font-size="7" fill="#888" font-family="sans-serif" letter-spacing="0.5">Q&amp;A</text>
-                    <rect x="136" y="34" width="46" height="22" rx="4" fill="#0a1e14" stroke="#22c55e" stroke-width="1"/>
-                    <text x="159" y="49" text-anchor="middle" font-size="7.5" fill="#22c55e" font-family="sans-serif">True</text>
-                    <rect x="136" y="62" width="46" height="22" rx="4" fill="#1e0a0a" stroke="#ef4444" stroke-width="1"/>
-                    <text x="159" y="77" text-anchor="middle" font-size="7.5" fill="#ef4444" font-family="sans-serif">False</text>
-                    <rect x="136" y="90" width="46" height="24" rx="4" fill="#0a1628" stroke="#4FA3FF" stroke-width="1"/>
-                    <text x="159" y="102" text-anchor="middle" font-size="6" fill="#4FA3FF" font-family="sans-serif">Roll Dice</text>
-                    <text x="159" y="111" text-anchor="middle" font-size="10" fill="#4FA3FF" font-family="sans-serif">🎲</text>
+                    <circle cx="124" cy="50" r="10" fill="#fb923c" opacity="0.95"/>
+                    <text x="124" y="53" text-anchor="middle" font-size="5" fill="#000" font-weight="700" font-family="sans-serif">CPU</text>
                   </svg>
                 </div>
                 <div class="nav-hub-label">
@@ -244,10 +257,34 @@
                 </div>
               </a>
 
-              <a href="#" class="nav-hub-card nav-hub-card--tbd">
-                <div class="nav-hub-icon">&#43;</div>
+              <a href="whack.html" class="nav-hub-card">
+                <div class="nav-hub-img-placeholder">
+                  <svg viewBox="0 0 200 130" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+                    <rect width="200" height="130" fill="#080818"/>
+                    <circle cx="38"  cy="34"  r="20" fill="#0c0c20" stroke="#1a2840" stroke-width="1.5"/>
+                    <circle cx="100" cy="34"  r="20" fill="#0c0c20" stroke="#1a2840" stroke-width="1.5"/>
+                    <circle cx="162" cy="34"  r="20" fill="#0c0c20" stroke="#1a2840" stroke-width="1.5"/>
+                    <circle cx="38"  cy="84"  r="20" fill="#0c0c20" stroke="#1a2840" stroke-width="1.5"/>
+                    <circle cx="100" cy="84"  r="20" fill="#0c0c20" stroke="#1a2840" stroke-width="1.5"/>
+                    <circle cx="162" cy="84"  r="20" fill="#0c0c20" stroke="#1a2840" stroke-width="1.5"/>
+                    <rect x="14" y="10" width="48" height="40" rx="6" fill="rgba(239,68,68,0.18)" stroke="rgba(239,68,68,0.5)" stroke-width="1.5"/>
+                    <text x="38" y="24" text-anchor="middle" font-size="6" font-weight="800" fill="#f87171" font-family="sans-serif" letter-spacing="1">MYTH</text>
+                    <text x="38" y="34" text-anchor="middle" font-size="5.5" fill="#e0e0e0" font-family="sans-serif">Muscle turns</text>
+                    <text x="38" y="42" text-anchor="middle" font-size="5.5" fill="#e0e0e0" font-family="sans-serif">to fat</text>
+                    <rect x="138" y="10" width="48" height="40" rx="6" fill="rgba(79,163,255,0.15)" stroke="rgba(79,163,255,0.4)" stroke-width="1.5"/>
+                    <text x="162" y="24" text-anchor="middle" font-size="6" font-weight="800" fill="#7DF9FF" font-family="sans-serif" letter-spacing="1">FACT</text>
+                    <text x="162" y="34" text-anchor="middle" font-size="5.5" fill="#e0e0e0" font-family="sans-serif">Sleep aids</text>
+                    <text x="162" y="42" text-anchor="middle" font-size="5.5" fill="#e0e0e0" font-family="sans-serif">recovery</text>
+                    <rect x="76" y="60" width="48" height="40" rx="6" fill="rgba(239,68,68,0.18)" stroke="rgba(239,68,68,0.5)" stroke-width="1.5"/>
+                    <text x="100" y="74" text-anchor="middle" font-size="6" font-weight="800" fill="#f87171" font-family="sans-serif" letter-spacing="1">MYTH</text>
+                    <text x="100" y="84" text-anchor="middle" font-size="5.5" fill="#e0e0e0" font-family="sans-serif">10% brain</text>
+                    <text x="100" y="92" text-anchor="middle" font-size="5.5" fill="#e0e0e0" font-family="sans-serif">myth</text>
+                    <rect x="6" y="110" width="36" height="16" rx="4" fill="rgba(79,163,255,0.15)" stroke="rgba(79,163,255,0.3)" stroke-width="1"/>
+                    <text x="24" y="121" text-anchor="middle" font-size="8" font-weight="800" fill="#7DF9FF" font-family="sans-serif">+10</text>
+                  </svg>
+                </div>
                 <div class="nav-hub-label">
-                  <span class="nav-hub-title">Coming Soon</span>
+                  <span class="nav-hub-title">Whack-a-Myth</span>
                   <span class="nav-hub-arrow">→</span>
                 </div>
               </a>
