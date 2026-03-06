@@ -41,27 +41,26 @@
       background: rgba(255,255,255,0.05);
       border: 1px solid rgba(255,255,255,0.12);
       color: #aaa;
-      width: 40px;
-      height: 40px;
+      width: 40px; height: 40px;
       border-radius: 8px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      transition: background 0.18s, color 0.18s, border-color 0.18s;
+      transition: background 0.18s, color 0.18s;
     }
     .pause-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
     .pause-btn:disabled { opacity: 0.25; cursor: not-allowed; }
 
-    /* ── Board ────────────────────────────────────── */
+    /* ── Board — noticeably green ─────────────────── */
     .board-wrap {
       width: 100%;
       max-width: 560px;
-      background: #0e120b;
+      background: linear-gradient(170deg, #173210 0%, #0f2209 60%, #0a1a06 100%);
       border-radius: 20px;
-      padding: 20px 20px 24px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+      padding: 20px 20px 26px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.55),
+                  0 0 0 1px rgba(50,120,20,0.18),
+                  inset 0 1px 0 rgba(80,180,40,0.08);
     }
     .whack-board {
       display: grid;
@@ -71,7 +70,8 @@
 
     /* ── Hole cell ────────────────────────────────── */
     .hole-cell {
-      padding-top: 56px;
+      /* top padding = room for speech bubble */
+      padding-top: 60px;
       position: relative;
     }
     .hole-inner {
@@ -79,22 +79,22 @@
       position: relative;
     }
 
-    /* Speech bubble above the hole */
+    /* Speech bubble above hole */
     .mole-bubble {
       position: absolute;
       bottom: calc(100% + 5px);
       left: 50%;
       transform: translateX(-50%);
-      background: rgba(12,12,24,0.96);
-      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(10,10,22,0.97);
+      border: 1px solid rgba(255,255,255,0.16);
       border-radius: 10px;
       padding: 8px 12px;
-      font-size: 0.84rem;
+      font-size: 0.83rem;
       font-weight: 600;
       color: #f0f0f0;
       text-align: center;
-      width: 128px;
-      line-height: 1.35;
+      width: 130px;
+      line-height: 1.38;
       pointer-events: none;
       z-index: 10;
       opacity: 0;
@@ -107,7 +107,7 @@
       top: 100%; left: 50%;
       transform: translateX(-50%);
       border: 6px solid transparent;
-      border-top-color: rgba(255,255,255,0.15);
+      border-top-color: rgba(255,255,255,0.16);
     }
     .mole-bubble::before {
       content: '';
@@ -115,28 +115,28 @@
       top: calc(100% - 1px); left: 50%;
       transform: translateX(-50%);
       border: 6px solid transparent;
-      border-top-color: rgba(12,12,24,0.96);
+      border-top-color: rgba(10,10,22,0.97);
       z-index: 1;
     }
     .hole-cell.active .mole-bubble { opacity: 1; }
 
-    /* Hole shadow */
+    /* Dark hole shadow */
     .hole-bg {
       position: absolute;
-      bottom: 2%; left: 50%;
+      bottom: 1%; left: 50%;
       transform: translateX(-50%);
-      width: 90%; height: 36%;
-      background: radial-gradient(ellipse at 50% 50%, #2e1206 20%, #080300 100%);
+      width: 90%; height: 38%;
+      background: radial-gradient(ellipse at 50% 50%, #2a1005 15%, #060200 100%);
       border-radius: 50%;
-      box-shadow: inset 0 5px 16px rgba(0,0,0,0.9);
+      box-shadow: inset 0 5px 18px rgba(0,0,0,0.95);
     }
 
-    /* Overflow clip for mole animation */
+    /* Overflow clip — mole slides up */
     .mole-stage {
       position: absolute;
-      bottom: 18%; left: 50%;
+      bottom: 11%; left: 50%;
       transform: translateX(-50%);
-      width: 80%; height: 86%;
+      width: 78%; height: 90%;
       overflow: hidden;
       display: flex;
       align-items: flex-end;
@@ -151,24 +151,24 @@
       flex-direction: column;
       align-items: center;
       transform: translateY(108%);
-      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
       cursor: pointer;
       pointer-events: none;
-      padding-bottom: 3px;
+      padding-bottom: 2px;
     }
     .mole-inner.up { transform: translateY(0); pointer-events: auto; }
-    .mole-svg { width: 88%; max-width: 96px; display: block; }
+    .mole-svg { width: 90%; max-width: 100px; display: block; }
 
-    /* Hole rim (covers mole bottom) */
+    /* Hole rim — covers lower body so it "disappears into the ground" */
     .hole-front {
       position: absolute;
       bottom: 0; left: 50%;
       transform: translateX(-50%);
-      width: 96%; height: 24%;
-      background: radial-gradient(ellipse at 50% 38%, #3d1e08, #1c0904);
+      width: 98%; height: 32%;
+      background: radial-gradient(ellipse at 50% 36%, #3a1c07, #1a0803);
       border-radius: 50%;
       z-index: 3;
-      box-shadow: 0 -3px 8px rgba(0,0,0,0.55), 0 2px 16px rgba(0,0,0,0.85);
+      box-shadow: 0 -4px 10px rgba(0,0,0,0.5), 0 3px 18px rgba(0,0,0,0.9);
     }
 
     /* Hit flash */
@@ -183,7 +183,7 @@
     .instr-myth { color: #f87171; font-weight: 700; }
     .instr-fact { color: #7DF9FF; font-weight: 700; }
 
-    /* ── Full-screen overlays ─────────────────────── */
+    /* ── Overlays ─────────────────────────────────── */
     .game-overlay {
       position: fixed; inset: 0;
       background: rgba(2,2,18,0.92);
@@ -192,15 +192,13 @@
     }
     .game-overlay.hidden { display: none; }
     .overlay-card {
-      background: #0d1628;
-      border: 1.5px solid #3a2a5a;
-      border-radius: 24px;
-      padding: 40px 32px;
+      background: #0d1628; border: 1.5px solid #3a2a5a;
+      border-radius: 24px; padding: 40px 32px;
       max-width: 380px; width: 100%; text-align: center;
     }
     .overlay-title { font-size: 2rem; font-weight: 800; color: #f0f0f0; margin: 0 0 8px; }
-    .overlay-sub { font-size: 0.93rem; color: #888; margin: 0 0 24px; line-height: 1.55; }
-    .overlay-score-big { font-size: 3.5rem; font-weight: 900; color: #c084fc; line-height: 1; margin: 0 0 4px; }
+    .overlay-sub   { font-size: 0.93rem; color: #888; margin: 0 0 24px; line-height: 1.55; }
+    .overlay-score-big   { font-size: 3.5rem; font-weight: 900; color: #c084fc; line-height: 1; margin: 0 0 4px; }
     .overlay-score-label { font-size: 0.72rem; color: #555; letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 28px; }
     .primary-btn {
       background: #7c3aed; border: none; color: #fff;
@@ -360,34 +358,55 @@
     { text: "Cardio helps reduce heart disease risk",       type: 'fact' },
   ];
 
-  // ── Mole SVG: single smooth oval body+head, no arms ──
-  const MOLE_SVG = `<svg class="mole-svg" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <!-- ears -->
-    <ellipse cx="15" cy="22" rx="11" ry="13" fill="#9a6835"/>
-    <ellipse cx="65" cy="22" rx="11" ry="13" fill="#9a6835"/>
-    <ellipse cx="15" cy="22" rx="6.5" ry="8" fill="#d4a0a0"/>
-    <ellipse cx="65" cy="22" rx="6.5" ry="8" fill="#d4a0a0"/>
-    <!-- single oval body+head -->
-    <ellipse cx="40" cy="52" rx="30" ry="40" fill="#b8845a"/>
-    <!-- face shading -->
-    <ellipse cx="40" cy="52" rx="23" ry="31" fill="#c8955a"/>
+  // ── Mole SVG — cute, round head with longer body disappearing into ground ──
+  // viewBox 0 0 80 100: head fills top ~60%, elongated body fills bottom ~60%
+  // (they overlap — gives one continuous creature shape)
+  const MOLE_SVG = `<svg class="mole-svg" viewBox="0 0 80 100" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- elongated body below head (wider, darker — disappears into ground) -->
+    <ellipse cx="40" cy="80" rx="27" ry="30" fill="#8a5c2a"/>
+
+    <!-- ears (behind head) -->
+    <ellipse cx="15" cy="15" rx="11" ry="13" fill="#9a6835"/>
+    <ellipse cx="65" cy="15" rx="11" ry="13" fill="#9a6835"/>
+    <!-- inner ear -->
+    <ellipse cx="15" cy="15" rx="6.5" ry="8" fill="#e8a0a0"/>
+    <ellipse cx="65" cy="15" rx="6.5" ry="8" fill="#e8a0a0"/>
+
+    <!-- round head -->
+    <circle cx="40" cy="36" r="27" fill="#b8845a"/>
+    <!-- face centre shading -->
+    <circle cx="40" cy="38" r="21" fill="#c9975e"/>
+
     <!-- snout mound -->
-    <ellipse cx="40" cy="63" rx="13" ry="9" fill="#c8a070"/>
-    <!-- brows -->
-    <path d="M22 39 Q27 36 33 39" fill="none" stroke="#6a4020" stroke-width="1.8" stroke-linecap="round"/>
-    <path d="M47 39 Q53 36 58 39" fill="none" stroke="#6a4020" stroke-width="1.8" stroke-linecap="round"/>
-    <!-- eyes -->
-    <circle cx="28" cy="46" r="7" fill="#1a1010"/>
-    <circle cx="52" cy="46" r="7" fill="#1a1010"/>
-    <circle cx="29.5" cy="44" r="2.5" fill="#fff"/>
-    <circle cx="53.5" cy="44" r="2.5" fill="#fff"/>
-    <circle cx="30.5" cy="44.8" r="1.2" fill="#111"/>
-    <circle cx="54.5" cy="44.8" r="1.2" fill="#111"/>
+    <ellipse cx="40" cy="50" rx="13" ry="9" fill="#caa878"/>
+
+    <!-- soft brows -->
+    <path d="M21 28 Q27 24 33 28" fill="none" stroke="#7a4820" stroke-width="2" stroke-linecap="round"/>
+    <path d="M47 28 Q53 24 59 28" fill="none" stroke="#7a4820" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- big cute eyes -->
+    <circle cx="27" cy="34" r="9" fill="#111"/>
+    <circle cx="53" cy="34" r="9" fill="#111"/>
+    <!-- large shine -->
+    <circle cx="29.5" cy="30.5" r="3.8" fill="#fff"/>
+    <circle cx="55.5" cy="30.5" r="3.8" fill="#fff"/>
+    <!-- small inner shine -->
+    <circle cx="33"   cy="36"   r="1.5" fill="rgba(255,255,255,0.5)"/>
+    <circle cx="59"   cy="36"   r="1.5" fill="rgba(255,255,255,0.5)"/>
+
+    <!-- blush marks -->
+    <ellipse cx="17" cy="43" rx="7" ry="4.5" fill="#e87878" opacity="0.32"/>
+    <ellipse cx="63" cy="43" rx="7" ry="4.5" fill="#e87878" opacity="0.32"/>
+
     <!-- nose -->
-    <ellipse cx="40" cy="60" rx="6" ry="4.5" fill="#b06060"/>
-    <ellipse cx="40" cy="59" rx="3.5" ry="2.5" fill="#c07070"/>
-    <!-- smile -->
-    <path d="M33 68 Q40 74 47 68" fill="none" stroke="#6a3010" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="40" cy="47" rx="6.5" ry="5" fill="#b85858"/>
+    <ellipse cx="40" cy="46" rx="3.5" ry="2.8" fill="#cc7070"/>
+    <!-- nostrils -->
+    <circle cx="38" cy="47.5" r="1.2" fill="#8a3030" opacity="0.7"/>
+    <circle cx="42" cy="47.5" r="1.2" fill="#8a3030" opacity="0.7"/>
+
+    <!-- big smile -->
+    <path d="M31 55 Q40 64 49 55" fill="none" stroke="#7a4020" stroke-width="2.4" stroke-linecap="round"/>
   </svg>`;
 
   // ── Build board ────────────────────────────────
@@ -435,12 +454,12 @@
   const gameoverTitle   = document.getElementById('gameover-title');
   const gameoverSub     = document.getElementById('gameover-sub');
 
-  // ── Difficulty ─────────────────────────────────
+  // ── Difficulty — generous reading time throughout ──
   function diffParams(elapsed) {
-    if (elapsed < 15) return { interval: 1600, displayTime: 3400 };
-    if (elapsed < 30) return { interval: 1250, displayTime: 2800 };
-    if (elapsed < 45) return { interval: 1000, displayTime: 2300 };
-    return             { interval: 800,  displayTime: 1900 };
+    if (elapsed < 15) return { interval: 1800, displayTime: 4500 };
+    if (elapsed < 30) return { interval: 1400, displayTime: 3800 };
+    if (elapsed < 45) return { interval: 1100, displayTime: 3200 };
+    return             { interval: 900,  displayTime: 2700 };
   }
 
   // ── Pop a mole ─────────────────────────────────
@@ -453,24 +472,17 @@
     if (inactive.length > 0) {
       const idx  = inactive[Math.floor(Math.random() * inactive.length)];
       const item = ITEMS[Math.floor(Math.random() * ITEMS.length)];
-
       const mole   = moleInners[idx];
-      const bubble = document.getElementById('bubble-' + idx);
-
-      bubble.textContent = item.text;
+      document.getElementById('bubble-' + idx).textContent = item.text;
       mole._type = item.type;
       mole.classList.remove('hit-good', 'hit-bad');
       active[idx] = true;
       void mole.offsetWidth;
       mole.classList.add('up');
       holeCells[idx].classList.add('active');
-
-      const hid = setTimeout(() => hideMole(idx), displayTime);
-      hideIds.push(hid);
+      hideIds.push(setTimeout(() => hideMole(idx), displayTime));
     }
-
-    const pid = setTimeout(peep, interval + Math.floor(Math.random() * 300) - 150);
-    peepIds.push(pid);
+    peepIds.push(setTimeout(peep, interval + Math.floor(Math.random() * 300) - 150));
   }
 
   function hideMole(idx) {
@@ -486,7 +498,6 @@
     if (!mole) return;
     const idx = moleInners.indexOf(mole);
     if (idx < 0 || !active[idx]) return;
-
     active[idx] = false;
     holeCells[idx].classList.remove('active');
 
@@ -499,14 +510,14 @@
       hearts = Math.max(0, hearts - 1);
       updateHearts();
       mole.classList.add('hit-bad');
-      setTimeout(() => {
-        hideMole(idx);
-        if (hearts === 0) setTimeout(endGame, 320);
-      }, 320);
+      setTimeout(() => { hideMole(idx); if (hearts === 0) setTimeout(endGame, 320); }, 320);
     }
   });
 
   // ── Pause / resume ─────────────────────────────
+  const PAUSE_ICON  = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><rect x="5" y="3" width="4" height="18" rx="1"/><rect x="15" y="3" width="4" height="18" rx="1"/></svg>`;
+  const RESUME_ICON = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>`;
+
   function pauseGame() {
     if (!running) return;
     paused = true;
@@ -515,10 +526,8 @@
     peepIds = []; hideIds = [];
     for (let i = 0; i < 9; i++) if (active[i]) hideMole(i);
     pauseOverlay.classList.remove('hidden');
+    pauseBtn.innerHTML = RESUME_ICON;
     pauseBtn.setAttribute('aria-label', 'Resume');
-    pauseBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <polygon points="5,3 19,12 5,21"/>
-    </svg>`;
   }
 
   function resumeGame() {
@@ -526,22 +535,18 @@
     pauseOverlay.classList.add('hidden');
     timerId = setInterval(tickTimer, 1000);
     peep();
+    pauseBtn.innerHTML = PAUSE_ICON;
     pauseBtn.setAttribute('aria-label', 'Pause');
-    pauseBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <rect x="5" y="3" width="4" height="18" rx="1"/>
-      <rect x="15" y="3" width="4" height="18" rx="1"/>
-    </svg>`;
   }
 
   pauseBtn.addEventListener('click', () => paused ? resumeGame() : pauseGame());
   document.getElementById('resume-btn').addEventListener('click', resumeGame);
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
-      if (running) paused ? resumeGame() : pauseGame();
+    if ((e.key === 'Escape' || e.key === 'p' || e.key === 'P') && running) {
+      paused ? resumeGame() : pauseGame();
     }
   });
 
-  // ── Helpers ────────────────────────────────────
   function updateHearts() {
     heartsEl.innerHTML =
       '&#10084;'.repeat(hearts) +
@@ -552,17 +557,13 @@
     timeLeft--;
     timerEl.textContent = timeLeft;
     timerBarEl.style.width = (timeLeft / 60 * 100) + '%';
-    if (timeLeft <= 10) {
-      timerEl.classList.add('urgent');
-      timerBarEl.classList.add('urgent');
-    }
+    if (timeLeft <= 10) { timerEl.classList.add('urgent'); timerBarEl.classList.add('urgent'); }
     if (timeLeft <= 0) endGame();
   }
 
   // ── Start / end ────────────────────────────────
   function startGame() {
-    score = 0; hearts = 3; timeLeft = 60;
-    running = true; paused = false;
+    score = 0; hearts = 3; timeLeft = 60; running = true; paused = false;
     scoreEl.textContent = '0';
     timerEl.textContent = '60';
     timerEl.classList.remove('urgent');
@@ -570,15 +571,10 @@
     timerBarEl.classList.remove('urgent');
     updateHearts();
     for (let i = 0; i < 9; i++) hideMole(i);
-    startOverlay.classList.add('hidden');
-    gameoverOverlay.classList.add('hidden');
-    pauseOverlay.classList.add('hidden');
+    [startOverlay, gameoverOverlay, pauseOverlay].forEach(o => o.classList.add('hidden'));
     pauseBtn.disabled = false;
+    pauseBtn.innerHTML = PAUSE_ICON;
     pauseBtn.setAttribute('aria-label', 'Pause');
-    pauseBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <rect x="5" y="3" width="4" height="18" rx="1"/>
-      <rect x="15" y="3" width="4" height="18" rx="1"/>
-    </svg>`;
     timerId = setInterval(tickTimer, 1000);
     peep();
   }
@@ -590,15 +586,13 @@
     peepIds = []; hideIds = [];
     for (let i = 0; i < 9; i++) if (active[i]) hideMole(i);
     pauseBtn.disabled = true;
-
     finalScoreEl.textContent = score;
     if (hearts === 0) {
       gameoverTitle.textContent = 'No Hearts Left!';
       gameoverSub.textContent   = 'You clicked too many facts. Final score: ' + score + ' pts.';
     } else {
       gameoverTitle.textContent = "Time's Up!";
-      const r = score >= 100 ? 'Excellent!' : score >= 60 ? 'Nice effort!' : 'Keep practising!';
-      gameoverSub.textContent = r + ' You scored ' + score + ' points.';
+      gameoverSub.textContent   = (score >= 100 ? 'Excellent!' : score >= 60 ? 'Nice effort!' : 'Keep practising!') + ' You scored ' + score + ' points.';
     }
     gameoverOverlay.classList.remove('hidden');
   }
