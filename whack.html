@@ -6,7 +6,6 @@
   <title>Whack-a-Myth | Hack Your Body: Fact vs Myth</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* ── Layout ───────────────────────────────────── */
     .whack-outer {
       display: flex;
       flex-direction: column;
@@ -15,7 +14,7 @@
       padding: 0 0 60px;
     }
 
-    /* ── HUD strip ────────────────────────────────── */
+    /* ── HUD ──────────────────────────────────────── */
     .hud-strip {
       width: 100%;
       max-width: 560px;
@@ -25,8 +24,8 @@
       background: rgba(255,255,255,0.03);
       border: 1px solid rgba(255,255,255,0.07);
       border-radius: 14px;
-      padding: 14px 22px;
-      gap: 16px;
+      padding: 12px 18px;
+      gap: 12px;
     }
     .hud-item { text-align: center; }
     .hud-label { font-size: 0.65rem; color: #555; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px; }
@@ -38,6 +37,22 @@
     .timer-bar-track { margin-top: 6px; height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
     .timer-bar-fill { height: 100%; background: #c084fc; border-radius: 2px; transition: width 0.95s linear, background 0.4s; }
     .timer-bar-fill.urgent { background: #ef4444; }
+    .pause-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #aaa;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: background 0.18s, color 0.18s, border-color 0.18s;
+    }
+    .pause-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+    .pause-btn:disabled { opacity: 0.25; cursor: not-allowed; }
 
     /* ── Board ────────────────────────────────────── */
     .board-wrap {
@@ -56,43 +71,40 @@
 
     /* ── Hole cell ────────────────────────────────── */
     .hole-cell {
-      /* Extra top padding so the speech bubble above doesn't collide */
-      padding-top: 52px;
+      padding-top: 56px;
       position: relative;
     }
     .hole-inner {
-      /* The actual square area that holds the hole + mole */
       aspect-ratio: 1;
       position: relative;
     }
 
-    /* Speech bubble — sits above the hole, always in normal flow */
+    /* Speech bubble above the hole */
     .mole-bubble {
       position: absolute;
-      bottom: calc(100% + 4px);
+      bottom: calc(100% + 5px);
       left: 50%;
       transform: translateX(-50%);
       background: rgba(12,12,24,0.96);
       border: 1px solid rgba(255,255,255,0.15);
       border-radius: 10px;
-      padding: 7px 11px;
-      font-size: 0.82rem;
+      padding: 8px 12px;
+      font-size: 0.84rem;
       font-weight: 600;
       color: #f0f0f0;
       text-align: center;
-      width: 120px;
+      width: 128px;
       line-height: 1.35;
       pointer-events: none;
       z-index: 10;
       opacity: 0;
-      transition: opacity 0.18s 0.12s;
+      transition: opacity 0.2s 0.1s;
       white-space: normal;
     }
     .mole-bubble::after {
       content: '';
       position: absolute;
-      top: 100%;
-      left: 50%;
+      top: 100%; left: 50%;
       transform: translateX(-50%);
       border: 6px solid transparent;
       border-top-color: rgba(255,255,255,0.15);
@@ -100,8 +112,7 @@
     .mole-bubble::before {
       content: '';
       position: absolute;
-      top: calc(100% - 1px);
-      left: 50%;
+      top: calc(100% - 1px); left: 50%;
       transform: translateX(-50%);
       border: 6px solid transparent;
       border-top-color: rgba(12,12,24,0.96);
@@ -109,27 +120,23 @@
     }
     .hole-cell.active .mole-bubble { opacity: 1; }
 
-    /* Dark hole shadow behind mole */
+    /* Hole shadow */
     .hole-bg {
       position: absolute;
-      bottom: 2%;
-      left: 50%;
+      bottom: 2%; left: 50%;
       transform: translateX(-50%);
-      width: 90%;
-      height: 36%;
+      width: 90%; height: 36%;
       background: radial-gradient(ellipse at 50% 50%, #2e1206 20%, #080300 100%);
       border-radius: 50%;
       box-shadow: inset 0 5px 16px rgba(0,0,0,0.9);
     }
 
-    /* Overflow clip — mole slides up from here */
+    /* Overflow clip for mole animation */
     .mole-stage {
       position: absolute;
-      bottom: 18%;
-      left: 50%;
+      bottom: 18%; left: 50%;
       transform: translateX(-50%);
-      width: 82%;
-      height: 86%;
+      width: 80%; height: 86%;
       overflow: hidden;
       display: flex;
       align-items: flex-end;
@@ -137,7 +144,7 @@
       z-index: 2;
     }
 
-    /* The mole character — slides up/down */
+    /* Mole character */
     .mole-inner {
       width: 100%;
       display: flex;
@@ -149,41 +156,20 @@
       pointer-events: none;
       padding-bottom: 3px;
     }
-    .mole-inner.up {
-      transform: translateY(0);
-      pointer-events: auto;
-    }
+    .mole-inner.up { transform: translateY(0); pointer-events: auto; }
+    .mole-svg { width: 88%; max-width: 96px; display: block; }
 
-    /* Front of hole — covers the mole's lower body */
+    /* Hole rim (covers mole bottom) */
     .hole-front {
       position: absolute;
-      bottom: 0;
-      left: 50%;
+      bottom: 0; left: 50%;
       transform: translateX(-50%);
-      width: 96%;
-      height: 24%;
+      width: 96%; height: 24%;
       background: radial-gradient(ellipse at 50% 38%, #3d1e08, #1c0904);
       border-radius: 50%;
       z-index: 3;
       box-shadow: 0 -3px 8px rgba(0,0,0,0.55), 0 2px 16px rgba(0,0,0,0.85);
     }
-
-    /* ── Mole badge ───────────────────────────────── */
-    .mole-badge {
-      font-size: clamp(0.54rem, 1.5vw, 0.68rem);
-      font-weight: 800;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      padding: 2px 8px;
-      border-radius: 4px;
-      margin-bottom: 4px;
-      flex-shrink: 0;
-      line-height: 1.5;
-    }
-    .mole-badge.is-myth { background: rgba(239,68,68,0.22); color: #f87171; border: 1px solid rgba(239,68,68,0.45); }
-    .mole-badge.is-fact { background: rgba(79,163,255,0.18); color: #7DF9FF; border: 1px solid rgba(79,163,255,0.4); }
-
-    .mole-svg { width: 82%; max-width: 88px; display: block; }
 
     /* Hit flash */
     .mole-inner.hit-good .mole-svg { filter: brightness(2) saturate(1.4); }
@@ -191,17 +177,13 @@
 
     /* ── Instructions ─────────────────────────────── */
     .whack-instructions {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-      font-size: 0.82rem;
-      color: #888;
+      display: flex; gap: 20px; flex-wrap: wrap;
+      justify-content: center; font-size: 0.82rem; color: #888;
     }
     .instr-myth { color: #f87171; font-weight: 700; }
     .instr-fact { color: #7DF9FF; font-weight: 700; }
 
-    /* ── Overlays ─────────────────────────────────── */
+    /* ── Full-screen overlays ─────────────────────── */
     .game-overlay {
       position: fixed; inset: 0;
       background: rgba(2,2,18,0.92);
@@ -214,27 +196,26 @@
       border: 1.5px solid #3a2a5a;
       border-radius: 24px;
       padding: 40px 32px;
-      max-width: 380px; width: 100%;
-      text-align: center;
+      max-width: 380px; width: 100%; text-align: center;
     }
     .overlay-title { font-size: 2rem; font-weight: 800; color: #f0f0f0; margin: 0 0 8px; }
     .overlay-sub { font-size: 0.93rem; color: #888; margin: 0 0 24px; line-height: 1.55; }
     .overlay-score-big { font-size: 3.5rem; font-weight: 900; color: #c084fc; line-height: 1; margin: 0 0 4px; }
     .overlay-score-label { font-size: 0.72rem; color: #555; letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 28px; }
-    .start-btn {
+    .primary-btn {
       background: #7c3aed; border: none; color: #fff;
       font-size: 1.1rem; font-weight: 700; padding: 16px 56px;
       border-radius: 14px; cursor: pointer; font-family: inherit;
       transition: background 0.2s; display: block; width: 100%; margin-bottom: 10px;
     }
-    .start-btn:hover { background: #9333ea; }
-    .home-btn {
+    .primary-btn:hover { background: #9333ea; }
+    .ghost-btn {
       background: transparent; border: 1px solid rgba(255,255,255,0.12); color: #888;
       font-size: 0.9rem; font-weight: 600; padding: 11px 32px; border-radius: 10px;
       cursor: pointer; font-family: inherit; transition: border-color 0.2s, color 0.2s;
       display: block; width: 100%;
     }
-    .home-btn:hover { border-color: rgba(255,255,255,0.3); color: #ddd; }
+    .ghost-btn:hover { border-color: rgba(255,255,255,0.3); color: #ddd; }
   </style>
 </head>
 <body>
@@ -252,7 +233,7 @@
   <section class="page-hero">
     <div class="container">
       <h1>Whack-a-Myth</h1>
-      <p>Read the statement on each mole — whack it if it's a <strong>MYTH</strong>, leave it if it's a <strong>FACT</strong>!</p>
+      <p>Read what the mole says — whack it if it's a <strong>MYTH</strong>, leave it if it's a <strong>FACT</strong>!</p>
     </div>
   </section>
 
@@ -277,6 +258,12 @@
             <div class="hud-label">Hearts</div>
             <div class="hud-hearts" id="hearts-display">&#10084;&#10084;&#10084;</div>
           </div>
+          <button class="pause-btn" id="pause-btn" aria-label="Pause" disabled>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+              <rect x="5" y="3" width="4" height="18" rx="1"/>
+              <rect x="15" y="3" width="4" height="18" rx="1"/>
+            </svg>
+          </button>
         </div>
 
         <!-- Board -->
@@ -286,8 +273,8 @@
 
         <!-- Instructions -->
         <div class="whack-instructions">
-          <span>Read the text — <span class="instr-myth">MYTH</span> = whack it (+10)</span>
-          <span><span class="instr-fact">FACT</span> = leave it (clicking = −1 heart)</span>
+          <span>Read the statement — <span class="instr-myth">MYTH</span> = whack it (+10)</span>
+          <span><span class="instr-fact">FACT</span> = leave it (−1 heart if clicked)</span>
         </div>
 
       </div>
@@ -299,15 +286,25 @@
     <div class="overlay-card">
       <div class="overlay-title">Whack-a-Myth</div>
       <div class="overlay-sub">
-        Moles pop up carrying a statement.<br>
-        Read it — whack <strong style="color:#f87171">MYTHS</strong>, spare <strong style="color:#7DF9FF">FACTS</strong>!
+        Moles pop up with a statement.<br>
+        Whack <strong style="color:#f87171">MYTHS</strong> — spare <strong style="color:#7DF9FF">FACTS</strong>!
       </div>
       <div style="display:flex;gap:18px;justify-content:center;margin-bottom:24px;font-size:0.82rem;color:#888;flex-wrap:wrap;">
         <span><span class="instr-myth">MYTH</span> = +10 pts</span>
         <span><span class="instr-fact">FACT</span> = −1 heart</span>
         <span>3 hearts &bull; 60 sec</span>
       </div>
-      <button class="start-btn" id="start-btn">Start Game</button>
+      <button class="primary-btn" id="start-btn">Start Game</button>
+    </div>
+  </div>
+
+  <!-- Pause overlay -->
+  <div class="game-overlay hidden" id="pause-overlay">
+    <div class="overlay-card">
+      <div class="overlay-title">Paused</div>
+      <div class="overlay-sub">Take a breather — your time is frozen.</div>
+      <button class="primary-btn" id="resume-btn">Resume</button>
+      <button class="ghost-btn" onclick="location.href='index.html'">Go Home</button>
     </div>
   </div>
 
@@ -318,8 +315,8 @@
       <div class="overlay-score-big" id="final-score">0</div>
       <div class="overlay-score-label">points</div>
       <div class="overlay-sub" id="gameover-sub"></div>
-      <button class="start-btn" id="play-again-btn">Play Again</button>
-      <button class="home-btn" onclick="window.location.href='index.html'">Go Home</button>
+      <button class="primary-btn" id="play-again-btn">Play Again</button>
+      <button class="ghost-btn" onclick="location.href='index.html'">Go Home</button>
     </div>
   </div>
 
@@ -363,38 +360,34 @@
     { text: "Cardio helps reduce heart disease risk",       type: 'fact' },
   ];
 
-  // ── Mole SVG — identical for all moles (neutral face) ──
-  const MOLE_SVG = `<svg class="mole-svg" viewBox="0 0 80 84" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <!-- paws -->
-    <ellipse cx="10" cy="70" rx="9" ry="11" fill="#9a6835" transform="rotate(-18,10,70)"/>
-    <ellipse cx="70" cy="70" rx="9" ry="11" fill="#9a6835" transform="rotate(18,70,70)"/>
-    <!-- body -->
-    <ellipse cx="40" cy="78" rx="27" ry="16" fill="#9a6835"/>
+  // ── Mole SVG: single smooth oval body+head, no arms ──
+  const MOLE_SVG = `<svg class="mole-svg" viewBox="0 0 80 90" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
     <!-- ears -->
-    <ellipse cx="16" cy="22" rx="11" ry="13" fill="#9a6835"/>
-    <ellipse cx="64" cy="22" rx="11" ry="13" fill="#9a6835"/>
-    <ellipse cx="16" cy="22" rx="6.5" ry="8" fill="#d4a0a0"/>
-    <ellipse cx="64" cy="22" rx="6.5" ry="8" fill="#d4a0a0"/>
-    <!-- head -->
-    <circle cx="40" cy="40" r="28" fill="#b8845a"/>
-    <circle cx="40" cy="43" r="22" fill="#c8955a"/>
-    <!-- snout -->
-    <ellipse cx="40" cy="51" rx="12" ry="9" fill="#c8a070"/>
-    <!-- neutral brows -->
-    <path d="M22 28 Q27 25 33 28" fill="none" stroke="#6a4020" stroke-width="1.8" stroke-linecap="round"/>
-    <path d="M47 28 Q53 25 58 28" fill="none" stroke="#6a4020" stroke-width="1.8" stroke-linecap="round"/>
+    <ellipse cx="15" cy="22" rx="11" ry="13" fill="#9a6835"/>
+    <ellipse cx="65" cy="22" rx="11" ry="13" fill="#9a6835"/>
+    <ellipse cx="15" cy="22" rx="6.5" ry="8" fill="#d4a0a0"/>
+    <ellipse cx="65" cy="22" rx="6.5" ry="8" fill="#d4a0a0"/>
+    <!-- single oval body+head -->
+    <ellipse cx="40" cy="52" rx="30" ry="40" fill="#b8845a"/>
+    <!-- face shading -->
+    <ellipse cx="40" cy="52" rx="23" ry="31" fill="#c8955a"/>
+    <!-- snout mound -->
+    <ellipse cx="40" cy="63" rx="13" ry="9" fill="#c8a070"/>
+    <!-- brows -->
+    <path d="M22 39 Q27 36 33 39" fill="none" stroke="#6a4020" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M47 39 Q53 36 58 39" fill="none" stroke="#6a4020" stroke-width="1.8" stroke-linecap="round"/>
     <!-- eyes -->
-    <circle cx="28" cy="37" r="7" fill="#1a1010"/>
-    <circle cx="52" cy="37" r="7" fill="#1a1010"/>
-    <circle cx="29.5" cy="35" r="2.5" fill="#fff"/>
-    <circle cx="53.5" cy="35" r="2.5" fill="#fff"/>
-    <circle cx="30.5" cy="35.8" r="1.2" fill="#111"/>
-    <circle cx="54.5" cy="35.8" r="1.2" fill="#111"/>
+    <circle cx="28" cy="46" r="7" fill="#1a1010"/>
+    <circle cx="52" cy="46" r="7" fill="#1a1010"/>
+    <circle cx="29.5" cy="44" r="2.5" fill="#fff"/>
+    <circle cx="53.5" cy="44" r="2.5" fill="#fff"/>
+    <circle cx="30.5" cy="44.8" r="1.2" fill="#111"/>
+    <circle cx="54.5" cy="44.8" r="1.2" fill="#111"/>
     <!-- nose -->
-    <ellipse cx="40" cy="49" rx="6" ry="4.5" fill="#b06060"/>
-    <ellipse cx="40" cy="48" rx="3.5" ry="2.5" fill="#c07070"/>
-    <!-- slight smile -->
-    <path d="M33 57 Q40 63 47 57" fill="none" stroke="#6a3010" stroke-width="2" stroke-linecap="round"/>
+    <ellipse cx="40" cy="60" rx="6" ry="4.5" fill="#b06060"/>
+    <ellipse cx="40" cy="59" rx="3.5" ry="2.5" fill="#c07070"/>
+    <!-- smile -->
+    <path d="M33 68 Q40 74 47 68" fill="none" stroke="#6a3010" stroke-width="2" stroke-linecap="round"/>
   </svg>`;
 
   // ── Build board ────────────────────────────────
@@ -411,10 +404,7 @@
         <div class="mole-bubble" id="bubble-${i}"></div>
         <div class="hole-bg"></div>
         <div class="mole-stage">
-          <div class="mole-inner" id="mole-${i}">
-            <div class="mole-badge" id="badge-${i}">MYTH</div>
-            ${MOLE_SVG}
-          </div>
+          <div class="mole-inner" id="mole-${i}">${MOLE_SVG}</div>
         </div>
         <div class="hole-front"></div>
       </div>`;
@@ -423,11 +413,12 @@
     holeCells.push(cell);
   }
 
-  // ── Game state ─────────────────────────────────
+  // ── State ──────────────────────────────────────
   let score    = 0;
   let hearts   = 3;
   let timeLeft = 60;
   let running  = false;
+  let paused   = false;
   let timerId  = null;
   let peepIds  = [];
   let hideIds  = [];
@@ -436,23 +427,25 @@
   const timerEl         = document.getElementById('timer-display');
   const timerBarEl      = document.getElementById('timer-bar');
   const heartsEl        = document.getElementById('hearts-display');
+  const pauseBtn        = document.getElementById('pause-btn');
   const startOverlay    = document.getElementById('start-overlay');
+  const pauseOverlay    = document.getElementById('pause-overlay');
   const gameoverOverlay = document.getElementById('gameover-overlay');
   const finalScoreEl    = document.getElementById('final-score');
   const gameoverTitle   = document.getElementById('gameover-title');
   const gameoverSub     = document.getElementById('gameover-sub');
 
-  // ── Difficulty — longer display times for readability ──
+  // ── Difficulty ─────────────────────────────────
   function diffParams(elapsed) {
-    if (elapsed < 15) return { interval: 1500, displayTime: 2900 };
-    if (elapsed < 30) return { interval: 1200, displayTime: 2400 };
-    if (elapsed < 45) return { interval: 950,  displayTime: 2000 };
-    return             { interval: 750,  displayTime: 1700 };
+    if (elapsed < 15) return { interval: 1600, displayTime: 3400 };
+    if (elapsed < 30) return { interval: 1250, displayTime: 2800 };
+    if (elapsed < 45) return { interval: 1000, displayTime: 2300 };
+    return             { interval: 800,  displayTime: 1900 };
   }
 
   // ── Pop a mole ─────────────────────────────────
   function peep() {
-    if (!running) return;
+    if (!running || paused) return;
     const elapsed = 60 - timeLeft;
     const { interval, displayTime } = diffParams(elapsed);
 
@@ -462,14 +455,10 @@
       const item = ITEMS[Math.floor(Math.random() * ITEMS.length)];
 
       const mole   = moleInners[idx];
-      const badge  = document.getElementById('badge-' + idx);
       const bubble = document.getElementById('bubble-' + idx);
 
-      badge.textContent = item.type === 'myth' ? 'MYTH' : 'FACT';
-      badge.className   = 'mole-badge is-' + item.type;
       bubble.textContent = item.text;
       mole._type = item.type;
-
       mole.classList.remove('hit-good', 'hit-bad');
       active[idx] = true;
       void mole.offsetWidth;
@@ -492,7 +481,7 @@
 
   // ── Click handler ──────────────────────────────
   boardEl.addEventListener('click', e => {
-    if (!running) return;
+    if (!running || paused) return;
     const mole = e.target.closest('.mole-inner.up');
     if (!mole) return;
     const idx = moleInners.indexOf(mole);
@@ -500,9 +489,8 @@
 
     active[idx] = false;
     holeCells[idx].classList.remove('active');
-    const type = mole._type;
 
-    if (type === 'myth') {
+    if (mole._type === 'myth') {
       score += 10;
       scoreEl.textContent = score;
       mole.classList.add('hit-good');
@@ -518,6 +506,42 @@
     }
   });
 
+  // ── Pause / resume ─────────────────────────────
+  function pauseGame() {
+    if (!running) return;
+    paused = true;
+    clearInterval(timerId);
+    peepIds.forEach(clearTimeout); hideIds.forEach(clearTimeout);
+    peepIds = []; hideIds = [];
+    for (let i = 0; i < 9; i++) if (active[i]) hideMole(i);
+    pauseOverlay.classList.remove('hidden');
+    pauseBtn.setAttribute('aria-label', 'Resume');
+    pauseBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <polygon points="5,3 19,12 5,21"/>
+    </svg>`;
+  }
+
+  function resumeGame() {
+    paused = false;
+    pauseOverlay.classList.add('hidden');
+    timerId = setInterval(tickTimer, 1000);
+    peep();
+    pauseBtn.setAttribute('aria-label', 'Pause');
+    pauseBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <rect x="5" y="3" width="4" height="18" rx="1"/>
+      <rect x="15" y="3" width="4" height="18" rx="1"/>
+    </svg>`;
+  }
+
+  pauseBtn.addEventListener('click', () => paused ? resumeGame() : pauseGame());
+  document.getElementById('resume-btn').addEventListener('click', resumeGame);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' || e.key === 'p' || e.key === 'P') {
+      if (running) paused ? resumeGame() : pauseGame();
+    }
+  });
+
+  // ── Helpers ────────────────────────────────────
   function updateHearts() {
     heartsEl.innerHTML =
       '&#10084;'.repeat(hearts) +
@@ -537,26 +561,35 @@
 
   // ── Start / end ────────────────────────────────
   function startGame() {
-    score = 0; hearts = 3; timeLeft = 60; running = true;
+    score = 0; hearts = 3; timeLeft = 60;
+    running = true; paused = false;
     scoreEl.textContent = '0';
     timerEl.textContent = '60';
     timerEl.classList.remove('urgent');
     timerBarEl.style.width = '100%';
     timerBarEl.classList.remove('urgent');
     updateHearts();
-    for (let i = 0; i < 9; i++) { hideMole(i); }
+    for (let i = 0; i < 9; i++) hideMole(i);
     startOverlay.classList.add('hidden');
     gameoverOverlay.classList.add('hidden');
+    pauseOverlay.classList.add('hidden');
+    pauseBtn.disabled = false;
+    pauseBtn.setAttribute('aria-label', 'Pause');
+    pauseBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <rect x="5" y="3" width="4" height="18" rx="1"/>
+      <rect x="15" y="3" width="4" height="18" rx="1"/>
+    </svg>`;
     timerId = setInterval(tickTimer, 1000);
     peep();
   }
 
   function endGame() {
-    running = false;
+    running = false; paused = false;
     clearInterval(timerId);
     peepIds.forEach(clearTimeout); hideIds.forEach(clearTimeout);
     peepIds = []; hideIds = [];
     for (let i = 0; i < 9; i++) if (active[i]) hideMole(i);
+    pauseBtn.disabled = true;
 
     finalScoreEl.textContent = score;
     if (hearts === 0) {
