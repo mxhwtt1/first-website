@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Practice | Hack Your Body: Fact vs Myth</title>
+  <meta name="description" content="20 flashcards to test your knowledge. Click each card to reveal the answer." />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .flashcard-intro {
+      text-align: center;
+      color: var(--color-muted);
+      font-size: 0.9rem;
+      margin-bottom: 36px;
+    }
+    .flashcard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 60px;
+    }
+    .card-scene {
+      perspective: 900px;
+      height: 148px;
+    }
+    .card-flip {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.4, 0.2, 0.2, 1);
+      cursor: pointer;
+      border-radius: 12px;
+    }
+    .card-flip.flipped {
+      transform: rotateY(180deg);
+    }
+    .card-face {
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      text-align: center;
+      gap: 8px;
+    }
+    .card-front {
+      background: #1a1a1a;
+      border: 2px solid #333;
+    }
+    .card-front:hover {
+      border-color: #0068C4;
+    }
+    .card-back {
+      background: #0c2a4a;
+      border: 2px solid #0068C4;
+      transform: rotateY(180deg);
+    }
+    .card-number {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--color-muted);
+      text-transform: uppercase;
+    }
+    .card-icon {
+      font-size: 1.8rem;
+      line-height: 1;
+    }
+    .card-label {
+      font-size: 0.82rem;
+      color: #888;
+      font-style: italic;
+    }
+    .card-coming-soon {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: #7DF9FF;
+      letter-spacing: 0.3px;
+    }
+    .card-hint {
+      font-size: 0.72rem;
+      color: #555;
+      margin-top: 4px;
+    }
+    .progress-bar-wrap {
+      max-width: 500px;
+      margin: 0 auto 28px;
+    }
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: var(--color-muted);
+      margin-bottom: 6px;
+    }
+    .progress-bar {
+      height: 6px;
+      background: #222;
+      border-radius: 99px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: #0068C4;
+      border-radius: 99px;
+      width: 0%;
+      transition: width 0.3s;
+    }
+    .reset-btn {
+      display: block;
+      margin: 0 auto 48px;
+      background: transparent;
+      border: 2px solid #333;
+      color: var(--color-muted);
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .reset-btn:hover {
+      border-color: #0068C4;
+      color: #f0f0f0;
+    }
+    @media (max-width: 500px) {
+      .flashcard-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+      .card-scene { height: 130px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Desktop header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo"><span>Hack</span> Your Body</a>
+      <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="library.html">Myth Library</a>
+        <a href="practice.html" class="active">Practice</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Practice Flashcards</h1>
+      <p>Click each card to flip it and reveal the answer.</p>
+    </div>
+  </section>
+
+  <main>
+    <section class="section">
+      <div class="container">
+
+        <div class="progress-bar-wrap">
+          <div class="progress-label">
+            <span>Cards flipped</span>
+            <span id="progress-text">0 / 20</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill"></div>
+          </div>
+        </div>
+
+        <div class="flashcard-grid" id="flashcard-grid"></div>
+
+        <button class="reset-btn" id="reset-btn">Reset all cards</button>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-meta">
+        <span>Last reviewed: March 2026</span>
+        <span>This site does not replace medical advice. Contact your team or GP for individual guidance.</span>
+      </div>
+      <div class="footer-links">
+        <a href="library.html">Myth Library</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile bottom nav -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/>
+      </svg>
+      Home
+    </a>
+    <a href="library.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      Library
+    </a>
+    <a href="practice.html" class="active">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="2"/><path d="M12 9v6M9 12h6"/>
+      </svg>
+      Practice
+    </a>
+    <a href="about.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+      </svg>
+      About
+    </a>
+    <a href="contact.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.8 19.8 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+      </svg>
+      Contact
+    </a>
+  </nav>
+
+  <script src="js/app.js"></script>
+  <script>
+    const TOTAL = 20;
+    let flipped = new Set();
+
+    function updateProgress() {
+      const n = flipped.size;
+      document.getElementById('progress-text').textContent = n + ' / ' + TOTAL;
+      document.getElementById('progress-fill').style.width = (n / TOTAL * 100) + '%';
+    }
+
+    function buildCards() {
+      const grid = document.getElementById('flashcard-grid');
+      grid.innerHTML = '';
+      flipped.clear();
+      updateProgress();
+
+      for (let i = 1; i <= TOTAL; i++) {
+        const scene = document.createElement('div');
+        scene.className = 'card-scene';
+
+        const card = document.createElement('div');
+        card.className = 'card-flip';
+        card.setAttribute('role', 'button');
+        card.setAttribute('aria-label', 'Flashcard ' + i + '. Click to flip.');
+        card.setAttribute('tabindex', '0');
+
+        card.innerHTML = `
+          <div class="card-face card-front">
+            <span class="card-number">Card ${i}</span>
+            <span class="card-icon">&#10067;</span>
+            <span class="card-coming-soon">Coming Soon</span>
+            <span class="card-hint">Tap to flip</span>
+          </div>
+          <div class="card-face card-back">
+            <span class="card-number">Card ${i}</span>
+            <span class="card-icon">&#128161;</span>
+            <span class="card-coming-soon">Coming Soon</span>
+            <span class="card-label">Answer</span>
+          </div>`;
+
+        function toggle(e) {
+          card.classList.toggle('flipped');
+          if (card.classList.contains('flipped')) {
+            flipped.add(i);
+          } else {
+            flipped.delete(i);
+          }
+          updateProgress();
+        }
+
+        card.addEventListener('click', toggle);
+        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+
+        scene.appendChild(card);
+        grid.appendChild(scene);
+      }
+    }
+
+    buildCards();
+
+    document.getElementById('reset-btn').addEventListener('click', buildCards);
+  </script>
+</body>
+</html>
