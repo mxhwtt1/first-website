@@ -383,23 +383,6 @@ function initHamburgerMenu() {
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeMenu(); });
 }
 
-// ─── Mobile nav toggle ────────────────────────────────────────
-function initMobileNavToggle() {
-  const nav = document.querySelector('.mobile-nav');
-  if (!nav) return;
-  const btn = document.createElement('button');
-  btn.className = 'mobile-nav-toggle';
-  btn.setAttribute('aria-label', 'Toggle navigation bar');
-  const chevron = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>`;
-  btn.innerHTML = chevron + `<span>Hide nav</span>`;
-  document.body.appendChild(btn);
-  btn.addEventListener('click', () => {
-    const hidden = nav.classList.toggle('hidden');
-    btn.classList.toggle('nav-hidden', hidden);
-    btn.querySelector('span').textContent = hidden ? 'Show nav' : 'Hide nav';
-  });
-}
-
 // ─── Boot ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   markActiveNav();
@@ -407,7 +390,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initShareBtn();
   initAbbrExpanders();
   initCarousels();
-  initMobileNavToggle();
   initHamburgerMenu();
 
   const page = window.location.pathname.split('/').pop() || 'index.html';
