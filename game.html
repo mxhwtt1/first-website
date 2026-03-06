@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asteroid Blaster | Hack Your Body: Fact vs Myth</title>
+  <meta name="description" content="Blast the myths, spare the facts. A Fact vs Myth space shooter." />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .game-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      padding: 24px 0 60px;
+    }
+    #game-canvas {
+      display: block;
+      border-radius: 12px;
+      border: 2px solid #333;
+      max-width: 100%;
+      cursor: pointer;
+      touch-action: none;
+    }
+    .game-legend {
+      display: flex;
+      gap: 28px;
+      font-size: 0.88rem;
+      color: #b0b0b0;
+    }
+    .legend-myth { color: #f87171; font-weight: 600; }
+    .legend-fact { color: #34d399; font-weight: 600; }
+    .game-controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .game-btn {
+      background: #1a1a1a;
+      border: 2px solid #444;
+      color: #f0f0f0;
+      font-size: 1.4rem;
+      width: 68px;
+      height: 68px;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.1s, border-color 0.1s;
+    }
+    .game-btn:active, .game-btn.pressed {
+      background: #004F96;
+      border-color: #7DF9FF;
+    }
+    .game-btn--fire {
+      background: rgba(6,182,212,0.12);
+      border-color: #06b6d4;
+      width: 90px;
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #7DF9FF;
+    }
+    .game-hint {
+      font-size: 0.82rem;
+      color: #666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Desktop header -->
+  <header class="site-header">
+    <div class="container">
+      <a href="index.html" class="logo"><span>Hack</span> Your Body</a>
+      <nav aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="library.html">Myth Library</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Page hero -->
+  <section class="page-hero">
+    <div class="container">
+      <h1>Asteroid Blaster</h1>
+      <p>Blast the myths. Spare the facts. How high can you score?</p>
+    </div>
+  </section>
+
+  <main>
+    <div class="container">
+      <div class="game-wrap">
+
+        <div class="game-legend">
+          <span><span class="legend-myth">■ MYTH</span> — shoot it</span>
+          <span><span class="legend-fact">■ FACT</span> — spare it</span>
+        </div>
+
+        <canvas id="game-canvas" width="680" height="520"></canvas>
+
+        <div class="game-controls">
+          <button class="game-btn" id="btn-left"  aria-label="Move left">&#9664;</button>
+          <button class="game-btn game-btn--fire" id="btn-fire" aria-label="Fire">FIRE</button>
+          <button class="game-btn" id="btn-right" aria-label="Move right">&#9654;</button>
+        </div>
+
+        <p class="game-hint">
+          Desktop: arrow keys to move &nbsp;|&nbsp; Space to fire &nbsp;|&nbsp; click canvas to start
+        </p>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-meta">
+        <span>Last reviewed: March 2026</span>
+        <span>This site does not replace medical advice. Contact your team or GP for individual guidance.</span>
+      </div>
+      <div class="footer-links">
+        <a href="library.html">Myth Library</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile bottom nav -->
+  <nav class="mobile-nav" aria-label="Mobile navigation">
+    <a href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/>
+      </svg>
+      Home
+    </a>
+    <a href="library.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/>
+        <rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>
+      </svg>
+      Library
+    </a>
+    <a href="about.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+      </svg>
+      About
+    </a>
+    <a href="contact.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M22 16.92v3a2 2 0 01-2.18 2 19.8 19.8 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8a19.8 19.8 0 01-3.07-8.67A2 2 0 012 1h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.09 8.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/>
+      </svg>
+      Contact
+    </a>
+  </nav>
+
+  <script src="js/app.js"></script>
+  <script>
+  // ═══════════════════════════════════════════════════
+  //  Fact vs Myth Asteroid Blaster
+  // ═══════════════════════════════════════════════════
+
+  const STATEMENTS = [
+    { text: "Stretching before exercise prevents injury", type: "myth" },
+    { text: "Muscle turns into fat when you stop training", type: "myth" },
+    { text: "Crunches burn belly fat", type: "myth" },
+    { text: "Cardio is the only way to lose weight", type: "myth" },
+    { text: "Lifting weights makes women bulky", type: "myth" },
+    { text: "No pain, no gain", type: "myth" },
+    { text: "Sweating means you are burning fat", type: "myth" },
+    { text: "Running always damages your knees", type: "myth" },
+    { text: "You need protein shakes to build muscle", type: "myth" },
+    { text: "More exercise is always better", type: "myth" },
+    { text: "You only use 10% of your brain", type: "myth" },
+    { text: "Eating carbs at night causes weight gain", type: "myth" },
+    { text: "Lactic acid causes post-workout soreness", type: "myth" },
+    { text: "Exercise improves mental health", type: "fact" },
+    { text: "Sleep is essential for muscle recovery", type: "fact" },
+    { text: "Dehydration reduces exercise performance", type: "fact" },
+    { text: "Strength training increases bone density", type: "fact" },
+    { text: "Regular exercise reduces heart disease risk", type: "fact" },
+    { text: "Warming up improves performance", type: "fact" },
+    { text: "Resistance training boosts metabolism", type: "fact" },
+    { text: "Good posture reduces back pain", type: "fact" },
+    { text: "Progressive overload builds strength", type: "fact" },
+  ];
+
+  const W = 680, H = 520;
+  const canvas = document.getElementById('game-canvas');
+  const ctx    = canvas.getContext('2d');
+
+  // Responsive sizing
+  function resize() {
+    const max = Math.min(W, window.innerWidth - 24);
+    canvas.style.width  = max + 'px';
+    canvas.style.height = Math.round(max * H / W) + 'px';
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // Stars (static)
+  const STARS = Array.from({ length: 90 }, () => ({
+    x: Math.random() * W,
+    y: Math.random() * H,
+    r: Math.random() * 1.4 + 0.3,
+    a: Math.random() * 0.7 + 0.2,
+  }));
+
+  // ── State ──────────────────────────────────────────
+  let gameState = 'start'; // 'start' | 'playing' | 'gameover'
+  let score, lives, asteroids, bullets, particles;
+  let spawnTimer, spawnInterval, level;
+  let redFlash = 0, greenFlash = 0;
+  let bulletCooldown = 0;
+
+  const player = { x: W / 2, y: H - 52, speed: 5 };
+  const keys = { left: false, right: false, fire: false };
+  let firePrev = false;
+
+  function resetGame() {
+    score = 0; lives = 3;
+    asteroids = []; bullets = []; particles = [];
+    spawnTimer = 0; spawnInterval = 180; level = 1;
+    redFlash = 0; greenFlash = 0; bulletCooldown = 0;
+    player.x = W / 2;
+  }
+
+  // ── Asteroid helpers ───────────────────────────────
+  const AW = 200, AH = 88; // asteroid bounding box
+
+  function makeRockyPath(w, h, seed) {
+    // Build a rocky rounded rect path with slight bumps
+    const pts = [];
+    const steps = 20;
+    const rx = w / 2, ry = h / 2;
+    for (let i = 0; i < steps; i++) {
+      const angle = (i / steps) * Math.PI * 2;
+      const noise = 0.85 + 0.15 * Math.sin(seed + i * 2.3 + angle * 3);
+      const ex = Math.cos(angle);
+      const ey = Math.sin(angle);
+      // Squircle-ish: blend circle and rect
+      const sq = Math.pow(Math.abs(ex), 2.5) + Math.pow(Math.abs(ey), 2.5);
+      const scale = Math.pow(sq, -1 / 2.5);
+      pts.push({ x: ex * rx * scale * noise, y: ey * ry * scale * noise });
+    }
+    return pts;
+  }
+
+  function spawnAsteroid() {
+    const stmt  = STATEMENTS[Math.floor(Math.random() * STATEMENTS.length)];
+    const x     = Math.random() * (W - AW - 20) + 10;
+    const speed = 0.7 + Math.random() * 0.5 + (level - 1) * 0.2;
+    const seed  = Math.random() * 10;
+    const rotDir = Math.random() > 0.5 ? 1 : -1;
+    asteroids.push({ x, y: -AH - 10, speed, stmt, seed, angle: 0, rotSpeed: rotDir * (0.003 + Math.random() * 0.005) });
+  }
+
+  // ── Particles ──────────────────────────────────────
+  function burst(x, y, color) {
+    for (let i = 0; i < 20; i++) {
+      const a = Math.random() * Math.PI * 2;
+      const s = Math.random() * 4 + 1;
+      particles.push({ x, y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 1, color, r: Math.random() * 3 + 1 });
+    }
+  }
+
+  // ── Text wrapping ──────────────────────────────────
+  function wrapText(text, x, y, maxW, lineH) {
+    const words = text.split(' ');
+    let line = '';
+    const lines = [];
+    for (const w of words) {
+      const test = line ? line + ' ' + w : w;
+      if (ctx.measureText(test).width > maxW && line) { lines.push(line); line = w; }
+      else line = test;
+    }
+    if (line) lines.push(line);
+    const top = y - ((lines.length - 1) * lineH) / 2;
+    lines.forEach((l, i) => ctx.fillText(l, x, top + i * lineH));
+  }
+
+  // ── Round rect path ────────────────────────────────
+  function rrect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.arcTo(x + w, y, x + w, y + r, r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+    ctx.lineTo(x + r, y + h);
+    ctx.arcTo(x, y + h, x, y + h - r, r);
+    ctx.lineTo(x, y + r);
+    ctx.arcTo(x, y, x + r, y, r);
+    ctx.closePath();
+  }
+
+  // ── Draw ───────────────────────────────────────────
+  function draw() {
+    // Sky
+    ctx.fillStyle = '#06060f';
+    ctx.fillRect(0, 0, W, H);
+
+    // Stars
+    STARS.forEach(s => {
+      ctx.globalAlpha = s.a;
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+
+    if (gameState === 'start')    { drawStart();    return; }
+    if (gameState === 'gameover') { drawGameOver(); return; }
+
+    // Flash overlays
+    if (redFlash > 0) {
+      ctx.fillStyle = `rgba(200,30,30,${(redFlash / 20) * 0.4})`;
+      ctx.fillRect(0, 0, W, H);
+    }
+    if (greenFlash > 0) {
+      ctx.fillStyle = `rgba(52,211,153,${(greenFlash / 15) * 0.25})`;
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    // Bullets
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = '#7DF9FF';
+    ctx.fillStyle = '#7DF9FF';
+    bullets.forEach(b => {
+      ctx.fillRect(b.x - 2, b.y - 12, 4, 14);
+    });
+    ctx.shadowBlur = 0;
+
+    // Asteroids
+    asteroids.forEach(a => {
+      const cx = a.x + AW / 2, cy = a.y + AH / 2;
+      const isMyth = a.stmt.type === 'myth';
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(a.angle);
+
+      // Rocky body
+      const pts = makeRockyPath(AW - 4, AH - 4, a.seed);
+      ctx.beginPath();
+      pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+      ctx.closePath();
+      ctx.fillStyle = isMyth ? '#3b0a0a' : '#022c22';
+      ctx.fill();
+      ctx.strokeStyle = isMyth ? '#f87171' : '#34d399';
+      ctx.lineWidth = 2.5;
+      ctx.stroke();
+
+      ctx.restore();
+
+      // MYTH / FACT chip
+      const chipW = 58, chipH = 20;
+      ctx.fillStyle = isMyth ? '#f87171' : '#34d399';
+      rrect(cx - chipW / 2, cy - AH / 2 + 6, chipW, chipH, 4);
+      ctx.fill();
+      ctx.fillStyle = '#000';
+      ctx.font = 'bold 11px system-ui,sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(isMyth ? 'MYTH' : 'FACT', cx, cy - AH / 2 + 19);
+
+      // Statement text
+      ctx.fillStyle = '#eee';
+      ctx.font = '11.5px system-ui,sans-serif';
+      ctx.textAlign = 'center';
+      wrapText(a.stmt.text, cx, cy + 12, AW - 24, 15);
+    });
+
+    // Particles
+    particles.forEach(p => {
+      ctx.globalAlpha = p.life;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+
+    // Player ship
+    drawShip(player.x, player.y);
+
+    // HUD
+    ctx.fillStyle = '#f0f0f0';
+    ctx.font = 'bold 15px system-ui,sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText('Score: ' + score, 12, 24);
+    ctx.textAlign = 'right';
+    ctx.fillText('Lv ' + level, W - 12, 24);
+    // Lives
+    for (let i = 0; i < lives; i++) drawShipMini(W / 2 - (lives - 1) * 14 + i * 28, 20);
+  }
+
+  function drawShip(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.shadowBlur = 14;
+    ctx.shadowColor = '#7DF9FF';
+    ctx.fillStyle = '#7DF9FF';
+    ctx.beginPath();
+    ctx.moveTo(0, -20);
+    ctx.lineTo(-14, 16);
+    ctx.lineTo(0, 9);
+    ctx.lineTo(14, 16);
+    ctx.closePath();
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.fillStyle = '#0068C4';
+    ctx.beginPath();
+    ctx.moveTo(-6, 16);
+    ctx.lineTo(6, 16);
+    ctx.lineTo(0, 26);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawShipMini(x, y) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.fillStyle = '#7DF9FF';
+    ctx.beginPath();
+    ctx.moveTo(0, -9);
+    ctx.lineTo(-6, 7);
+    ctx.lineTo(0, 4);
+    ctx.lineTo(6, 7);
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawStart() {
+    ctx.fillStyle = '#7DF9FF';
+    ctx.font = 'bold 38px system-ui,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.shadowBlur = 20;
+    ctx.shadowColor = '#7DF9FF';
+    ctx.fillText('ASTEROID BLASTER', W / 2, 155);
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = '#f0f0f0';
+    ctx.font = '17px system-ui,sans-serif';
+    ctx.fillText('Blast the MYTHS. Spare the FACTS.', W / 2, 202);
+
+    ctx.fillStyle = '#888';
+    ctx.font = '13px system-ui,sans-serif';
+    ctx.fillText('Arrow keys to move  |  Space to fire', W / 2, 248);
+    ctx.fillText('Or use the buttons below on mobile', W / 2, 270);
+
+    ctx.fillStyle = '#0068C4';
+    rrect(W / 2 - 100, 308, 200, 56, 12);
+    ctx.fill();
+    ctx.shadowBlur = 12;
+    ctx.shadowColor = '#7DF9FF';
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 22px system-ui,sans-serif';
+    ctx.fillText('START GAME', W / 2, 343);
+    ctx.shadowBlur = 0;
+  }
+
+  function drawGameOver() {
+    ctx.fillStyle = '#f87171';
+    ctx.font = 'bold 42px system-ui,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.shadowBlur = 16;
+    ctx.shadowColor = '#f87171';
+    ctx.fillText('GAME OVER', W / 2, 165);
+    ctx.shadowBlur = 0;
+
+    ctx.fillStyle = '#f0f0f0';
+    ctx.font = '24px system-ui,sans-serif';
+    ctx.fillText('Score: ' + score, W / 2, 215);
+
+    ctx.fillStyle = '#fbbf24';
+    ctx.font = '34px system-ui,sans-serif';
+    ctx.fillText(score >= 200 ? '★★★' : score >= 100 ? '★★☆' : '★☆☆', W / 2, 258);
+
+    ctx.fillStyle = '#b0b0b0';
+    ctx.font = '15px system-ui,sans-serif';
+    ctx.fillText(score >= 200 ? 'Myth-busting expert!' : score >= 100 ? 'Good effort — keep learning!' : 'Have another go!', W / 2, 292);
+
+    ctx.fillStyle = '#0068C4';
+    rrect(W / 2 - 100, 322, 200, 54, 12);
+    ctx.fill();
+    ctx.fillStyle = '#fff';
+    ctx.font = 'bold 20px system-ui,sans-serif';
+    ctx.fillText('PLAY AGAIN', W / 2, 355);
+  }
+
+  // ── Update ─────────────────────────────────────────
+  function update() {
+    if (gameState !== 'playing') return;
+
+    // Move player
+    if (keys.left)  player.x = Math.max(18, player.x - player.speed);
+    if (keys.right) player.x = Math.min(W - 18, player.x + player.speed);
+
+    // Fire
+    if (keys.fire && !firePrev && bulletCooldown <= 0) {
+      bullets.push({ x: player.x, y: player.y - 22 });
+      bulletCooldown = 16;
+    }
+    firePrev = keys.fire;
+    if (bulletCooldown > 0) bulletCooldown--;
+
+    // Move bullets
+    bullets.forEach(b => b.y -= 11);
+    bullets = bullets.filter(b => b.y > -20);
+
+    // Spawn
+    spawnTimer++;
+    if (spawnTimer >= spawnInterval) {
+      spawnTimer = 0;
+      spawnAsteroid();
+      spawnInterval = Math.max(55, spawnInterval - 4);
+      level = Math.floor((180 - spawnInterval) / 25) + 1;
+    }
+
+    // Move & rotate asteroids
+    asteroids.forEach(a => { a.y += a.speed; a.angle += a.rotSpeed; });
+
+    // Asteroids reaching bottom
+    const escaped = asteroids.filter(a => a.y > H + 10);
+    escaped.forEach(a => {
+      if (a.stmt.type === 'myth') {
+        lives--;
+        redFlash = 22;
+        if (lives <= 0) gameState = 'gameover';
+      }
+    });
+    asteroids = asteroids.filter(a => a.y <= H + 10);
+
+    // Bullet–asteroid collisions
+    for (let bi = bullets.length - 1; bi >= 0; bi--) {
+      const b = bullets[bi];
+      for (let ai = asteroids.length - 1; ai >= 0; ai--) {
+        const a = asteroids[ai];
+        if (b.x > a.x && b.x < a.x + AW && b.y > a.y && b.y < a.y + AH) {
+          const cx = a.x + AW / 2, cy = a.y + AH / 2;
+          bullets.splice(bi, 1);
+          asteroids.splice(ai, 1);
+          if (a.stmt.type === 'myth') {
+            score += 10;
+            greenFlash = 14;
+            burst(cx, cy, '#f87171');
+          } else {
+            score = Math.max(0, score - 5);
+            redFlash = 22;
+            burst(cx, cy, '#34d399');
+          }
+          break;
+        }
+      }
+    }
+
+    // Particles
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      p.vx *= 0.93; p.vy *= 0.93;
+      p.life -= 0.045;
+    });
+    particles = particles.filter(p => p.life > 0);
+
+    if (redFlash > 0)   redFlash--;
+    if (greenFlash > 0) greenFlash--;
+  }
+
+  // ── Loop ───────────────────────────────────────────
+  function loop() { update(); draw(); requestAnimationFrame(loop); }
+  loop();
+
+  // ── Keyboard ───────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowLeft')  keys.left  = true;
+    if (e.key === 'ArrowRight') keys.right = true;
+    if (e.key === ' ') { e.preventDefault(); keys.fire = true; }
+    if (e.key === ' ' || e.key === 'Enter') {
+      if (gameState === 'start' || gameState === 'gameover') { resetGame(); gameState = 'playing'; }
+    }
+  });
+  document.addEventListener('keyup', e => {
+    if (e.key === 'ArrowLeft')  keys.left  = false;
+    if (e.key === 'ArrowRight') keys.right = false;
+    if (e.key === ' ')          keys.fire  = false;
+  });
+
+  // ── Canvas click (start / restart) ────────────────
+  canvas.addEventListener('click', () => {
+    if (gameState === 'start' || gameState === 'gameover') { resetGame(); gameState = 'playing'; }
+  });
+
+  // ── Mobile buttons ─────────────────────────────────
+  function holdBtn(id, key) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('pointerdown', e => { e.preventDefault(); keys[key] = true;  el.classList.add('pressed'); });
+    el.addEventListener('pointerup',   ()  => { keys[key] = false; el.classList.remove('pressed'); });
+    el.addEventListener('pointerleave',()  => { keys[key] = false; el.classList.remove('pressed'); });
+  }
+  holdBtn('btn-left',  'left');
+  holdBtn('btn-right', 'right');
+
+  const fireBtn = document.getElementById('btn-fire');
+  if (fireBtn) {
+    fireBtn.addEventListener('pointerdown', e => {
+      e.preventDefault();
+      fireBtn.classList.add('pressed');
+      if (gameState !== 'playing') { resetGame(); gameState = 'playing'; return; }
+      keys.fire = true;
+      setTimeout(() => { keys.fire = false; }, 100);
+    });
+    fireBtn.addEventListener('pointerup',    () => { fireBtn.classList.remove('pressed'); keys.fire = false; });
+    fireBtn.addEventListener('pointerleave', () => { fireBtn.classList.remove('pressed'); keys.fire = false; });
+  }
+  </script>
+</body>
+</html>
