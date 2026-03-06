@@ -238,6 +238,7 @@ function initAbbrExpanders() {
       if (!isOpen) item.classList.add('tapped');
     }
     item.addEventListener('touchend', e => {
+      if (e.target.closest('a')) return;
       e.preventDefault();
       lastTouch = Date.now();
       toggle();
