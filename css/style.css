@@ -128,7 +128,7 @@ ul { list-style: none; }
   color: rgba(255,255,255,.75);
 }
 .back-btn:hover { opacity: 0.8; }
-.back-btn svg { width: 22px; height: 22px; color: #000; }
+.back-btn svg { width: 22px; height: 22px; }
 
 /* ─── Desktop Header ─────────────────────────────── */
 .site-header {
@@ -240,6 +240,7 @@ ul { list-style: none; }
   border: 1px solid rgba(255,255,255,0.12);
   border-radius: 8px;
   overflow: hidden;
+  cursor: pointer;
 }
 .abbr-trigger {
   width: 100%;
