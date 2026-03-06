@@ -273,6 +273,55 @@ ul { list-style: none; }
 .abbr-item:nth-child(3):hover, .abbr-item:nth-child(3).tapped { background: rgba(255,160,30,0.22);  border-color: rgba(255,160,30,0.7); }
 .abbr-item.tapped .abbr-body { max-height: 120px; padding: 0 16px 12px; }
 
+/* ─── Carousel rows ─────────────────────── */
+.carousel-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+.carousel-overflow {
+  flex: 1;
+  overflow: hidden;
+}
+.carousel-track {
+  display: flex;
+  gap: 20px;
+  transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.carousel-track .nav-hub-card {
+  flex: 0 0 calc((100% - 40px) / 3);
+  min-width: 0;
+}
+.carousel-btn {
+  flex-shrink: 0;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #1a1a1a;
+  border: 2px solid #333;
+  color: #f0f0f0;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.carousel-btn:hover:not(:disabled) {
+  border-color: #7DF9FF;
+  background: #222;
+}
+.carousel-btn:disabled {
+  opacity: 0.25;
+  cursor: default;
+}
+@media (max-width: 700px) {
+  .carousel-track .nav-hub-card { flex: 0 0 calc(100% - 0px); }
+  .carousel-btn { width: 34px; height: 34px; font-size: 1.1rem; }
+}
+
 /* ─── Navigation Hub ────────────────────── */
 .nav-hub {
   padding: 60px 0 80px;

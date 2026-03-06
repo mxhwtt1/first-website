@@ -236,12 +236,39 @@ function initAbbrExpanders() {
   });
 }
 
+// ─── Carousel rows ────────────────────────────────────────────
+function initCarousels() {
+  document.querySelectorAll('[data-carousel]').forEach(row => {
+    const track   = row.querySelector('.carousel-track');
+    const cards   = track.querySelectorAll('.nav-hub-card');
+    const prevBtn = row.querySelector('.carousel-prev');
+    const nextBtn = row.querySelector('.carousel-next');
+    const visible = window.innerWidth <= 700 ? 1 : 3;
+    let index = 0;
+    const max = Math.max(0, cards.length - visible);
+
+    function update() {
+      const cardW = cards[0].getBoundingClientRect().width;
+      const gap   = 20;
+      track.style.transform = `translateX(-${index * (cardW + gap)}px)`;
+      prevBtn.disabled = index === 0;
+      nextBtn.disabled = index >= max;
+    }
+
+    prevBtn.addEventListener('click', () => { if (index > 0)   { index--; update(); } });
+    nextBtn.addEventListener('click', () => { if (index < max) { index++; update(); } });
+    window.addEventListener('resize', update);
+    update();
+  });
+}
+
 // ─── Boot ─────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   markActiveNav();
   initFaqAccordions();
   initShareBtn();
   initAbbrExpanders();
+  initCarousels();
 
   const page = window.location.pathname.split('/').pop() || 'index.html';
   if (page === '' || page === 'index.html') initHomepage();
