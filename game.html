@@ -382,7 +382,13 @@
     ctx.textAlign = 'right';
     ctx.fillText('Lv ' + level, W - 12, 24);
     // Lives
-    for (let i = 0; i < lives; i++) drawShipMini(W / 2 - (lives - 1) * 14 + i * 28, 20);
+    ctx.fillStyle = 'rgba(125,249,255,0.55)';
+    ctx.font = '600 11px system-ui,sans-serif';
+    ctx.textAlign = 'center';
+    ctx.letterSpacing = '1px';
+    ctx.fillText('LIVES', W / 2, 10);
+    ctx.letterSpacing = '0px';
+    for (let i = 0; i < lives; i++) drawShipMini(W / 2 - (lives - 1) * 16 + i * 32, 28);
 
     if (gameState === 'paused') drawPaused();
   }
@@ -414,14 +420,17 @@
   function drawShipMini(x, y) {
     ctx.save();
     ctx.translate(x, y);
+    ctx.shadowBlur = 8;
+    ctx.shadowColor = '#7DF9FF';
     ctx.fillStyle = '#7DF9FF';
     ctx.beginPath();
-    ctx.moveTo(0, -9);
-    ctx.lineTo(-6, 7);
-    ctx.lineTo(0, 4);
-    ctx.lineTo(6, 7);
+    ctx.moveTo(0, -11);
+    ctx.lineTo(-8, 9);
+    ctx.lineTo(0, 5);
+    ctx.lineTo(8, 9);
     ctx.closePath();
     ctx.fill();
+    ctx.shadowBlur = 0;
     ctx.restore();
   }
 
