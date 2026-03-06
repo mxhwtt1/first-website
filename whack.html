@@ -6,7 +6,7 @@
   <title>Whack-a-Myth | Hack Your Body: Fact vs Myth</title>
   <link rel="stylesheet" href="css/style.css" />
   <style>
-    /* ── Layout ──────────────────────────────────── */
+    /* ── Layout ───────────────────────────────────── */
     .whack-outer {
       display: flex;
       flex-direction: column;
@@ -15,7 +15,7 @@
       padding: 0 0 60px;
     }
 
-    /* ── HUD strip ───────────────────────────────── */
+    /* ── HUD strip ────────────────────────────────── */
     .hud-strip {
       width: 100%;
       max-width: 560px;
@@ -29,159 +29,167 @@
       gap: 16px;
     }
     .hud-item { text-align: center; }
-    .hud-label {
-      font-size: 0.65rem;
-      color: #555;
-      text-transform: uppercase;
-      letter-spacing: 1.2px;
-      margin-bottom: 4px;
-    }
-    .hud-score {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #c084fc;
-      line-height: 1;
-    }
-    .hud-hearts {
-      font-size: 1.4rem;
-      line-height: 1;
-      letter-spacing: 2px;
-    }
+    .hud-label { font-size: 0.65rem; color: #555; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px; }
+    .hud-score { font-size: 1.8rem; font-weight: 800; color: #c084fc; line-height: 1; }
+    .hud-hearts { font-size: 1.4rem; line-height: 1; letter-spacing: 2px; }
     .hud-timer-wrap { flex: 1; text-align: center; }
-    .hud-timer-num {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: #f0f0f0;
-      line-height: 1;
-    }
+    .hud-timer-num { font-size: 1.8rem; font-weight: 800; color: #f0f0f0; line-height: 1; }
     .hud-timer-num.urgent { color: #ef4444; }
-    .timer-bar-track {
-      margin-top: 6px;
-      height: 4px;
-      background: rgba(255,255,255,0.07);
-      border-radius: 2px;
-      overflow: hidden;
-    }
-    .timer-bar-fill {
-      height: 100%;
-      background: #c084fc;
-      border-radius: 2px;
-      transition: width 0.95s linear, background 0.4s;
-    }
+    .timer-bar-track { margin-top: 6px; height: 4px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+    .timer-bar-fill { height: 100%; background: #c084fc; border-radius: 2px; transition: width 0.95s linear, background 0.4s; }
     .timer-bar-fill.urgent { background: #ef4444; }
 
-    /* ── Board ───────────────────────────────────── */
+    /* ── Board ────────────────────────────────────── */
     .board-wrap {
       width: 100%;
       max-width: 560px;
       background: #0e120b;
       border-radius: 20px;
-      padding: 20px;
+      padding: 20px 20px 24px;
       box-shadow: 0 8px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
     }
     .whack-board {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
+      gap: 10px;
     }
 
-    /* ── Individual hole ─────────────────────────── */
+    /* ── Hole cell ────────────────────────────────── */
     .hole-cell {
+      /* Extra top padding so the speech bubble above doesn't collide */
+      padding-top: 52px;
+      position: relative;
+    }
+    .hole-inner {
+      /* The actual square area that holds the hole + mole */
       aspect-ratio: 1;
       position: relative;
     }
-    /* Dark shadow hole behind mole */
+
+    /* Speech bubble — sits above the hole, always in normal flow */
+    .mole-bubble {
+      position: absolute;
+      bottom: calc(100% + 4px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(12,12,24,0.96);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      padding: 7px 11px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: #f0f0f0;
+      text-align: center;
+      width: 120px;
+      line-height: 1.35;
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0;
+      transition: opacity 0.18s 0.12s;
+      white-space: normal;
+    }
+    .mole-bubble::after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: rgba(255,255,255,0.15);
+    }
+    .mole-bubble::before {
+      content: '';
+      position: absolute;
+      top: calc(100% - 1px);
+      left: 50%;
+      transform: translateX(-50%);
+      border: 6px solid transparent;
+      border-top-color: rgba(12,12,24,0.96);
+      z-index: 1;
+    }
+    .hole-cell.active .mole-bubble { opacity: 1; }
+
+    /* Dark hole shadow behind mole */
     .hole-bg {
       position: absolute;
       bottom: 2%;
       left: 50%;
       transform: translateX(-50%);
-      width: 88%;
-      height: 34%;
-      background: radial-gradient(ellipse at 50% 50%, #2e1206 30%, #0a0400 100%);
+      width: 90%;
+      height: 36%;
+      background: radial-gradient(ellipse at 50% 50%, #2e1206 20%, #080300 100%);
       border-radius: 50%;
-      box-shadow: inset 0 4px 14px rgba(0,0,0,0.85);
+      box-shadow: inset 0 5px 16px rgba(0,0,0,0.9);
     }
-    /* Overflow clip: mole slides up from inside here */
+
+    /* Overflow clip — mole slides up from here */
     .mole-stage {
       position: absolute;
-      bottom: 20%;
+      bottom: 18%;
       left: 50%;
       transform: translateX(-50%);
-      width: 72%;
-      height: 82%;
+      width: 82%;
+      height: 86%;
       overflow: hidden;
       display: flex;
       align-items: flex-end;
       justify-content: center;
       z-index: 2;
     }
-    /* The animated mole character */
+
+    /* The mole character — slides up/down */
     .mole-inner {
       width: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transform: translateY(105%);
+      transform: translateY(108%);
       transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1);
       cursor: pointer;
-      padding-bottom: 2px;
       pointer-events: none;
+      padding-bottom: 3px;
     }
     .mole-inner.up {
       transform: translateY(0);
       pointer-events: auto;
     }
-    /* Front of hole — covers bottom of mole to give depth */
+
+    /* Front of hole — covers the mole's lower body */
     .hole-front {
       position: absolute;
       bottom: 0;
       left: 50%;
       transform: translateX(-50%);
-      width: 92%;
-      height: 26%;
-      background: radial-gradient(ellipse at 50% 40%, #3d1e08, #1c0904);
+      width: 96%;
+      height: 24%;
+      background: radial-gradient(ellipse at 50% 38%, #3d1e08, #1c0904);
       border-radius: 50%;
       z-index: 3;
-      box-shadow: 0 -3px 8px rgba(0,0,0,0.6), 0 2px 14px rgba(0,0,0,0.8);
+      box-shadow: 0 -3px 8px rgba(0,0,0,0.55), 0 2px 16px rgba(0,0,0,0.85);
     }
 
-    /* ── Mole parts ───────────────────────────────── */
+    /* ── Mole badge ───────────────────────────────── */
     .mole-badge {
-      font-size: clamp(0.48rem, 1.4vw, 0.62rem);
+      font-size: clamp(0.54rem, 1.5vw, 0.68rem);
       font-weight: 800;
       letter-spacing: 1px;
       text-transform: uppercase;
-      padding: 2px 7px;
+      padding: 2px 8px;
       border-radius: 4px;
-      margin-bottom: 3px;
+      margin-bottom: 4px;
       flex-shrink: 0;
       line-height: 1.5;
     }
-    .mole-badge.is-myth { background: rgba(239,68,68,0.25); color: #f87171; border: 1px solid rgba(239,68,68,0.5); }
-    .mole-badge.is-fact { background: rgba(79,163,255,0.2);  color: #7DF9FF; border: 1px solid rgba(79,163,255,0.4); }
+    .mole-badge.is-myth { background: rgba(239,68,68,0.22); color: #f87171; border: 1px solid rgba(239,68,68,0.45); }
+    .mole-badge.is-fact { background: rgba(79,163,255,0.18); color: #7DF9FF; border: 1px solid rgba(79,163,255,0.4); }
 
-    .mole-svg {
-      width: 80%;
-      max-width: 84px;
-      display: block;
-    }
+    .mole-svg { width: 82%; max-width: 88px; display: block; }
 
-    .mole-text {
-      font-size: clamp(0.44rem, 1.3vw, 0.58rem);
-      line-height: 1.25;
-      color: #ccc;
-      text-align: center;
-      padding: 0 2px;
-      margin-top: 2px;
-      flex-shrink: 0;
-    }
+    /* Hit flash */
+    .mole-inner.hit-good .mole-svg { filter: brightness(2) saturate(1.4); }
+    .mole-inner.hit-bad  .mole-svg { filter: brightness(2) hue-rotate(100deg); }
 
-    /* Hit flash effects */
-    .mole-inner.hit-good .mole-svg { filter: brightness(1.8) saturate(1.5); }
-    .mole-inner.hit-bad  .mole-svg { filter: brightness(1.8) hue-rotate(90deg); }
-
-    /* ── Instructions ────────────────────────────── */
+    /* ── Instructions ─────────────────────────────── */
     .whack-instructions {
       display: flex;
       gap: 20px;
@@ -193,16 +201,12 @@
     .instr-myth { color: #f87171; font-weight: 700; }
     .instr-fact { color: #7DF9FF; font-weight: 700; }
 
-    /* ── Overlays ────────────────────────────────── */
+    /* ── Overlays ─────────────────────────────────── */
     .game-overlay {
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background: rgba(2,2,18,0.92);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 2000;
-      padding: 24px;
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2000; padding: 24px;
     }
     .game-overlay.hidden { display: none; }
     .overlay-card {
@@ -210,65 +214,25 @@
       border: 1.5px solid #3a2a5a;
       border-radius: 24px;
       padding: 40px 32px;
-      max-width: 380px;
-      width: 100%;
+      max-width: 380px; width: 100%;
       text-align: center;
     }
-    .overlay-title {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #f0f0f0;
-      margin: 0 0 8px;
-    }
-    .overlay-sub {
-      font-size: 0.93rem;
-      color: #888;
-      margin: 0 0 24px;
-      line-height: 1.55;
-    }
-    .overlay-score-big {
-      font-size: 3.5rem;
-      font-weight: 900;
-      color: #c084fc;
-      line-height: 1;
-      margin: 0 0 4px;
-    }
-    .overlay-score-label {
-      font-size: 0.72rem;
-      color: #555;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-      margin: 0 0 28px;
-    }
+    .overlay-title { font-size: 2rem; font-weight: 800; color: #f0f0f0; margin: 0 0 8px; }
+    .overlay-sub { font-size: 0.93rem; color: #888; margin: 0 0 24px; line-height: 1.55; }
+    .overlay-score-big { font-size: 3.5rem; font-weight: 900; color: #c084fc; line-height: 1; margin: 0 0 4px; }
+    .overlay-score-label { font-size: 0.72rem; color: #555; letter-spacing: 1.5px; text-transform: uppercase; margin: 0 0 28px; }
     .start-btn {
-      background: #7c3aed;
-      border: none;
-      color: #fff;
-      font-size: 1.1rem;
-      font-weight: 700;
-      padding: 16px 56px;
-      border-radius: 14px;
-      cursor: pointer;
-      font-family: inherit;
-      transition: background 0.2s;
-      display: block;
-      width: 100%;
-      margin-bottom: 10px;
+      background: #7c3aed; border: none; color: #fff;
+      font-size: 1.1rem; font-weight: 700; padding: 16px 56px;
+      border-radius: 14px; cursor: pointer; font-family: inherit;
+      transition: background 0.2s; display: block; width: 100%; margin-bottom: 10px;
     }
     .start-btn:hover { background: #9333ea; }
     .home-btn {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.12);
-      color: #888;
-      font-size: 0.9rem;
-      font-weight: 600;
-      padding: 11px 32px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-family: inherit;
-      transition: border-color 0.2s, color 0.2s;
-      display: block;
-      width: 100%;
+      background: transparent; border: 1px solid rgba(255,255,255,0.12); color: #888;
+      font-size: 0.9rem; font-weight: 600; padding: 11px 32px; border-radius: 10px;
+      cursor: pointer; font-family: inherit; transition: border-color 0.2s, color 0.2s;
+      display: block; width: 100%;
     }
     .home-btn:hover { border-color: rgba(255,255,255,0.3); color: #ddd; }
   </style>
@@ -288,7 +252,7 @@
   <section class="page-hero">
     <div class="container">
       <h1>Whack-a-Myth</h1>
-      <p>Myths pop up — whack them before they vanish! But if it's a <strong>FACT</strong>, leave it alone or lose a heart.</p>
+      <p>Read the statement on each mole — whack it if it's a <strong>MYTH</strong>, leave it if it's a <strong>FACT</strong>!</p>
     </div>
   </section>
 
@@ -322,8 +286,8 @@
 
         <!-- Instructions -->
         <div class="whack-instructions">
-          <span><span class="instr-myth">MYTH</span> — whack it! (+10 pts)</span>
-          <span><span class="instr-fact">FACT</span> — spare it! (clicking = −1 heart)</span>
+          <span>Read the text — <span class="instr-myth">MYTH</span> = whack it (+10)</span>
+          <span><span class="instr-fact">FACT</span> = leave it (clicking = −1 heart)</span>
         </div>
 
       </div>
@@ -335,8 +299,8 @@
     <div class="overlay-card">
       <div class="overlay-title">Whack-a-Myth</div>
       <div class="overlay-sub">
-        Myths pop up — whack them fast!<br>
-        But if it's a <strong style="color:#7DF9FF">FACT</strong>, leave it alone — clicking costs a heart.
+        Moles pop up carrying a statement.<br>
+        Read it — whack <strong style="color:#f87171">MYTHS</strong>, spare <strong style="color:#7DF9FF">FACTS</strong>!
       </div>
       <div style="display:flex;gap:18px;justify-content:center;margin-bottom:24px;font-size:0.82rem;color:#888;flex-wrap:wrap;">
         <span><span class="instr-myth">MYTH</span> = +10 pts</span>
@@ -375,98 +339,91 @@
   // ═══════════════════════════════════════════════
 
   const ITEMS = [
-    { text: "Muscle turns to fat",             type: 'myth' },
-    { text: "10% of your brain",               type: 'myth' },
-    { text: "Crunches burn belly fat",          type: 'myth' },
-    { text: "Sweating burns fat",               type: 'myth' },
-    { text: "Weights make women bulky",         type: 'myth' },
-    { text: "Running damages knees",            type: 'myth' },
-    { text: "Need protein shakes",              type: 'myth' },
-    { text: "Lactic acid = DOMS",               type: 'myth' },
-    { text: "More exercise = better",           type: 'myth' },
-    { text: "Carbs at night = weight gain",     type: 'myth' },
-    { text: "Cardio only for weight loss",      type: 'myth' },
-    { text: "Regular detoxing needed",          type: 'myth' },
-    { text: "Sleep aids recovery",              type: 'fact' },
-    { text: "Exercise helps heart",             type: 'fact' },
-    { text: "Hydration boosts performance",     type: 'fact' },
-    { text: "Weights build bone density",       type: 'fact' },
-    { text: "Warm-ups help performance",        type: 'fact' },
-    { text: "Resistance boosts metabolism",     type: 'fact' },
-    { text: "Overload builds strength",         type: 'fact' },
-    { text: "Posture reduces back pain",        type: 'fact' },
-    { text: "Exercise improves mental health",  type: 'fact' },
-    { text: "Cardio reduces heart disease",     type: 'fact' },
+    { text: "Muscle turns to fat when you stop training",    type: 'myth' },
+    { text: "You only use 10% of your brain",               type: 'myth' },
+    { text: "Crunches are the best way to lose belly fat",  type: 'myth' },
+    { text: "Sweating means you are burning fat",           type: 'myth' },
+    { text: "Lifting weights makes women bulky",            type: 'myth' },
+    { text: "Running always damages your knees",            type: 'myth' },
+    { text: "You need protein shakes to build muscle",      type: 'myth' },
+    { text: "Lactic acid causes delayed muscle soreness",   type: 'myth' },
+    { text: "More exercise is always better for you",       type: 'myth' },
+    { text: "Eating carbs at night causes weight gain",     type: 'myth' },
+    { text: "Cardio is the only way to lose weight",        type: 'myth' },
+    { text: "You need to detox your body regularly",        type: 'myth' },
+    { text: "Sleep is essential for muscle recovery",       type: 'fact' },
+    { text: "Exercise reduces heart disease risk",          type: 'fact' },
+    { text: "Staying hydrated improves performance",        type: 'fact' },
+    { text: "Strength training builds bone density",        type: 'fact' },
+    { text: "Warm-ups improve exercise performance",        type: 'fact' },
+    { text: "Resistance training boosts metabolism",        type: 'fact' },
+    { text: "Progressive overload builds strength",         type: 'fact' },
+    { text: "Good posture can reduce back pain",            type: 'fact' },
+    { text: "Exercise improves mental health",              type: 'fact' },
+    { text: "Cardio helps reduce heart disease risk",       type: 'fact' },
   ];
 
-  // ── SVG mole character ────────────────────────
-  // type 'myth' = angry eyebrows, type 'fact' = friendly
-  function moleSVG(type) {
-    const eyebrows = type === 'myth'
-      ? `<line x1="21" y1="25" x2="33" y2="30" stroke="#4a2808" stroke-width="2.5" stroke-linecap="round"/>
-         <line x1="59" y1="25" x2="47" y2="30" stroke="#4a2808" stroke-width="2.5" stroke-linecap="round"/>`
-      : `<path d="M22 27 Q27 24 33 27" fill="none" stroke="#6a4020" stroke-width="1.5" stroke-linecap="round"/>
-         <path d="M47 27 Q53 24 58 27" fill="none" stroke="#6a4020" stroke-width="1.5" stroke-linecap="round"/>`;
-    const mouth = type === 'myth'
-      ? `<path d="M33 58 Q40 55 47 58" fill="none" stroke="#6a3010" stroke-width="2" stroke-linecap="round"/>`
-      : `<path d="M33 56 Q40 63 47 56" fill="none" stroke="#6a3010" stroke-width="2" stroke-linecap="round"/>`;
-    return `<svg class="mole-svg" viewBox="0 0 80 84" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <!-- paws -->
-      <ellipse cx="10" cy="70" rx="9" ry="11" fill="#9a6835" transform="rotate(-18,10,70)"/>
-      <ellipse cx="70" cy="70" rx="9" ry="11" fill="#9a6835" transform="rotate(18,70,70)"/>
-      <!-- body -->
-      <ellipse cx="40" cy="78" rx="27" ry="16" fill="#9a6835"/>
-      <!-- ears -->
-      <ellipse cx="16" cy="22" rx="11" ry="13" fill="#9a6835"/>
-      <ellipse cx="64" cy="22" rx="11" ry="13" fill="#9a6835"/>
-      <ellipse cx="16" cy="22" rx="6.5" ry="8" fill="#d4a0a0"/>
-      <ellipse cx="64" cy="22" rx="6.5" ry="8" fill="#d4a0a0"/>
-      <!-- head -->
-      <circle cx="40" cy="40" r="28" fill="#b8845a"/>
-      <!-- face shading -->
-      <circle cx="40" cy="43" r="22" fill="#c8955a"/>
-      <!-- snout -->
-      <ellipse cx="40" cy="50" rx="12" ry="9" fill="#c8a070"/>
-      <!-- eyebrows -->
-      ${eyebrows}
-      <!-- eyes -->
-      <circle cx="28" cy="36" r="7" fill="#1a1010"/>
-      <circle cx="52" cy="36" r="7" fill="#1a1010"/>
-      <circle cx="29.5" cy="34" r="2.5" fill="#fff"/>
-      <circle cx="53.5" cy="34" r="2.5" fill="#fff"/>
-      <circle cx="30.5" cy="34.8" r="1.2" fill="#111"/>
-      <circle cx="54.5" cy="34.8" r="1.2" fill="#111"/>
-      <!-- nose -->
-      <ellipse cx="40" cy="48" rx="6" ry="4.5" fill="#b06060"/>
-      <ellipse cx="40" cy="47" rx="3.5" ry="2.5" fill="#c07070"/>
-      <!-- mouth -->
-      ${mouth}
-    </svg>`;
-  }
+  // ── Mole SVG — identical for all moles (neutral face) ──
+  const MOLE_SVG = `<svg class="mole-svg" viewBox="0 0 80 84" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <!-- paws -->
+    <ellipse cx="10" cy="70" rx="9" ry="11" fill="#9a6835" transform="rotate(-18,10,70)"/>
+    <ellipse cx="70" cy="70" rx="9" ry="11" fill="#9a6835" transform="rotate(18,70,70)"/>
+    <!-- body -->
+    <ellipse cx="40" cy="78" rx="27" ry="16" fill="#9a6835"/>
+    <!-- ears -->
+    <ellipse cx="16" cy="22" rx="11" ry="13" fill="#9a6835"/>
+    <ellipse cx="64" cy="22" rx="11" ry="13" fill="#9a6835"/>
+    <ellipse cx="16" cy="22" rx="6.5" ry="8" fill="#d4a0a0"/>
+    <ellipse cx="64" cy="22" rx="6.5" ry="8" fill="#d4a0a0"/>
+    <!-- head -->
+    <circle cx="40" cy="40" r="28" fill="#b8845a"/>
+    <circle cx="40" cy="43" r="22" fill="#c8955a"/>
+    <!-- snout -->
+    <ellipse cx="40" cy="51" rx="12" ry="9" fill="#c8a070"/>
+    <!-- neutral brows -->
+    <path d="M22 28 Q27 25 33 28" fill="none" stroke="#6a4020" stroke-width="1.8" stroke-linecap="round"/>
+    <path d="M47 28 Q53 25 58 28" fill="none" stroke="#6a4020" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- eyes -->
+    <circle cx="28" cy="37" r="7" fill="#1a1010"/>
+    <circle cx="52" cy="37" r="7" fill="#1a1010"/>
+    <circle cx="29.5" cy="35" r="2.5" fill="#fff"/>
+    <circle cx="53.5" cy="35" r="2.5" fill="#fff"/>
+    <circle cx="30.5" cy="35.8" r="1.2" fill="#111"/>
+    <circle cx="54.5" cy="35.8" r="1.2" fill="#111"/>
+    <!-- nose -->
+    <ellipse cx="40" cy="49" rx="6" ry="4.5" fill="#b06060"/>
+    <ellipse cx="40" cy="48" rx="3.5" ry="2.5" fill="#c07070"/>
+    <!-- slight smile -->
+    <path d="M33 57 Q40 63 47 57" fill="none" stroke="#6a3010" stroke-width="2" stroke-linecap="round"/>
+  </svg>`;
 
-  // ── Build board ───────────────────────────────
-  const boardEl   = document.getElementById('whack-board');
+  // ── Build board ────────────────────────────────
+  const boardEl    = document.getElementById('whack-board');
   const moleInners = [];
+  const holeCells  = [];
   const active     = new Array(9).fill(false);
 
   for (let i = 0; i < 9; i++) {
     const cell = document.createElement('div');
     cell.className = 'hole-cell';
     cell.innerHTML = `
-      <div class="hole-bg"></div>
-      <div class="mole-stage" id="stage-${i}">
-        <div class="mole-inner" id="mole-${i}">
-          <div class="mole-badge" id="badge-${i}">MYTH</div>
-          <div id="mole-svg-${i}"></div>
-          <div class="mole-text" id="mole-text-${i}"></div>
+      <div class="hole-inner">
+        <div class="mole-bubble" id="bubble-${i}"></div>
+        <div class="hole-bg"></div>
+        <div class="mole-stage">
+          <div class="mole-inner" id="mole-${i}">
+            <div class="mole-badge" id="badge-${i}">MYTH</div>
+            ${MOLE_SVG}
+          </div>
         </div>
-      </div>
-      <div class="hole-front"></div>`;
+        <div class="hole-front"></div>
+      </div>`;
     boardEl.appendChild(cell);
     moleInners.push(document.getElementById('mole-' + i));
+    holeCells.push(cell);
   }
 
-  // ── Game state ────────────────────────────────
+  // ── Game state ─────────────────────────────────
   let score    = 0;
   let hearts   = 3;
   let timeLeft = 60;
@@ -485,15 +442,15 @@
   const gameoverTitle   = document.getElementById('gameover-title');
   const gameoverSub     = document.getElementById('gameover-sub');
 
-  // ── Difficulty ────────────────────────────────
+  // ── Difficulty — longer display times for readability ──
   function diffParams(elapsed) {
-    if (elapsed < 15) return { interval: 1300, displayTime: 1900 };
-    if (elapsed < 30) return { interval: 1050, displayTime: 1550 };
-    if (elapsed < 45) return { interval: 840,  displayTime: 1300 };
-    return             { interval: 660,  displayTime: 1080 };
+    if (elapsed < 15) return { interval: 1500, displayTime: 2900 };
+    if (elapsed < 30) return { interval: 1200, displayTime: 2400 };
+    if (elapsed < 45) return { interval: 950,  displayTime: 2000 };
+    return             { interval: 750,  displayTime: 1700 };
   }
 
-  // ── Pop a mole ────────────────────────────────
+  // ── Pop a mole ─────────────────────────────────
   function peep() {
     if (!running) return;
     const elapsed = 60 - timeLeft;
@@ -504,21 +461,20 @@
       const idx  = inactive[Math.floor(Math.random() * inactive.length)];
       const item = ITEMS[Math.floor(Math.random() * ITEMS.length)];
 
-      const mole  = moleInners[idx];
-      const badge = document.getElementById('badge-' + idx);
-      const svgEl = document.getElementById('mole-svg-' + idx);
-      const txtEl = document.getElementById('mole-text-' + idx);
+      const mole   = moleInners[idx];
+      const badge  = document.getElementById('badge-' + idx);
+      const bubble = document.getElementById('bubble-' + idx);
 
-      badge.textContent  = item.type === 'myth' ? 'MYTH' : 'FACT';
-      badge.className    = 'mole-badge is-' + item.type;
-      svgEl.innerHTML    = moleSVG(item.type);
-      txtEl.textContent  = item.text;
-      mole._type         = item.type;
+      badge.textContent = item.type === 'myth' ? 'MYTH' : 'FACT';
+      badge.className   = 'mole-badge is-' + item.type;
+      bubble.textContent = item.text;
+      mole._type = item.type;
 
       mole.classList.remove('hit-good', 'hit-bad');
       active[idx] = true;
-      void mole.offsetWidth; // reflow
+      void mole.offsetWidth;
       mole.classList.add('up');
+      holeCells[idx].classList.add('active');
 
       const hid = setTimeout(() => hideMole(idx), displayTime);
       hideIds.push(hid);
@@ -529,12 +485,12 @@
   }
 
   function hideMole(idx) {
-    const mole = moleInners[idx];
-    mole.classList.remove('up', 'hit-good', 'hit-bad');
+    moleInners[idx].classList.remove('up', 'hit-good', 'hit-bad');
+    holeCells[idx].classList.remove('active');
     active[idx] = false;
   }
 
-  // ── Click handler ─────────────────────────────
+  // ── Click handler ──────────────────────────────
   boardEl.addEventListener('click', e => {
     if (!running) return;
     const mole = e.target.closest('.mole-inner.up');
@@ -543,21 +499,22 @@
     if (idx < 0 || !active[idx]) return;
 
     active[idx] = false;
+    holeCells[idx].classList.remove('active');
     const type = mole._type;
 
     if (type === 'myth') {
       score += 10;
       scoreEl.textContent = score;
       mole.classList.add('hit-good');
-      setTimeout(() => hideMole(idx), 240);
+      setTimeout(() => hideMole(idx), 260);
     } else {
       hearts = Math.max(0, hearts - 1);
       updateHearts();
       mole.classList.add('hit-bad');
       setTimeout(() => {
         hideMole(idx);
-        if (hearts === 0) setTimeout(endGame, 300);
-      }, 300);
+        if (hearts === 0) setTimeout(endGame, 320);
+      }, 320);
     }
   });
 
@@ -569,9 +526,8 @@
 
   function tickTimer() {
     timeLeft--;
-    const pct = (timeLeft / 60) * 100;
     timerEl.textContent = timeLeft;
-    timerBarEl.style.width = pct + '%';
+    timerBarEl.style.width = (timeLeft / 60 * 100) + '%';
     if (timeLeft <= 10) {
       timerEl.classList.add('urgent');
       timerBarEl.classList.add('urgent');
@@ -579,7 +535,7 @@
     if (timeLeft <= 0) endGame();
   }
 
-  // ── Start / end ───────────────────────────────
+  // ── Start / end ────────────────────────────────
   function startGame() {
     score = 0; hearts = 3; timeLeft = 60; running = true;
     scoreEl.textContent = '0';
@@ -588,12 +544,7 @@
     timerBarEl.style.width = '100%';
     timerBarEl.classList.remove('urgent');
     updateHearts();
-
-    for (let i = 0; i < 9; i++) {
-      moleInners[i].classList.remove('up', 'hit-good', 'hit-bad');
-      active[i] = false;
-    }
-
+    for (let i = 0; i < 9; i++) { hideMole(i); }
     startOverlay.classList.add('hidden');
     gameoverOverlay.classList.add('hidden');
     timerId = setInterval(tickTimer, 1000);
@@ -610,7 +561,7 @@
     finalScoreEl.textContent = score;
     if (hearts === 0) {
       gameoverTitle.textContent = 'No Hearts Left!';
-      gameoverSub.textContent   = 'You clicked one too many facts. Final score: ' + score + ' pts.';
+      gameoverSub.textContent   = 'You clicked too many facts. Final score: ' + score + ' pts.';
     } else {
       gameoverTitle.textContent = "Time's Up!";
       const r = score >= 100 ? 'Excellent!' : score >= 60 ? 'Nice effort!' : 'Keep practising!';
