@@ -331,12 +331,12 @@
         card.innerHTML = `
           <div class="card-face card-front">
             <span class="card-statement">${c.text}</span>
-            ${c.cite ? `<span class="card-cite">${c.cite}</span>` : ''}
             <span class="card-hint">Tap to flip</span>
           </div>
           <div class="card-face card-back ${isFact ? '' : 'card-back--myth'}">
             <span class="card-verdict ${isFact ? '' : 'card-verdict--myth'}">${isFact ? '✓' : '✕'}</span>
             <span class="card-verdict-label ${isFact ? '' : 'card-verdict-label--myth'}">${isFact ? 'True' : 'False'}</span>
+            ${c.cite ? `<span class="card-cite">${c.cite}</span>` : ''}
           </div>`;
 
         function makeToggle(cardEl, i) {
