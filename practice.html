@@ -21,7 +21,7 @@
     }
     .card-scene {
       perspective: 900px;
-      height: 148px;
+      height: 210px;
     }
     .card-flip {
       width: 100%;
@@ -77,16 +77,46 @@
       color: #888;
       font-style: italic;
     }
-    .card-coming-soon {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: #7DF9FF;
-      letter-spacing: 0.3px;
+    .card-topic {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 99px;
+    }
+    .card-topic--pap { background: rgba(180,100,255,0.18); color: #b464ff; }
+    .card-topic--pnf { background: rgba(52,211,153,0.18); color: #34d399; }
+    .card-topic--ems { background: rgba(255,160,30,0.18); color: #ffa01e; }
+    .card-statement {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #e0e0e0;
+      line-height: 1.4;
+    }
+    .card-cite {
+      font-size: 0.67rem;
+      color: #555;
+      font-style: italic;
+      line-height: 1.3;
     }
     .card-hint {
-      font-size: 0.72rem;
-      color: #555;
-      margin-top: 4px;
+      font-size: 0.68rem;
+      color: #444;
+      margin-top: 2px;
+    }
+    .card-verdict {
+      font-size: 2rem;
+      font-weight: 800;
+      color: #34d399;
+      line-height: 1;
+    }
+    .card-verdict-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #34d399;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
     }
     .progress-bar-wrap {
       max-width: 500px;
@@ -133,7 +163,7 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
       }
-      .card-scene { height: 130px; }
+      .card-scene { height: 185px; }
     }
   </style>
 </head>
@@ -165,7 +195,7 @@
         <div class="progress-bar-wrap">
           <div class="progress-label">
             <span>Cards flipped</span>
-            <span id="progress-text">0 / 20</span>
+            <span id="progress-text">0 / 22</span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill" id="progress-fill"></div>
@@ -195,7 +225,35 @@
 
   <script src="js/app.js"></script>
   <script>
-    const TOTAL = 20;
+    const CARDS = [
+      // PAP
+      { topic: 'pap', text: 'Heavy pre-activation exercises can increase muscular power output', cite: 'Wilson et al., 2013' },
+      { topic: 'pap', text: 'PAP has less effect on untrained athletes', cite: 'Chiu et al.; Wilson et al., 2013' },
+      { topic: 'pap', text: 'The optimal rest time for PAP effects is between 4–12 minutes', cite: 'Kilduff et al., 2008; Chen et al., 2023' },
+      { topic: 'pap', text: 'Training status, intensity, and rest period length influence PAP performance improvements', cite: 'Tillin and Bishop, 2012' },
+      { topic: 'pap', text: 'PAP increases neural activation of the muscles', cite: 'Blazevich and Babault, 2019' },
+      { topic: 'pap', text: 'PAP protocols often include high intensity strength exercises of 80% 1RM or more', cite: 'Seitz and Haff, 2015' },
+      { topic: 'pap', text: 'PAP performance effects depend on the balance between fatigue and potentiation', cite: 'Tillin and Bishop, 2012' },
+      // PNF
+      { topic: 'pnf', text: 'PNF stretching performed immediately before exercise may temporarily reduce strength or power performance', cite: 'Behm et al., 2015' },
+      { topic: 'pnf', text: 'One PNF stretching session can significantly increase joint range of motion temporarily', cite: 'Konrad and Tilp, 2014' },
+      { topic: 'pnf', text: 'Flexibility improvements from PNF are partly due to increased tolerance to stretch sensations', cite: 'Magnusson et al., 1996' },
+      { topic: 'pnf', text: 'PNF is widely used in sports training and physiotherapy to improve flexibility and mobility', cite: 'Hindle et al., 2012' },
+      { topic: 'pnf', text: 'PNF stretching works partly because Golgi tendon organs reduce muscle activation', cite: 'Hindle et al., 2012' },
+      { topic: 'pnf', text: 'PNF stretching usually involves contracting the muscle before stretching it further', cite: '' },
+      { topic: 'pnf', text: 'PNF stretching can be performed with both maximal and submaximal muscle contractions', cite: '' },
+      // EMS
+      { topic: 'ems', text: 'External electrical impulses trigger muscle contractions by depolarising motor neurons', cite: 'Milosevic et al., 2020' },
+      { topic: 'ems', text: 'EMS training can increase muscle strength', cite: 'Maffiuletti and Maffiuletti, 2010' },
+      { topic: 'ems', text: 'EMS can recruit fast-twitch muscle fibres that are difficult to activate during voluntary exercise', cite: 'Gregory and Bickel, 2005' },
+      { topic: 'ems', text: 'EMS training can improve strength and power performance in athletes', cite: 'Filipovic et al., 2012' },
+      { topic: 'ems', text: 'EMS can activate large motor units earlier than voluntary contractions', cite: 'Yoo et al., 2023' },
+      { topic: 'ems', text: 'EMS mainly stimulates the muscles directly under the electrode pads', cite: '' },
+      { topic: 'ems', text: 'EMS is often used in rehabilitation to help maintain muscle when someone cannot exercise normally', cite: '' },
+      { topic: 'ems', text: 'EMS devices send electrical pulses through electrodes placed on the skin', cite: '' },
+    ];
+
+    const TOTAL = CARDS.length;
     let flipped = new Set();
 
     function updateProgress() {
@@ -218,40 +276,38 @@
       flipped.clear();
       updateProgress();
 
-      for (const i of order) {
+      for (const idx of order) {
+        const c = CARDS[idx];
         const scene = document.createElement('div');
         scene.className = 'card-scene';
 
         const card = document.createElement('div');
         card.className = 'card-flip';
         card.setAttribute('role', 'button');
-        card.setAttribute('aria-label', 'Flashcard ' + i + '. Click to flip.');
+        card.setAttribute('aria-label', c.text + '. Click to flip.');
         card.setAttribute('tabindex', '0');
 
         card.innerHTML = `
           <div class="card-face card-front">
-            <span class="card-number">Card ${i}</span>
-            <span class="card-icon">&#10067;</span>
-            <span class="card-coming-soon">Coming Soon</span>
+            <span class="card-topic card-topic--${c.topic}">${c.topic.toUpperCase()}</span>
+            <span class="card-statement">${c.text}</span>
+            ${c.cite ? `<span class="card-cite">${c.cite}</span>` : ''}
             <span class="card-hint">Tap to flip</span>
           </div>
           <div class="card-face card-back">
-            <span class="card-number">Card ${i}</span>
-            <span class="card-icon">&#128161;</span>
-            <span class="card-coming-soon">Coming Soon</span>
-            <span class="card-label">Answer</span>
+            <span class="card-verdict">✓</span>
+            <span class="card-verdict-label">True</span>
           </div>`;
 
-        function toggle(e) {
-          card.classList.toggle('flipped');
-          if (card.classList.contains('flipped')) {
-            flipped.add(i);
-          } else {
-            flipped.delete(i);
-          }
-          updateProgress();
+        function makeToggle(cardEl, i) {
+          return function() {
+            cardEl.classList.toggle('flipped');
+            if (cardEl.classList.contains('flipped')) flipped.add(i);
+            else flipped.delete(i);
+            updateProgress();
+          };
         }
-
+        const toggle = makeToggle(card, idx);
         card.addEventListener('click', toggle);
         card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
 
@@ -260,7 +316,7 @@
       }
     }
 
-    const defaultOrder = Array.from({ length: TOTAL }, (_, i) => i + 1);
+    const defaultOrder = CARDS.map((_, i) => i);
     buildCards([...defaultOrder]);
 
     document.getElementById('reset-btn').addEventListener('click', () => buildCards([...defaultOrder]));
