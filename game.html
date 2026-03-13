@@ -627,9 +627,11 @@
     spawnTimer++;
     if (spawnTimer >= spawnInterval) {
       spawnTimer = 0;
-      spawnAsteroid();
-      spawnInterval = Math.max(55, spawnInterval - 4);
-      level = Math.floor((180 - spawnInterval) / 25) + 1;
+      if (asteroids.length < 3) {
+        spawnAsteroid();
+        spawnInterval = Math.max(90, spawnInterval - 3);
+        level = Math.floor((180 - spawnInterval) / 25) + 1;
+      }
     }
 
     // Move & rotate asteroids

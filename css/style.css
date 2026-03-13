@@ -1320,6 +1320,8 @@ ul { list-style: none; }
   /* Collapse desktop header nav on mobile */
   .site-header nav { display: none; }
   .site-header .container { justify-content: space-between; gap: 8px; padding: 0 14px; }
+  .logo { font-size: 1.55rem; }
+  .logo-est { display: none; }
 }
 
 /* ─── Focus styles (a11y) ─────────────────────────────── */
