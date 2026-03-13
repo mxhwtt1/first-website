@@ -61,6 +61,16 @@
       border: 2px solid #0068C4;
       transform: rotateY(180deg);
     }
+    .card-back--myth {
+      background: #2a0c0c;
+      border-color: #dc2626;
+    }
+    .card-verdict--myth {
+      color: #f87171;
+    }
+    .card-verdict-label--myth {
+      color: #f87171;
+    }
     .card-number {
       font-size: 0.7rem;
       font-weight: 700;
@@ -195,7 +205,7 @@
         <div class="progress-bar-wrap">
           <div class="progress-label">
             <span>Cards flipped</span>
-            <span id="progress-text">0 / 22</span>
+            <span id="progress-text">0 / 49</span>
           </div>
           <div class="progress-bar">
             <div class="progress-fill" id="progress-fill"></div>
@@ -226,31 +236,61 @@
   <script src="js/app.js"></script>
   <script>
     const CARDS = [
-      // PAP
-      { topic: 'pap', text: 'Heavy pre-activation exercises can increase muscular power output', cite: 'Wilson et al., 2013' },
-      { topic: 'pap', text: 'PAP has less effect on untrained athletes', cite: 'Chiu et al.; Wilson et al., 2013' },
-      { topic: 'pap', text: 'The optimal rest time for PAP effects is between 4–12 minutes', cite: 'Kilduff et al., 2008; Chen et al., 2023' },
-      { topic: 'pap', text: 'Training status, intensity, and rest period length influence PAP performance improvements', cite: 'Tillin and Bishop, 2012' },
-      { topic: 'pap', text: 'PAP increases neural activation of the muscles', cite: 'Blazevich and Babault, 2019' },
-      { topic: 'pap', text: 'PAP protocols often include high intensity strength exercises of 80% 1RM or more', cite: 'Seitz and Haff, 2015' },
-      { topic: 'pap', text: 'PAP performance effects depend on the balance between fatigue and potentiation', cite: 'Tillin and Bishop, 2012' },
-      // PNF
-      { topic: 'pnf', text: 'PNF stretching performed immediately before exercise may temporarily reduce strength or power performance', cite: 'Behm et al., 2015' },
-      { topic: 'pnf', text: 'One PNF stretching session can significantly increase joint range of motion temporarily', cite: 'Konrad and Tilp, 2014' },
-      { topic: 'pnf', text: 'Flexibility improvements from PNF are partly due to increased tolerance to stretch sensations', cite: 'Magnusson et al., 1996' },
-      { topic: 'pnf', text: 'PNF is widely used in sports training and physiotherapy to improve flexibility and mobility', cite: 'Hindle et al., 2012' },
-      { topic: 'pnf', text: 'PNF stretching works partly because Golgi tendon organs reduce muscle activation', cite: 'Hindle et al., 2012' },
-      { topic: 'pnf', text: 'PNF stretching usually involves contracting the muscle before stretching it further', cite: '' },
-      { topic: 'pnf', text: 'PNF stretching can be performed with both maximal and submaximal muscle contractions', cite: '' },
-      // EMS
-      { topic: 'ems', text: 'External electrical impulses trigger muscle contractions by depolarising motor neurons', cite: 'Milosevic et al., 2020' },
-      { topic: 'ems', text: 'EMS training can increase muscle strength', cite: 'Maffiuletti and Maffiuletti, 2010' },
-      { topic: 'ems', text: 'EMS can recruit fast-twitch muscle fibres that are difficult to activate during voluntary exercise', cite: 'Gregory and Bickel, 2005' },
-      { topic: 'ems', text: 'EMS training can improve strength and power performance in athletes', cite: 'Filipovic et al., 2012' },
-      { topic: 'ems', text: 'EMS can activate large motor units earlier than voluntary contractions', cite: 'Yoo et al., 2023' },
-      { topic: 'ems', text: 'EMS mainly stimulates the muscles directly under the electrode pads', cite: '' },
-      { topic: 'ems', text: 'EMS is often used in rehabilitation to help maintain muscle when someone cannot exercise normally', cite: '' },
-      { topic: 'ems', text: 'EMS devices send electrical pulses through electrodes placed on the skin', cite: '' },
+      // PAP Facts
+      { type: 'fact', text: 'Heavy pre-activation exercises can increase muscular power output', cite: 'Wilson et al., 2013' },
+      { type: 'fact', text: 'PAP has less effect on untrained athletes', cite: 'Chiu et al.; Wilson et al., 2013' },
+      { type: 'fact', text: 'The optimal rest time for PAP effects is between 4–12 minutes', cite: 'Kilduff et al., 2008; Chen et al., 2023' },
+      { type: 'fact', text: 'Training status, intensity, and rest period length influence PAP performance improvements', cite: 'Tillin and Bishop, 2012' },
+      { type: 'fact', text: 'PAP increases neural activation of the muscles', cite: 'Blazevich and Babault, 2019' },
+      { type: 'fact', text: 'PAP protocols often include high intensity strength exercises of 80% 1RM or more', cite: 'Seitz and Haff, 2015' },
+      { type: 'fact', text: 'PAP performance effects depend on the balance between fatigue and potentiation', cite: 'Tillin and Bishop, 2012' },
+      // PNF Facts
+      { type: 'fact', text: 'PNF stretching performed immediately before exercise may temporarily reduce strength or power performance', cite: 'Behm et al., 2015' },
+      { type: 'fact', text: 'One PNF stretching session can significantly increase joint range of motion temporarily', cite: 'Konrad and Tilp, 2014' },
+      { type: 'fact', text: 'Flexibility improvements from PNF are partly due to increased tolerance to stretch sensations', cite: 'Magnusson et al., 1996' },
+      { type: 'fact', text: 'PNF is widely used in sports training and physiotherapy to improve flexibility and mobility', cite: 'Hindle et al., 2012' },
+      { type: 'fact', text: 'PNF stretching works partly because Golgi tendon organs reduce muscle activation', cite: 'Hindle et al., 2012' },
+      { type: 'fact', text: 'PNF stretching usually involves contracting the muscle before stretching it further', cite: '' },
+      { type: 'fact', text: 'PNF stretching can be performed with both maximal and submaximal muscle contractions', cite: '' },
+      // EMS Facts
+      { type: 'fact', text: 'External electrical impulses trigger muscle contractions by depolarising motor neurons', cite: 'Milosevic et al., 2020' },
+      { type: 'fact', text: 'EMS training can increase muscle strength', cite: 'Maffiuletti and Maffiuletti, 2010' },
+      { type: 'fact', text: 'EMS can recruit fast-twitch muscle fibres that are difficult to activate during voluntary exercise', cite: 'Gregory and Bickel, 2005' },
+      { type: 'fact', text: 'EMS training can improve strength and power performance in athletes', cite: 'Filipovic et al., 2012' },
+      { type: 'fact', text: 'EMS can activate large motor units earlier than voluntary contractions', cite: 'Yoo et al., 2023' },
+      { type: 'fact', text: 'EMS mainly stimulates the muscles directly under the electrode pads', cite: '' },
+      { type: 'fact', text: 'EMS is often used in rehabilitation to help maintain muscle when someone cannot exercise normally', cite: '' },
+      { type: 'fact', text: 'EMS devices send electrical pulses through electrodes placed on the skin', cite: '' },
+      // PAP Myths
+      { type: 'myth', text: 'PAP works best when the explosive movement is performed immediately after the heavy exercise with no rest', cite: '' },
+      { type: 'myth', text: 'PAP improves performance because it increases muscle flexibility like PNF stretching', cite: '' },
+      { type: 'myth', text: 'PAP only works for elite power athletes and has no effect in recreational athletes', cite: '' },
+      { type: 'myth', text: 'PAP occurs because electrical impulses from the muscles increase in the same way as EMS stimulation', cite: '' },
+      { type: 'myth', text: 'The heavier the exercise used in PAP, the bigger the performance improvement will always be', cite: '' },
+      { type: 'myth', text: 'PAP improves performance by increasing blood flow to the muscles', cite: '' },
+      { type: 'myth', text: 'PAP only improves vertical jump performance and cannot improve sprinting or throwing', cite: '' },
+      { type: 'myth', text: 'PAP protocols involve stretching the muscle before explosive activity', cite: '' },
+      { type: 'myth', text: 'PAP effects last for more than an hour after the heavy exercise', cite: '' },
+      // PNF Myths
+      { type: 'myth', text: 'PNF stretching increases explosive power in the same way PAP does', cite: '' },
+      { type: 'myth', text: 'PNF stretching works by electrically stimulating the muscle fibres like EMS', cite: '' },
+      { type: 'myth', text: 'One PNF stretching session permanently increases muscle length', cite: '' },
+      { type: 'myth', text: 'PNF stretching should always involve maximal contractions to be effective', cite: '' },
+      { type: 'myth', text: 'PNF stretching improves flexibility mainly by increasing blood flow to the muscle', cite: '' },
+      { type: 'myth', text: 'PNF stretching should always be used immediately before explosive activities to increase power', cite: '' },
+      { type: 'myth', text: 'PNF stretching only works when assisted by another person and cannot be done independently', cite: '' },
+      { type: 'myth', text: 'PNF stretching completely switches off the muscle so it becomes fully relaxed', cite: '' },
+      { type: 'myth', text: 'PNF stretching only works for hamstrings and cannot be applied to other muscle groups', cite: '' },
+      // EMS Myths
+      { type: 'myth', text: 'EMS can fully replace strength training because it stimulates muscles in the same way as voluntary exercise', cite: '' },
+      { type: 'myth', text: 'EMS improves flexibility in the same way that PNF stretching does', cite: '' },
+      { type: 'myth', text: 'EMS works by increasing the muscle\'s stretch tolerance like PNF stretching', cite: '' },
+      { type: 'myth', text: 'EMS only activates slow-twitch muscle fibres', cite: '' },
+      { type: 'myth', text: 'EMS produces PAP automatically because electrical stimulation replaces heavy exercise', cite: '' },
+      { type: 'myth', text: 'EMS improves strength mainly by increasing blood flow to the muscle', cite: '' },
+      { type: 'myth', text: 'EMS contractions occur because the electrodes stretch the muscle fibres', cite: '' },
+      { type: 'myth', text: 'EMS only works during rehabilitation and cannot improve athletic performance', cite: '' },
+      { type: 'myth', text: 'EMS activates muscles only under the electrodes and does not involve the nervous system', cite: '' },
     ];
 
     const TOTAL = CARDS.length;
@@ -287,16 +327,16 @@
         card.setAttribute('aria-label', c.text + '. Click to flip.');
         card.setAttribute('tabindex', '0');
 
+        const isFact = c.type === 'fact';
         card.innerHTML = `
           <div class="card-face card-front">
-            <span class="card-topic card-topic--${c.topic}">${c.topic.toUpperCase()}</span>
             <span class="card-statement">${c.text}</span>
             ${c.cite ? `<span class="card-cite">${c.cite}</span>` : ''}
             <span class="card-hint">Tap to flip</span>
           </div>
-          <div class="card-face card-back">
-            <span class="card-verdict">✓</span>
-            <span class="card-verdict-label">True</span>
+          <div class="card-face card-back ${isFact ? '' : 'card-back--myth'}">
+            <span class="card-verdict ${isFact ? '' : 'card-verdict--myth'}">${isFact ? '✓' : '✕'}</span>
+            <span class="card-verdict-label ${isFact ? '' : 'card-verdict-label--myth'}">${isFact ? 'True' : 'False'}</span>
           </div>`;
 
         function makeToggle(cardEl, i) {
