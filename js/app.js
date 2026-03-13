@@ -330,13 +330,7 @@ function initHamburgerMenu() {
       <a href="sources.html" class="menu-link ${page === 'sources.html' ? 'active' : ''}">Sources</a>
     </div>
 
-    <div class="menu-divider"></div>
-
-    <div class="menu-section">
-      <div class="menu-section-label">Info</div>
-      <a href="about.html" class="menu-link ${page === 'about.html' ? 'active' : ''}">About</a>
-      <a href="contact.html" class="menu-link ${page === 'contact.html' ? 'active' : ''}">Contact</a>
-    </div>`;
+    `;
   document.body.appendChild(menu);
 
   function openMenu() {
