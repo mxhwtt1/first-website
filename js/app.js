@@ -333,15 +333,6 @@ function initHamburgerMenu() {
     <div class="menu-divider"></div>
 
     <div class="menu-section">
-      <div class="menu-section-label">Techniques</div>
-      <a href="pnf.html" class="menu-link ${page === 'pnf.html' ? 'active' : ''}">PNF Stretching</a>
-      <a href="pap.html" class="menu-link ${page === 'pap.html' ? 'active' : ''}">Post-Activation Potentiation</a>
-      <a href="ems.html" class="menu-link ${page === 'ems.html' ? 'active' : ''}">Electrical Muscle Stimulation</a>
-    </div>
-
-    <div class="menu-divider"></div>
-
-    <div class="menu-section">
       <div class="menu-section-label">Info</div>
       <a href="about.html" class="menu-link ${page === 'about.html' ? 'active' : ''}">About</a>
       <a href="contact.html" class="menu-link ${page === 'contact.html' ? 'active' : ''}">Contact</a>
