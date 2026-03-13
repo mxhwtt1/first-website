@@ -489,10 +489,10 @@
 
   // ── Difficulty — generous reading time throughout ──
   function diffParams(elapsed) {
-    if (elapsed < 15) return { interval: 1800, displayTime: 4500 };
-    if (elapsed < 30) return { interval: 1400, displayTime: 3800 };
-    if (elapsed < 45) return { interval: 1100, displayTime: 3200 };
-    return             { interval: 900,  displayTime: 2700 };
+    if (elapsed < 15) return { interval: 3200, displayTime: 7000 };
+    if (elapsed < 30) return { interval: 2600, displayTime: 6000 };
+    if (elapsed < 45) return { interval: 2000, displayTime: 5200 };
+    return             { interval: 1600, displayTime: 4400 };
   }
 
   // ── Pop a mole ─────────────────────────────────

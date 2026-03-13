@@ -266,10 +266,19 @@
     return pts;
   }
 
+  function findSpawnX() {
+    const nearby = asteroids.filter(a => a.y < AH * 2);
+    for (let attempt = 0; attempt < 12; attempt++) {
+      const x = Math.random() * (W - AW - 20) + 10;
+      if (!nearby.some(a => x < a.x + AW + 12 && x + AW + 12 > a.x)) return x;
+    }
+    return Math.random() * (W - AW - 20) + 10;
+  }
+
   function spawnAsteroid() {
     const stmt  = STATEMENTS[Math.floor(Math.random() * STATEMENTS.length)];
-    const x     = Math.random() * (W - AW - 20) + 10;
-    const speed = 0.7 + Math.random() * 0.5 + (level - 1) * 0.2;
+    const x     = findSpawnX();
+    const speed = 0.32 + Math.random() * 0.22 + (level - 1) * 0.08;
     const seed  = Math.random() * 10;
     const rotDir = Math.random() > 0.5 ? 1 : -1;
     asteroids.push({ x, y: -AH - 10, speed, stmt, seed, angle: 0, rotSpeed: rotDir * (0.003 + Math.random() * 0.005) });
