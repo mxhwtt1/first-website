@@ -168,6 +168,69 @@
       border-color: #0068C4;
       color: #f0f0f0;
     }
+    .guess-btns {
+      display: flex;
+      gap: 8px;
+      margin-top: 6px;
+      width: 100%;
+    }
+    .guess-btn {
+      flex: 1;
+      padding: 6px 4px;
+      border-radius: 8px;
+      border: 2px solid;
+      font-size: 0.72rem;
+      font-weight: 700;
+      cursor: pointer;
+      background: transparent;
+      transition: background 0.15s;
+    }
+    .guess-btn--fact {
+      border-color: #34d399;
+      color: #34d399;
+    }
+    .guess-btn--fact:hover { background: rgba(52,211,153,0.15); }
+    .guess-btn--myth {
+      border-color: #f87171;
+      color: #f87171;
+    }
+    .guess-btn--myth:hover { background: rgba(248,113,113,0.15); }
+    .mode-btn {
+      background: transparent;
+      border: 2px solid #555;
+      color: var(--color-muted);
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: border-color 0.2s, color 0.2s, background 0.2s;
+      margin: 0;
+    }
+    .mode-btn:hover { border-color: #ffa01e; color: #ffa01e; }
+    .mode-btn.active {
+      background: rgba(255,160,30,0.12);
+      border-color: #ffa01e;
+      color: #ffa01e;
+    }
+    .wrong-flash {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #2a0c0c;
+      border: 2px solid #dc2626;
+      color: #f87171;
+      padding: 18px 36px;
+      border-radius: 14px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      z-index: 9999;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.2s;
+      text-align: center;
+    }
+    .wrong-flash.show { opacity: 1; }
     @media (max-width: 500px) {
       .flashcard-grid {
         grid-template-columns: repeat(2, 1fr);
@@ -190,11 +253,13 @@
     </div>
   </header>
 
+  <div class="wrong-flash" id="wrong-flash">✕ Wrong!<br><span style="font-size:0.8rem;font-weight:500;">Progress reset</span></div>
+
   <!-- Page hero -->
   <section class="page-hero">
     <div class="container">
       <h1>Practice Flashcards</h1>
-      <p>Click each card to flip it and reveal the answer.</p>
+      <p id="hero-sub">Click each card to flip it and reveal the answer.</p>
     </div>
   </section>
 
@@ -214,9 +279,10 @@
 
         <div class="flashcard-grid" id="flashcard-grid"></div>
 
-        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:48px;">
+        <div style="display:flex; gap:12px; justify-content:center; margin-bottom:48px; flex-wrap:wrap;">
           <button class="reset-btn" id="reset-btn" style="margin:0;">Reset all cards</button>
           <button class="reset-btn" id="shuffle-btn" style="margin:0; border-color:#0068C4; color:#7DF9FF;">&#8635; Randomise</button>
+          <button class="mode-btn" id="mode-btn">&#9654; Test Mode</button>
         </div>
 
       </div>
@@ -295,6 +361,8 @@
 
     const TOTAL = CARDS.length;
     let flipped = new Set();
+    let testMode = false;
+    let currentOrder = [];
 
     function updateProgress() {
       const n = flipped.size;
@@ -310,7 +378,14 @@
       return arr;
     }
 
+    function showWrongFlash(cb) {
+      const el = document.getElementById('wrong-flash');
+      el.classList.add('show');
+      setTimeout(() => { el.classList.remove('show'); if (cb) cb(); }, 900);
+    }
+
     function buildCards(order) {
+      currentOrder = order;
       const grid = document.getElementById('flashcard-grid');
       grid.innerHTML = '';
       flipped.clear();
@@ -323,33 +398,67 @@
 
         const card = document.createElement('div');
         card.className = 'card-flip';
-        card.setAttribute('role', 'button');
-        card.setAttribute('aria-label', c.text + '. Click to flip.');
-        card.setAttribute('tabindex', '0');
-
         const isFact = c.type === 'fact';
-        card.innerHTML = `
-          <div class="card-face card-front">
-            <span class="card-statement">${c.text}</span>
-            <span class="card-hint">Tap to flip</span>
-          </div>
-          <div class="card-face card-back ${isFact ? '' : 'card-back--myth'}">
-            <span class="card-verdict ${isFact ? '' : 'card-verdict--myth'}">${isFact ? '✓' : '✕'}</span>
-            <span class="card-verdict-label ${isFact ? '' : 'card-verdict-label--myth'}">${isFact ? 'True' : 'False'}</span>
-            ${c.cite ? `<span class="card-cite">${c.cite}</span>` : ''}
-          </div>`;
 
-        function makeToggle(cardEl, i) {
-          return function() {
-            cardEl.classList.toggle('flipped');
-            if (cardEl.classList.contains('flipped')) flipped.add(i);
-            else flipped.delete(i);
-            updateProgress();
-          };
+        if (testMode) {
+          card.setAttribute('aria-label', c.text);
+          card.innerHTML = `
+            <div class="card-face card-front">
+              <span class="card-statement">${c.text}</span>
+              <div class="guess-btns">
+                <button class="guess-btn guess-btn--fact" aria-label="Fact">✓ Fact</button>
+                <button class="guess-btn guess-btn--myth" aria-label="Myth">✕ Myth</button>
+              </div>
+            </div>
+            <div class="card-face card-back ${isFact ? '' : 'card-back--myth'}">
+              <span class="card-verdict ${isFact ? '' : 'card-verdict--myth'}">${isFact ? '✓' : '✕'}</span>
+              <span class="card-verdict-label ${isFact ? '' : 'card-verdict-label--myth'}">${isFact ? 'True' : 'False'}</span>
+              ${c.cite ? `<span class="card-cite">${c.cite}</span>` : ''}
+            </div>`;
+
+          function makeGuess(cardEl, i, correct) {
+            return function(e) {
+              e.stopPropagation();
+              if (cardEl.classList.contains('flipped')) return;
+              if (correct) {
+                cardEl.classList.add('flipped');
+                flipped.add(i);
+                updateProgress();
+              } else {
+                showWrongFlash(() => buildCards([...currentOrder]));
+              }
+            };
+          }
+          card.querySelector('.guess-btn--fact').addEventListener('click', makeGuess(card, idx, isFact));
+          card.querySelector('.guess-btn--myth').addEventListener('click', makeGuess(card, idx, !isFact));
+
+        } else {
+          card.setAttribute('role', 'button');
+          card.setAttribute('aria-label', c.text + '. Click to flip.');
+          card.setAttribute('tabindex', '0');
+          card.innerHTML = `
+            <div class="card-face card-front">
+              <span class="card-statement">${c.text}</span>
+              <span class="card-hint">Tap to flip</span>
+            </div>
+            <div class="card-face card-back ${isFact ? '' : 'card-back--myth'}">
+              <span class="card-verdict ${isFact ? '' : 'card-verdict--myth'}">${isFact ? '✓' : '✕'}</span>
+              <span class="card-verdict-label ${isFact ? '' : 'card-verdict-label--myth'}">${isFact ? 'True' : 'False'}</span>
+              ${c.cite ? `<span class="card-cite">${c.cite}</span>` : ''}
+            </div>`;
+
+          function makeToggle(cardEl, i) {
+            return function() {
+              cardEl.classList.toggle('flipped');
+              if (cardEl.classList.contains('flipped')) flipped.add(i);
+              else flipped.delete(i);
+              updateProgress();
+            };
+          }
+          const toggle = makeToggle(card, idx);
+          card.addEventListener('click', toggle);
+          card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
         }
-        const toggle = makeToggle(card, idx);
-        card.addEventListener('click', toggle);
-        card.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
 
         scene.appendChild(card);
         grid.appendChild(scene);
@@ -359,8 +468,23 @@
     const defaultOrder = CARDS.map((_, i) => i);
     buildCards([...defaultOrder]);
 
-    document.getElementById('reset-btn').addEventListener('click', () => buildCards([...defaultOrder]));
+    document.getElementById('reset-btn').addEventListener('click', () => buildCards([...currentOrder]));
     document.getElementById('shuffle-btn').addEventListener('click', () => buildCards(shuffle([...defaultOrder])));
+    document.getElementById('mode-btn').addEventListener('click', () => {
+      testMode = !testMode;
+      const btn = document.getElementById('mode-btn');
+      const sub = document.getElementById('hero-sub');
+      if (testMode) {
+        btn.textContent = '✕ Exit Test Mode';
+        btn.classList.add('active');
+        sub.textContent = 'Guess Fact or Myth — one wrong answer resets your progress.';
+      } else {
+        btn.textContent = '▶ Test Mode';
+        btn.classList.remove('active');
+        sub.textContent = 'Click each card to flip it and reveal the answer.';
+      }
+      buildCards([...currentOrder]);
+    });
   </script>
 </body>
 </html>
